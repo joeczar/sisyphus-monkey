@@ -47,7 +47,7 @@ async function processFileLetterByLetter(filePath: string) {
             charCount,
             packetNr,
           };
-          ws.send(chunk.toString());
+          ws.send(JSON.stringify(packet));
           console.log(packet, chunk);
           packetNr++;
         } else {
