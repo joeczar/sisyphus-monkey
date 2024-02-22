@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts":{
-    "chars":  "bun run characters/index.ts"
+    "chars":  "bun run characters/index.ts",
+    "ws:serve": "bun run words/ws-server.ts"
   }, 
   "devDependencies": {
     "@types/bun": "latest"
