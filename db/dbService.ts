@@ -16,12 +16,15 @@ export const initDb = () =>
     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);`);
   });
 
-export async function insertPacketIntoDB(message: Packet) {
+export async function insertPacketIntoDB(packet: Packet) {
   return new Promise<number>((resolve, reject) => {
+    // Assuming packet has properties: chunk, charCount, and packetNr
+    const { chunk, charCount, packetNr } = packet;
     db.run(
-      `INSERT INTO packets (message) VALUES (?)`,
-      [message],
-      (err: Error) => {
+      `INSERT INTO packets (chunk, charCount, packetNr) VALUES (?, ?, ?)`,
+      [chunk, charCount, packetNr], // Use the actual properties of `packet`
+      function (err: any) {
+        // Note: Changed arrow function to regular function to access `this`
         if (err) {
           return reject(err);
         }

@@ -6,6 +6,7 @@ import {
   packetQueue,
   processPackets,
 } from '../db/dbService';
+import type { Packet } from '../characters/packet.type';
 
 // Initialize the database
 initDb();
@@ -22,10 +23,10 @@ console.log(`WebSocket server started on ws://${ip}:8080`);
 
 wss.on('connection', function connection(ws) {
   ws.on('message', function incoming(message) {
-    console.log('received: %s', message);
     // Assuming `message` is a JSON string that needs to be parsed into a Packet type
     try {
-      const packet = JSON.parse(message.toString()); // Convert Buffer to string before parsing
+      const packet: Packet = JSON.parse(message.toString()); // Convert Buffer to string before parsing
+      console.log('Received packet:', packet.packetNr);
       // Validate packet or transform it into the correct format if necessary
       packetQueue.enqueue(packet); // Enqueue for processing
     } catch (error) {
