@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import WebSocket from 'ws';
+import type { Packet } from './packet.type';
 
 const wsServers = {
   word: 'ws://192.168.178.138:8080',
@@ -42,13 +43,13 @@ async function processFileLetterByLetter(filePath: string) {
         if (ws.bufferedAmount < BACKPRESSURE_THRESHOLD) {
           // count chars in chunk
           const charCount = chunk.toString().split('').length;
-          const packet = {
+          const packet: Packet = {
             chunk: chunk.toString(),
             charCount,
             packetNr,
           };
           ws.send(JSON.stringify(packet));
-          console.log(packet, chunk);
+          console.log(packet.chunk);
           packetNr++;
         } else {
           // Pause reading if we hit the threshold
