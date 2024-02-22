@@ -45,3 +45,41 @@ export async function processPackets(packetQueue: AsyncQueue<Packet>) {
     }
   }
 }
+
+export async function getPacket(packetNr:number) {
+  return new Promise<Packet>((resolve, reject) => {
+    db.get(
+      `SELECT * FROM packets WHERE packetNr = ?`,
+      [packetNr],
+      (err: any, row: Packet) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(row);
+      }
+    );
+  });
+}
+
+/**
+ * there should always be 2 packets being parsed to make sureany words across their boundaries are captured, they also need to be in order
+ * thier length are noted in the charCount property. When we have parsed the boundry we can drop the first and pull in the next one
+ */
+export async function pullPacketsForParsing(startingNumber = 0) {
+  let packets = [];
+  let packet = await getPacket(startingNumber);
+  let nextPacket = await getPacket(startingNumber + 1);
+  while (packet && nextPacket) {
+    packets.push(packet);
+    if (packets.reduce((acc, packet) => acc + packet.charCount, 0) >= 1000) {
+      break;
+    }
+    packets.shift();
+    packet = nextPacket;
+    nextPacket = await getPacket(packet.packetNr + 1);
+  }
+  return packets;
+
+
+}
+}
