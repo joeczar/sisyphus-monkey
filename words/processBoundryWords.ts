@@ -1,5 +1,6 @@
 import type { Packet } from '../characters/packet.type';
 import type { Trie } from '../found-words/Trie';
+import type { BoundaryWordData } from '../types/wordData';
 
 const MAX_WORD_LENGTH = 20;
 
@@ -8,10 +9,6 @@ export function processBoundaryWords(
   nextPacket: Packet,
   trie: Trie
 ) {
-  // This example assumes you have a method trie.search(word) that returns true if the word exists,
-  // and trie.startsWith(prefix) that returns true if there is a word that starts with the prefix.
-
-  // Buffer to hold potential boundary-spanning word start
   let boundaryBuffer = '';
 
   // Check the last N characters of the current packet, where N is the maximum word length you expect - 1
@@ -30,7 +27,14 @@ export function processBoundaryWords(
     ) {
       let potentialWord = boundaryBuffer + nextPacket.chunk.substring(0, j + 1);
       if (trie.search(potentialWord)) {
-        console.log('Found boundary-spanning word:', potentialWord);
+        return {
+          word: potentialWord,
+          packetNr: currentPacket.packetNr,
+          position: { i, j },
+          buffer: boundaryBuffer,
+          nextPacketNr: nextPacket.packetNr,
+        } as BoundaryWordData;
+
         // Handle the found word (e.g., store, send to client)
         // Make sure to adjust handling based on your application's needs
       }
