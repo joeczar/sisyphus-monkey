@@ -34,9 +34,6 @@ export function processBoundaryWords(
           buffer: boundaryBuffer,
           nextPacketNr: nextPacket.packetNr,
         } as BoundaryWordData;
-
-        // Handle the found word (e.g., store, send to client)
-        // Make sure to adjust handling based on your application's needs
       }
     }
   }
