@@ -46,7 +46,7 @@ export async function processPackets(packetQueue: AsyncQueue<Packet>) {
   }
 }
 
-export async function getPacket(packetNr:number) {
+export async function getPacket(packetNr: number) {
   return new Promise<Packet>((resolve, reject) => {
     db.get(
       `SELECT * FROM packets WHERE packetNr = ?`,
@@ -79,7 +79,4 @@ export async function pullPacketsForParsing(startingNumber = 0) {
     nextPacket = await getPacket(packet.packetNr + 1);
   }
   return packets;
-
-
-}
 }

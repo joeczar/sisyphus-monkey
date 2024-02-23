@@ -1,0 +1,91 @@
+#!/bin/bash
+
+# Stop script on any error
+set -e
+
+# Update and upgrade packages
+sudo apt-get update
+sudo apt-get upgrade -y
+
+# Install necessary packages
+sudo apt-get install -y software-properties-common git build-essential
+
+# Check if GitHub CLI GPG key exists
+if [ ! -f "/usr/share/keyrings/githubcli-archive-keyring.gpg" ]; then
+    # Download and add the GitHub CLI GPG key
+    curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo gpg --dearmor -o /usr/share/keyrings/githubcli-archive-keyring.gpg
+fi
+
+# Check if the GitHub CLI repository is already added
+if ! grep -q "github-cli.list" /etc/apt/sources.list.d/*; then
+    # Add the GitHub CLI repository
+    echo "deb [signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+fi
+
+# Update package lists after adding new repository
+sudo apt-get update
+
+# Install GitHub CLI
+sudo apt-get install gh -y
+
+# Check if NVM is already installed
+if ! command -v nvm &> /dev/null; then
+    # Install Node Version Manager (NVM)
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+    
+    # Load NVM into current session
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"  # This loads nvm
+fi
+
+# Check if Node.js is already installed
+if ! command -v node &> /dev/null; then
+    # Install the latest LTS version of Node.js
+    nvm install --lts
+    nvm use --lts
+fi
+
+# Check if bun is already installed
+if ! command -v bun &> /dev/null; then
+    # Install bun
+    npm install -g bun
+fi
+
+if ! ssh-keygen -F github.com >/dev/null; then
+    ssh-keyscan github.com >> ~/.ssh/known_hosts
+fi
+
+# Authenticate with GitHub through the CLI
+gh auth login
+
+# Clone your GitHub project
+PROJECT_DIR="$HOME/sisyphus-monkey"
+if [ -d "$PROJECT_DIR" ]; then
+    echo "Project directory already exists."
+else
+    gh repo clone sisyphus-monkey "$PROJECT_DIR"
+    echo "Project cloned successfully."
+fi
+
+# Install project dependencies
+cd "$PROJECT_DIR"
+bun install
+
+# Append Git aliases to .bashrc
+cat <<EOF >> ~/.bashrc
+# Git aliases
+alias g="git"
+alias gs="git status"
+alias ga="git add"
+alias gaa="git add --all"
+alias gc="git commit"
+alias gcm="git commit -m"
+alias gca="git commit --amend"
+alias gcam="git commit --amend -m"
+alias gp="git push"
+alias gpl="git pull"
+alias gplm="git pull origin main"
+alias gmom="git merge origin/main"
+EOF
+
+echo "Setup complete! Don't forget to source your .bashrc or restart your terminal."

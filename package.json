@@ -4,7 +4,8 @@
   "type": "module",
   "scripts":{
     "chars":  "bun run characters/index.ts",
-    "ws:serve": "bun run words/ws-server.ts"
+    "ws:serve": "bun run words/ws-server.ts",
+    "process:packets": "bun run words/process-packets.ts"
   }, 
   "devDependencies": {
     "@types/bun": "latest"

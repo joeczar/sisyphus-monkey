@@ -1,8 +1,9 @@
 import { Trie } from './Trie';
 import * as fs from 'fs/promises';
 import * as fs2 from 'fs';
+import * as path from 'path';
 
-const TRIE_PATH = './trie.json';
+const TRIE_PATH = path.resolve(__dirname, 'trie.json');
 
 export async function createTrieAndSaveToFile(
   wordsSet: Set<string>,
@@ -35,6 +36,7 @@ export function searchSerializedTrie(
   }
   return node.hasOwnProperty('isEndOfWord'); // Check if the path ends with a complete word
 }
+
 const trieData = JSON.parse(fs2.readFileSync(TRIE_PATH, 'utf8'));
 
 const wordTrie = new Trie();

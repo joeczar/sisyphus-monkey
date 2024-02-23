@@ -1,0 +1,51 @@
+#!/bin/bash
+
+echo "Please remove all connected SD cards and then press Enter."
+read -p ""
+
+# List disks before the SD card is inserted
+before=$(diskutil list | grep "/dev/disk" | awk '{print $1}')
+
+echo "Now, insert the SD card you want to back up and press Enter."
+read -p ""
+
+# Give a moment for the SD card to be recognized
+sleep 5
+
+# List disks after the SD card is inserted
+after=$(diskutil list | grep "/dev/disk" | awk '{print $1}')
+
+# Compare the lists to find the newly inserted SD card
+new_disk=$(comm -13 <(echo "$before") <(echo "$after"))
+
+# Verify if a new disk was detected
+if [ -z "$new_disk" ]; then
+    echo "No new SD card detected. Please ensure the SD card is properly inserted and try again."
+    exit 1
+fi
+
+# Assuming the new disk is correctly identified
+echo "Detected SD card: $new_disk"
+
+# Ask for the name of the backup
+read -p "Enter a name for the backup file (this will be the name of your Raspberry Pi): " backup_name
+
+# Construct the backup path
+backup_path="$HOME/Desktop/$backup_name.img"
+
+# Unmount the SD card
+echo "Unmounting $new_disk..."
+diskutil unmountDisk $new_disk
+
+# Start the backup process
+echo "Starting backup of $new_disk to $backup_path..."
+sudo dd if=/dev/r$(basename $new_disk) of=$backup_path bs=1m
+
+# Completion message
+echo "Backup completed successfully. The backup is saved as $backup_path"
+
+# Eject the SD card
+echo "Ejecting $new_disk..."
+diskutil eject $new_disk
+
+echo "SD card is safely ejected. You can now remove it from your Mac."
