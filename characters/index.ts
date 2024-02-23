@@ -1,91 +1,13 @@
-import fs from 'fs';
+// index.ts
 import path from 'path';
-import WebSocket from 'ws';
-import type { Packet } from './packet.type';
+import { WSConnectionManager } from './wsConnectionManager';
+import { processFolder } from './fileProcessor';
 
-const wsServers = {
-  word: 'ws://192.168.178.138:8080',
-  mac: 'ws://192.168.178.126:8080',
-};
-
+const wsAddress = 'ws://192.168.178.141:8080'; // Default WebSocket address
 const FOLDER_PATH = path.resolve(__dirname, '../generated-letters-chunked');
+const wsManager = new WSConnectionManager(wsAddress);
 
-const ws = new WebSocket(wsServers.word);
-
-let packetNr = 0;
-
-// Thresholds for backpressure handling
-const HIGH_WATER_MARK = 64 * 1024; // 64KB
-const BACKPRESSURE_THRESHOLD = HIGH_WATER_MARK / 4; // Resume reading when bufferedAmount falls below this
-
-ws.on('open', function open() {
+wsManager.initializeWebSocket(() => {
   console.log('Connected to the server.');
-  processFolder(FOLDER_PATH).then(() => {
-    console.log('All files processed.');
-    ws.close();
-  });
+  processFolder(FOLDER_PATH, wsManager);
 });
-
-ws.on('error', function error(err) {
-  console.error('WebSocket error:', err);
-});
-
-async function processFileLetterByLetter(filePath: string) {
-  return new Promise<void>((resolve, reject) => {
-    const readStream = fs.createReadStream(filePath, {
-      encoding: 'utf8',
-      highWaterMark: HIGH_WATER_MARK,
-    });
-
-    setInterval(() => {
-      readStream.on('data', (chunk) => {
-        // Send data only if WebSocket's bufferedAmount is below the threshold
-        if (ws.bufferedAmount < BACKPRESSURE_THRESHOLD) {
-          // count chars in chunk
-          const charCount = chunk.toString().split('').length;
-          const packet: Packet = {
-            chunk: chunk.toString(),
-            charCount,
-            packetNr,
-          };
-          ws.send(JSON.stringify(packet));
-          console.log(packet.chunk);
-          packetNr++;
-        } else {
-          // Pause reading if we hit the threshold
-          readStream.pause();
-
-          // Check bufferedAmount and resume reading when it decreases below threshold
-          const interval = setInterval(() => {
-            if (ws.bufferedAmount < BACKPRESSURE_THRESHOLD) {
-              clearInterval(interval);
-              readStream.resume();
-            }
-          }, 100); // Check every 100ms
-        }
-      });
-    }, 50);
-
-    readStream.on('end', () => {
-      // console.log(`Finished processing file: ${filePath}`);
-      resolve();
-    });
-
-    readStream.on('error', (err) => {
-      console.error('Stream error:', err);
-      reject(err);
-    });
-  });
-}
-
-async function processFolder(folderPath: string) {
-  const files = await fs.promises.readdir(folderPath);
-  for (const fileName of files) {
-    const filePath = path.join(folderPath, fileName);
-    if (fs.statSync(filePath).isFile()) {
-      // Ensure you're reading files
-      console.log(`Processing file: ${fileName}`);
-      await processFileLetterByLetter(filePath);
-    }
-  }
-}

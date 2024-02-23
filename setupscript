@@ -58,6 +58,10 @@ fi
 # Authenticate with GitHub through the CLI
 gh auth login
 
+# github setup
+git config --global user.email "joe.czar@outlook.com
+git config --global user.name "Joe Czarnecki"
+
 # Clone your GitHub project
 PROJECT_DIR="$HOME/sisyphus-monkey"
 if [ -d "$PROJECT_DIR" ]; then
