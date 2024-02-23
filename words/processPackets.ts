@@ -12,20 +12,28 @@ export async function processPackets(packet: Packet, trie: Trie) {
     // Reset boundaryBuffer for each starting character
     let boundaryBuffer = '';
 
-    for (let j = i; j < Math.min(i + MAX_WORD_LENGTH, packet.chunk.length); j++) {
+    for (
+      let j = i;
+      j < Math.min(i + MAX_WORD_LENGTH, packet.chunk.length);
+      j++
+    ) {
       boundaryBuffer += packet.chunk[j]; // Accumulate the next character in the sequence
 
-      if (trie.search(boundaryBuffer)) {
-        console.log(`${boundaryBuffer}, `);
-        words.push({
-          word: boundaryBuffer,
-          packetNr: packet.packetNr,
-          position: { start: i, end: j },
-          buffer: boundaryBuffer,
-        } as WordData);
+      try {
+        if (trie.search(boundaryBuffer)) {
+          words.push({
+            word: boundaryBuffer,
+            packetNr: packet.packetNr,
+            position: { start: i, end: j },
+            buffer: boundaryBuffer,
+          } as WordData);
+        }
+      } catch (error) {
+        console.error(`Error searching for word: ${error}`);
       }
     }
   }
+
+  process.stdout.write(words.join(', ') + '\n');
   return words;
 }
-
