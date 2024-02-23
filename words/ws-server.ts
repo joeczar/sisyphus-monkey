@@ -7,9 +7,12 @@ import {
   processPackets,
 } from '../db/dbService';
 import type { Packet } from '../characters/packet.type';
+// import { simulateOperation } from '../blinkt';
 
 // Initialize the database
 initDb();
+// simulateOperation();
+
 
 // Start processing packets from the queue in the background
 processPackets(packetQueue).catch((err) =>
