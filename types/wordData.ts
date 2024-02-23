@@ -1,7 +1,7 @@
 export type WordData = {
   word: string;
   packetNr: number;
-  position: { i: number; j: number };
+  position: { start: number; end: number };
   buffer: string;
 };
 

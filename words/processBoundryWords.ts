@@ -30,7 +30,7 @@ export function processBoundaryWords(
         return {
           word: potentialWord,
           packetNr: currentPacket.packetNr,
-          position: { i, j },
+          position: { start: i, end: j },
           buffer: boundaryBuffer,
           nextPacketNr: nextPacket.packetNr,
         } as BoundaryWordData;
