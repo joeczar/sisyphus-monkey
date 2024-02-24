@@ -25,7 +25,6 @@ export async function processPackets(packet: Packet, trie: Trie) {
             word: boundaryBuffer,
             packetNr: packet.packetNr,
             position: { start: i, end: j },
-            buffer: boundaryBuffer,
           } as WordData);
         }
       } catch (error) {
@@ -33,7 +32,8 @@ export async function processPackets(packet: Packet, trie: Trie) {
       }
     }
   }
-  const printedWords = words.map((word)=>word.word)
+  const printedWords = words.map((word) => word.word);
+  // don't forget this is also a console.log
   process.stdout.write(printedWords.join(', ') + '\n');
   return words;
 }

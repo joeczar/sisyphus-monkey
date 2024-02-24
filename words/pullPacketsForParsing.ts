@@ -13,7 +13,7 @@ export async function pullPacketsForParsing(startingNumber = 0) {
 
   // Wait indefinitely for the first packet if not immediately available
   while (!currentPacket && isActive) {
-    await delay(1000); // Check again after a delay
+    await delay(100); // Check again after a delay
     currentPacket = await getPacket(startingNumber);
   }
 
@@ -23,7 +23,7 @@ export async function pullPacketsForParsing(startingNumber = 0) {
     if (currentPacket) {
       try {
         const words = await processPackets(currentPacket, wordTrie);
-        console.log('Words', words.length);
+        // console.log('Words', words.length);
 
         // Prepare for the next packet
         nextPacketNumber = currentPacket.packetNr + 1;
@@ -36,7 +36,7 @@ export async function pullPacketsForParsing(startingNumber = 0) {
 
     // Wait indefinitely for the next packet if it's not available
     while (!nextPacket && isActive) {
-      await delay(1000); // Wait before trying again
+      await delay(100); // Wait before trying again
       nextPacket = await getPacket(nextPacketNumber);
     }
 
@@ -47,7 +47,4 @@ export async function pullPacketsForParsing(startingNumber = 0) {
     // Move to the next packet
     currentPacket = nextPacket;
   }
-
-  // Optionally, implement a cleanup or finalization logic here
-  return foundWords;
 }
