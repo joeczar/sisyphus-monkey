@@ -3,7 +3,7 @@ import { wordTrie } from '../found-words/trieService';
 import { processPackets } from './processPackets';
 
 function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+  return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
 let isActive = true; // Control flag to manage the processing state
@@ -18,22 +18,18 @@ export async function pullPacketsForParsing(startingNumber = 0) {
   }
 
   let nextPacketNumber = startingNumber + 1;
-  const foundWords = [];
 
   while (isActive) {
     if (currentPacket) {
       try {
         const words = await processPackets(currentPacket, wordTrie);
-        console.log("Words",words.length)
-      foundWords.push(...words);
-      console.log( "foundWords",foundWords)
+        console.log('Words', words.length);
 
-      // Prepare for the next packet
-      nextPacketNumber = currentPacket.packetNr + 1;
+        // Prepare for the next packet
+        nextPacketNumber = currentPacket.packetNr + 1;
       } catch (error) {
-        console.error("pullPacketsForParsing - problem finding word", error)
+        console.error('pullPacketsForParsing - problem finding word', error);
       }
-      
     }
 
     let nextPacket = await getPacket(nextPacketNumber);
