@@ -1,51 +1,57 @@
 import { getPacket } from '../db/dbService';
 import { wordTrie } from '../found-words/trieService';
-import { processBoundaryWords } from './processBoundryWords';
 import { processPackets } from './processPackets';
 
 function delay(ms: number) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+let isActive = true; // Control flag to manage the processing state
 
 export async function pullPacketsForParsing(startingNumber = 0) {
   let currentPacket = await getPacket(startingNumber);
-  let nextPacket = await getPacket(startingNumber + 1);
 
-  const foundWords = [];
-  const retryLimit = 5; // Maximum number of retries
-  let retries = 0; // Current retry count
-
-  while (currentPacket) {
-    const words = await processPackets(currentPacket, wordTrie);
-    foundWords.push(...words);
-
-    if (!nextPacket && retries < retryLimit) {
-      await delay(1000); // Wait for 1 second (or however long you deem appropriate)
-      nextPacket = await getPacket(currentPacket.packetNr + 1);
-      retries++;
-      continue; // Skip the rest of the loop to try fetching the next packet again
-    }
-
-    // Reset retry count if we successfully get a packet
-    retries = 0;
-
-    // Process boundary words and advance to the next packet as usual
-    if (nextPacket) {
-      const boundaryWord = processBoundaryWords(currentPacket, nextPacket, wordTrie);
-      if (boundaryWord) {
-        foundWords.push(boundaryWord);
-      }
-
-      currentPacket = nextPacket;
-      nextPacket = await getPacket(currentPacket.packetNr + 1);
-    } else {
-      // Exit the loop if no next packet is found after retries
-      break;
-    }
+  // Wait indefinitely for the first packet if not immediately available
+  while (!currentPacket && isActive) {
+    await delay(1000); // Check again after a delay
+    currentPacket = await getPacket(startingNumber);
   }
 
+  let nextPacketNumber = startingNumber + 1;
+  const foundWords = [];
+
+  while (isActive) {
+    if (currentPacket) {
+      try {
+        const words = await processPackets(currentPacket, wordTrie);
+        console.log("Words",words.length)
+      foundWords.push(...words);
+      console.log( "foundWords",foundWords)
+
+      // Prepare for the next packet
+      nextPacketNumber = currentPacket.packetNr + 1;
+      } catch (error) {
+        console.error("pullPacketsForParsing - problem finding word", error)
+      }
+      
+    }
+
+    let nextPacket = await getPacket(nextPacketNumber);
+
+    // Wait indefinitely for the next packet if it's not available
+    while (!nextPacket && isActive) {
+      await delay(1000); // Wait before trying again
+      nextPacket = await getPacket(nextPacketNumber);
+    }
+
+    if (!isActive) {
+      break; // Exit if processing is no longer active
+    }
+
+    // Move to the next packet
+    currentPacket = nextPacket;
+  }
+
+  // Optionally, implement a cleanup or finalization logic here
   return foundWords;
 }
-
-

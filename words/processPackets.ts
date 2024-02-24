@@ -33,7 +33,7 @@ export async function processPackets(packet: Packet, trie: Trie) {
       }
     }
   }
-
-  process.stdout.write(words.join(', ') + '\n');
+  const printedWords = words.map((word)=>word.word)
+  process.stdout.write(printedWords.join(', ') + '\n');
   return words;
 }
