@@ -3,6 +3,7 @@ import { wordTrie } from '../found-words/trieService';
 import serverProcess from '../websockets/serverProcess';     
 import poemsClient from '../websockets/wsTestPoem';
 import { processPackets } from './processPackets';
+import { processBoundaryWords } from './processBoundryWords';
 
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
@@ -24,6 +25,7 @@ export async function pullPacketsForParsing(startingNumber = 0) {
   while (isActive) {
     if (currentPacket) {
       try {
+        
         const words = await processPackets(currentPacket, wordTrie);
         console.log("Words",words.length)
         const wordsPacket = {
@@ -38,7 +40,7 @@ export async function pullPacketsForParsing(startingNumber = 0) {
         };
         
         serverProcess.send(messageToSend)
-      console.log( "foundWords",words)
+      // console.log( "foundWords",words)
 
         // Prepare for the next packet
         nextPacketNumber = currentPacket.packetNr + 1;
@@ -48,7 +50,12 @@ export async function pullPacketsForParsing(startingNumber = 0) {
     }
 
     let nextPacket = await getPacket(nextPacketNumber);
-
+    const boundaryWords = processBoundaryWords(currentPacket, nextPacket, wordTrie)
+    serverProcess.send({
+      cmd: 'sendToClient',
+          clientId: 'poem',
+          data: { wordsPacket: boundaryWords }
+    })
     // Wait indefinitely for the next packet if it's not available
     while (!nextPacket && isActive) {
       await delay(100); // Wait before trying again

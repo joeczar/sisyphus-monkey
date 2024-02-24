@@ -8,9 +8,6 @@ serverProcess.send({ cmd: 'start', port: 8080 });
 initDb();
 
 async function startProcessing() {
-  // Your polling and processing logic here
-  await pullPacketsForParsing();
-
   serverProcess.on('message', (message) => {
     try {
       const packet: Packet = JSON.parse(message.toString()); // Convert Buffer to string before parsing
@@ -21,6 +18,8 @@ async function startProcessing() {
       console.error('Error parsing message:', error);
     }
   });
+  // Your polling and processing logic here
+  await pullPacketsForParsing();
 }
 
 startProcessing().catch((err) =>

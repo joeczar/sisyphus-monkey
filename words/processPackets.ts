@@ -34,6 +34,6 @@ export async function processPackets(packet: Packet, trie: Trie) {
   }
   const printedWords = words.map((word) => word.word);
   // don't forget this is also a console.log
-  process.stdout.write(printedWords.join(', ') + '\n');
+  // process.stdout.write(printedWords.join(', ') + '\n');
   return words;
 }
