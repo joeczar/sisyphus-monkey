@@ -5,7 +5,10 @@
   "scripts": {
     "chars": "bun run characters/index.ts",
     "ws:serve": "bun run words/ws-server.ts",
-    "getWords": "bun run words/index.ts"
+    "getWords": "bun run words/index.ts",
+    "wsTest:char": "bun run websockets/wsTestChar.ts",
+    "wsTest:word": "bun run websockets/wsTestWord.ts",
+    "wsTest:poem": "bun run websockets/wsTestPoem.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
