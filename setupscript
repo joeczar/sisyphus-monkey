@@ -62,7 +62,7 @@ if [[ $status != *"Logged in"* ]]; then
 fi
 
 # github setup
-git config --global user.email "joe.czar@outlook.com
+git config --global user.email "joe.czar@outlook.com"
 git config --global user.name "Joe Czarnecki"
 
 # Clone your GitHub project
@@ -78,8 +78,7 @@ fi
 cd "$PROJECT_DIR"
 bun install
 
-# Append Git aliases to .bashrc
-cat <<EOF >> ~/.bashrc
+cat <<'EOF' >> ~/.bashrc
 # Git aliases
 alias g="git"
 alias gs="git status"
