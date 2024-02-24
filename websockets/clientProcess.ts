@@ -1,4 +1,6 @@
+import { fork } from 'child_process';
 import WebSocketClient from './WebSocketClient';
+import path from 'path';
 
 // Define the type for the environment variables
 interface Env {
@@ -19,23 +21,6 @@ const env: Env = {
   CLIENT_ID: process.env.CLIENT_ID || 'uniqueClientId',
 };
 
-const client = new WebSocketClient(env.SERVER_URL, env.CLIENT_ID);
+const clientProcess = fork(path.join(__dirname, 'client.ts'));
 
-// Function to send typed messages to the parent process
-const sendMessageToParent = (message: ConnectionStatusMessage): void => {
-  if (process.send) {
-    process.send(message);
-  }
-};
-
-// Wait for the WebSocket client to connect
-client
-  .connect()
-  .then(() => {
-    console.log('WebSocket client connected successfully.');
-    sendMessageToParent({ status: 'connected' });
-  })
-  .catch((error: Error) => {
-    console.error('WebSocket client failed to connect:', error.message);
-    sendMessageToParent({ status: 'failed', error: error.message });
-  });
+export default clientProcess;

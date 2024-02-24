@@ -30,10 +30,10 @@ process.on('message', (message: ServerCommandMessage) => {
         }
         break;
       case 'sendToClient':
-          if (message.clientId && message.data) {
-              server.sendToClient(message.data, message.clientId);
-          }
-          break;
+        if (message.clientId && message.data) {
+          server.sendToClient(message.data, message.clientId);
+        }
+        break;
       case 'stop':
         // Implement server stop logic here if necessary
         console.log('Stop command received.');
