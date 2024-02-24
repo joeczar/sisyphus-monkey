@@ -8,22 +8,23 @@ export const packetQueue = new AsyncQueue<Packet>();
 
 export const initDb = () => {
   db.serialize(() => {
-    db.run(`CREATE TABLE IF NOT EXISTS packets (
+    db.run(
+      `CREATE TABLE IF NOT EXISTS packets (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       chunk TEXT,
       charCount INTEGER,
       packetNr INTEGER,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);`, 
+      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);`,
       (err: Error) => {
         if (err) {
-          console.error("Table creation failed", err);
+          console.error('Table creation failed', err);
         } else {
-          console.log("Table created or already exists");
+          console.log('Table created or already exists');
         }
-      });
+      }
+    );
   });
 };
-
 
 export async function insertPacketIntoDB(packet: Packet) {
   return new Promise<number>((resolve, reject) => {
@@ -64,7 +65,7 @@ export async function getPacket(packetNr: number): Promise<Packet> {
         if (err) {
           reject(err);
         } else if (row === undefined) {
-          reject(new Error("No packet found with the provided packetNr"));
+          reject(new Error('No packet found with the provided packetNr'));
         } else {
           resolve(row);
         }
@@ -73,3 +74,14 @@ export async function getPacket(packetNr: number): Promise<Packet> {
   });
 }
 
+export async function clearDb() {
+  return new Promise<void>((resolve, reject) => {
+    db.run(`DELETE FROM packets`, (err: Error) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
