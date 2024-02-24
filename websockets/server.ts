@@ -1,7 +1,7 @@
 import { WsServer } from './WebsocketServer';
 
 export interface ServerCommandMessage {
-  cmd: 'start' | 'stop' | 'sendToClient';
+  cmd: 'start' | 'stop' | 'sendToClient' | "packet";
   port?: number;
   clientId?: string;
   data?: object;
@@ -44,7 +44,7 @@ process.on('message', (message: ServerCommandMessage) => {
   }
 });
 
-// Optionally send a ready message to the parent process
-if (process.send) {
-  process.send({ cmd: 'ready' });
-}
+// // Optionally send a ready message to the parent process
+// if (process.send) {
+//   process.send({ cmd: 'ready' });
+// }

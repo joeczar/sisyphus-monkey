@@ -9,7 +9,8 @@
     "poems": "bun run poems/index.ts",
     "wsTest:char": "bun run websockets/wsTestChar.ts",
     "wsTest:word": "bun run websockets/wsTestWord.ts",
-    "wsTest:poem": "bun run websockets/wsTestPoem.ts"
+    "wsTest:poem": "bun run websockets/wsTestPoem.ts",
+    "db:clear": "bun run db/clearDb.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"

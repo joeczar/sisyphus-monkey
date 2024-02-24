@@ -12,14 +12,14 @@ function delay(ms: number) {
 let isActive = true; // Control flag to manage the processing state
 
 export async function pullPacketsForParsing(startingNumber = 0) {
-  let currentPacket = await getPacket(startingNumber);
-
-  // Wait indefinitely for the first packet if not immediately available
+  let currentPacket;
+  try {
+    currentPacket= await getPacket(startingNumber);
+    // Wait indefinitely for the first packet if not immediately available
   while (!currentPacket && isActive) {
     await delay(100); // Check again after a delay
     currentPacket = await getPacket(startingNumber);
   }
-
   let nextPacketNumber = startingNumber + 1;
 
   while (isActive) {
@@ -69,5 +69,9 @@ export async function pullPacketsForParsing(startingNumber = 0) {
 
     // Move to the next packet
     currentPacket = nextPacket;
+  }
+
+  } catch (error) {
+    console.log("pullPacketsForParsing", error)
   }
 }
