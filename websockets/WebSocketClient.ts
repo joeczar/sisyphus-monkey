@@ -5,25 +5,33 @@ class WebSocketClient {
   private client?: WebSocket;
   private serverUrl: string; // e.g. 'ws://example.com?clientId=uniqueClientId'
   private clientId: string;
+  private messageQueue: Object[] = [];
 
   constructor(serverUrl: string, clientId: string) {
     this.serverUrl = serverUrl;
     this.clientId = clientId;
   }
+  public connect(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      this.client = new WebSocket(this.serverUrl);
 
-  public connect(): void {
-    this.client = new WebSocket(this.serverUrl);
-
-    this.client.on('open', () => this.onOpen());
-    this.client.on('message', (data) => this.onMessage(data));
-    this.client.on('close', () => this.onClose());
-    this.client.on('error', (error) => this.onError(error));
+      this.client.on('open', () => {
+        this.onOpen();
+        resolve(); // Resolve the promise here
+      });
+      this.client.on('message', (data) => this.onMessage(data));
+      this.client.on('close', () => this.onClose());
+      this.client.on('error', (error) => {
+        this.onError(error);
+        reject(error); // Reject the promise on error
+      });
+    });
   }
 
-  // Event handlers can be overridden by subclasses or instances
   protected onOpen(): void {
     console.log('Connected to server');
     this.send(JSON.stringify({ clientId: this.clientId }));
+    this.flushMessageQueue();
   }
 
   protected onMessage(data: WebSocket.Data) {
@@ -44,7 +52,16 @@ class WebSocketClient {
     if (this.client && this.client.readyState === WebSocket.OPEN) {
       this.client.send(JSON.stringify(payload));
     } else {
-      console.log('WebSocket is not open. Cannot send message.');
+      // Queue the message if the connection is not open
+      this.messageQueue.push(payload);
+      console.log('WebSocket is not open. Queuing message.');
+    }
+  }
+
+  private flushMessageQueue(): void {
+    while (this.messageQueue.length > 0) {
+      const message = this.messageQueue.shift();
+      if (message) this.send(message);
     }
   }
 }
