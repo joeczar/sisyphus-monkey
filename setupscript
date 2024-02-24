@@ -55,8 +55,11 @@ if ! ssh-keygen -F github.com >/dev/null; then
     ssh-keyscan github.com >> ~/.ssh/known_hosts
 fi
 
-# Authenticate with GitHub through the CLI
-gh auth login
+# Authenticate with GitHub through the CLI if not already logged in
+status=$(gh auth status)
+if [[ $status != *"Logged in"* ]]; then
+    gh auth login
+fi
 
 # github setup
 git config --global user.email "joe.czar@outlook.com
