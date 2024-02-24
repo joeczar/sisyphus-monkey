@@ -1,5 +1,7 @@
 import { getPacket } from '../db/dbService';
 import { wordTrie } from '../found-words/trieService';
+import serverProcess from '../websockets/serverProcess';     
+import poemsClient from '../websockets/wsTestPoem';
 import { processPackets } from './processPackets';
 
 function delay(ms: number) {
@@ -23,7 +25,20 @@ export async function pullPacketsForParsing(startingNumber = 0) {
     if (currentPacket) {
       try {
         const words = await processPackets(currentPacket, wordTrie);
-        // console.log('Words', words.length);
+        console.log("Words",words.length)
+        const wordsPacket = {
+          packetNr: currentPacket.packetNr,
+          charCount: currentPacket.charCount,
+          words
+        }
+        const messageToSend = {
+          cmd: 'sendToClient',
+          clientId: 'poem',
+          data: { wordsPacket }
+        };
+        
+        serverProcess.send(messageToSend)
+      console.log( "foundWords",words)
 
         // Prepare for the next packet
         nextPacketNumber = currentPacket.packetNr + 1;

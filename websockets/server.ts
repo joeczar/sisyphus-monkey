@@ -1,8 +1,10 @@
 import { WsServer } from './WebsocketServer';
 
-interface ServerCommandMessage {
-  cmd: 'start' | 'stop';
+export interface ServerCommandMessage {
+  cmd: 'start' | 'stop' | 'sendToClient';
   port?: number;
+  clientId?: string;
+  data?: object;
 }
 
 // Default port, can be overridden by messages from the parent process
@@ -27,6 +29,11 @@ process.on('message', (message: ServerCommandMessage) => {
           console.log('Server is already running.');
         }
         break;
+      case 'sendToClient':
+          if (message.clientId && message.data) {
+              server.sendToClient(message.data, message.clientId);
+          }
+          break;
       case 'stop':
         // Implement server stop logic here if necessary
         console.log('Stop command received.');

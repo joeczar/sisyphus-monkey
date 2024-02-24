@@ -1,9 +1,7 @@
 import { pullPacketsForParsing } from './pullPacketsForParsing';
-import { fork } from 'child_process';
 import { initDb, packetQueue } from '../db/dbService';
 import type { Packet } from '../characters/packet.type';
-
-const serverProcess = fork('./websockets/server.ts');
+import serverProcess from '../websockets/serverProcess';
 
 serverProcess.send({ cmd: 'start', port: 8080 });
 
@@ -28,3 +26,4 @@ async function startProcessing() {
 startProcessing().catch((err) =>
   console.error('Error in message processing:', err)
 );
+export {serverProcess}
