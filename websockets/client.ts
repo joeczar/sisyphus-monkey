@@ -2,16 +2,17 @@
 import WebSocketClient from './WebSocketClient';
 
 const serverUrl =
-  process.env.SERVER_URL || 'ws://localhost:8080?clientId=uniqueClientId';
+  process.env.SERVER_URL || 'ws://word.local:8080?clientId=uniqueClientId';
 const clientId = process.env.CLIENT_ID || 'uniqueClientId';
 
 const client = new WebSocketClient(serverUrl, clientId);
 
 // Wait for connection to establish
+console.log(`Attempting to connect to ${serverUrl}`)
 client
   .connect()
   .then(() => {
-    console.log('Client connected successfully.');
+    console.log('Client connected successfully.', clientId);
 
     // Optionally, notify the parent process that the connection is ready
     if (process.send) {

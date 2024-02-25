@@ -22,54 +22,21 @@ const BACKPRESSURE_THRESHOLD = HIGH_WATER_MARK / 4; // Resume reading when buffe
 import clientProcess from '../websockets/clientProcess';
 
 clientProcess.send({ cmd: 'start', port: 8080 });
+clientProcess.on("start",(message)=>{
+  isActive = true;
+
+})
+clientProcess.on("message",(message)=>{
+  console.log("messageRecieved", message)
+
+})
 
 
-// // Function to initialize WebSocket connection
-// function initializeWebSocket(wsAddress: string) {
-//   ws = new WebSocket(wsAddress);
 
-//   ws.on('open', function open() {
-//     console.log('Connected to the server.');
-//     processFolder(FOLDER_PATH).then(() => {
-//       console.log('All files processed.');
-//       ws.close();
-//     });
-//   });
-
-//   ws.on('error', function error(err) {
-//     console.error('WebSocket error:', err);
-//     askForNewIP(); // Call function to prompt user for new IP
-//   });
-// }
-// // Function to prompt user for new IP address
-// function askForNewIP() {
-//   const rl = readline.createInterface({
-//     input: process.stdin,
-//     output: process.stdout,
-//   });
-
-//   rl.question(
-//     'Connection failed. Please enter a new WebSocket IP address (e.g., ws://192.168.1.1:8080): ',
-//     (newIp) => {
-//       rl.close();
-//       initializeWebSocket(newIp); // Initialize WS with new IP
-//     }
-//   );
-// }
-
-// // Initial WS connection attempt
-// initializeWebSocket(wsServers.word);
 let isActive = false;
 async function processFileLetterByLetter(filePath: string) {
   return new Promise<void>((resolve, reject) => {
-    clientProcess.on("start",(message)=>{
-      isActive = true;
-
-    })
-    clientProcess.on("message",(message)=>{
-      console.log("messageRecieved", message)
-
-    })
+   
     const readStream = fs.createReadStream(filePath, {
       encoding: 'utf8',
       highWaterMark: HIGH_WATER_MARK,

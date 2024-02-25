@@ -8,11 +8,6 @@ interface Env {
   CLIENT_ID: string;
 }
 
-// Define the type for messages sent to the parent process
-interface ConnectionStatusMessage {
-  status: 'connected' | 'failed';
-  error?: string;
-}
 
 // Extract environment variables with type assertion
 const env: Env = {
