@@ -1,16 +1,17 @@
 import { pullPacketsForParsing } from './pullPacketsForParsing';
-import { fork } from 'child_process';
 import { initDb, packetQueue } from '../db/dbService';
 import type { Packet } from '../characters/packet.type';
-import serverProcess from '../websockets/serverProcess';
-import type { ServerCommandMessage } from '../websockets/server';
+import { WsServer } from '../websockets/WebsocketServer';
 
-serverProcess.send({ cmd: 'start', port: 8080 });
+const DEFAULT_PORT = 8080;
+const server = new WsServer(DEFAULT_PORT);
+server.start();
 
 initDb();
+
 let isActive = false;
 async function startProcessing() {
-  serverProcess.on('message', (message: ServerCommandMessage) => {
+  server.server?.on('message', (message: string) => {
     console.log('Message from server process:', message);
 
     try {
@@ -30,7 +31,15 @@ async function startProcessing() {
     await pullPacketsForParsing();
   }
 }
-
-startProcessing().catch((err) =>
-  console.error('Error in message processing:', err)
-);
+server.server?.on('message', (message: string) => {
+  console.log('Message Recieved', message);
+  if (message === 'start') {
+    isActive = true;
+    console.log('isActive', isActive);
+  }
+  if (isActive) {
+    startProcessing().catch((err) =>
+      console.error('Error in message processing:', err)
+    );
+  }
+});

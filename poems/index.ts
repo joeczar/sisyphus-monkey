@@ -1,3 +1,13 @@
-import clientProcess from '../websockets/clientProcess';
+import { initializeWsClient } from '../websockets/client';
 
-clientProcess.send({ cmd: 'start', port: 8080 });
+let isActive = false;
+
+const wsClient = await initializeWsClient();
+
+wsClient.client?.on('message', (message: string) => {
+  console.log('Message Recieved', message);
+  if (message === 'start') {
+    isActive = true;
+    console.log('isActive', isActive);
+  }
+});
