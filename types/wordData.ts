@@ -7,3 +7,8 @@ export type WordData = {
 export type BoundaryWordData = WordData & {
   nextPacketNr: number;
 };
+
+export type WordDataPacket = {
+  wordData: WordData[];
+  nextPacketNr: number;
+};

@@ -1,62 +1,90 @@
+
 import type { Packet } from '../characters/packet.type';
 import { AsyncQueue } from './AsyncQueue';
+import { EventEmitter } from 'events';
+
+
+interface RunResult {
+  lastID: number;
+  changes: number;
+}
 
 const sqlite3 = require('sqlite3').verbose();
-export const db = new sqlite3.Database('./mydatabase.db');
+const db = new sqlite3.Database('./mydatabase.db');
 
+export const dbEmitter = new EventEmitter();
 export const packetQueue = new AsyncQueue<Packet>();
 
-export const initDb = () => {
-  db.serialize(() => {
-    db.run(
-      `CREATE TABLE IF NOT EXISTS packets (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      chunk TEXT,
-      charCount INTEGER,
-      packetNr INTEGER,
-      timestamp DATETIME DEFAULT CURRENT_TIMESTAMP);`,
-      (err: Error) => {
-        if (err) {
-          console.error('Table creation failed', err);
-        } else {
-          console.log('Table created or already exists');
-        }
-      }
-    );
-  });
+// Initialize and open the database connection using sqlite wrapper with Promises
+
+
+export const dbConnected = async (): Promise<boolean> => {
+  try {
+
+    console.info('Database connected');
+    const row = await db.get("SELECT name FROM sqlite_master WHERE type='table' AND name='packets';");
+    return row !== undefined;
+  } catch (err) {
+    console.error('Error connecting to the database', err);
+    throw err;
+  }
 };
 
-export async function insertPacketIntoDB(packet: Packet) {
+export const initDbChar = async (): Promise<void> => {
+  try {
+    await db.serialize(() => {
+      db.run(`CREATE TABLE IF NOT EXISTS packets (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        message TEXT,
+        timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+      )`);
+    });
+    console.log('Table created or already exists');
+  } catch (err) {
+    console.error('Table creation failed', err);
+    throw err; // Add proper error handling if needed
+  }
+};
+export async function initializeDatabase() {
+  try {
+
+    // Connect to the database and create the `db` object.
+    await dbConnected();
+
+    // Now that `db` is initialized, you can create tables or perform other operations.
+    await initDbChar();
+    return db
+  } catch (err) {
+    console.error('Error initializing the database:', err);
+    // Handle error appropriately - you may want to halt the application if database setup fails
+    process.exit(1);
+  }
+}
+export function saveCharPacket(packet: Packet): Promise<number> {
   return new Promise<number>((resolve, reject) => {
-    // Assuming packet has properties: chunk, charCount, and packetNr
     const { chunk, charCount, packetNr } = packet;
+
     db.run(
       `INSERT INTO packets (chunk, charCount, packetNr) VALUES (?, ?, ?)`,
       [chunk, charCount, packetNr], // Use the actual properties of `packet`
-      function (err: any) {
-        // Note: Changed arrow function to regular function to access `this`
+      function(this: any, err: Error | null) { // Note: Changed arrow function to regular function to access `this`
         if (err) {
-          return reject(err);
+          console.error('Error saving packet:', packet.packetNr, err);
+          reject(err);
+        } else {
+          console.log('Packet saved:', packet.packetNr, this.lastID);
+          dbEmitter.emit('packetSaved', packet.packetNr);
+          resolve(this.lastID);
         }
-        resolve(db.lastID);
       }
     );
   });
 }
 
-export async function processPackets(packetQueue: AsyncQueue<Packet>) {
-  while (true) {
-    try {
-      const item = await packetQueue.dequeue(); // This will now wait asynchronously for an item
-      await insertPacketIntoDB(item);
-      // Processing logic here
-    } catch (error) {
-      console.error('Error processing packet:', error);
-    }
-  }
-}
 
-export async function getPacket(packetNr: number): Promise<Packet> {
+
+
+export async function getPacket(packetNr: number): Promise<Packet | undefined> {
   return new Promise<Packet>((resolve, reject) => {
     db.get(
       `SELECT * FROM packets WHERE packetNr = ?`,
@@ -65,7 +93,7 @@ export async function getPacket(packetNr: number): Promise<Packet> {
         if (err) {
           reject(err);
         } else if (row === undefined) {
-          reject(new Error('No packet found with the provided packetNr'));
+          reject(new Error("No packet found with the provided packetNr"));
         } else {
           resolve(row);
         }
@@ -74,14 +102,21 @@ export async function getPacket(packetNr: number): Promise<Packet> {
   });
 }
 
-export async function clearDb() {
-  return new Promise<void>((resolve, reject) => {
-    db.run(`DELETE FROM packets`, (err: Error) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
-  });
-}
+// export async function clearDb(): Promise<void> {
+//   try {
+//     await db.exec(`DELETE FROM packets`);
+//   } catch (err) {
+//     console.error('Error clearing the packets table:', err);
+//     throw err; // Add proper error handling if needed
+//   }
+// }
+
+// export async function closeDb(): Promise<void> {
+//   try {
+//     await db.close();
+//     console.log('Database connection closed');
+//   } catch (err) {
+//     console.error('Error closing the database:', err);
+//     throw err; // Add proper error handling if needed
+//   }
+// }

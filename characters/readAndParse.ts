@@ -1,0 +1,89 @@
+import fs from 'fs';
+import path from 'path';
+import type { Packet } from './packet.type';
+import { DatabaseService } from '../db/database';
+
+const FOLDER_PATH = './generated-letters-chunked';
+
+// const HIGH_WATER_MARK = 1024;
+const TARGET_CHAR_COUNT = 6000;
+let currentBuffer = '';
+let packetNr = 0;
+
+async function processFileLetterByLetter(filePath: string) {
+  return new Promise<void>(async (resolve, reject) => {
+    const readStream = fs.createReadStream(filePath, {
+      encoding: 'utf8',
+    });
+
+    // Initialize an array to batch packets
+    const packetBatch: Packet[] = [];
+    const BATCH_SIZE = 50; // Size of the batch to be inserted
+
+    readStream.on('data', (chunk) => {
+      currentBuffer += chunk;
+      while (currentBuffer.length >= TARGET_CHAR_COUNT) {
+        // When the currentBuffer has enough characters, add a packet to the batch
+        let packetChunk = currentBuffer.substring(0, TARGET_CHAR_COUNT);
+
+        const packet: Packet = {
+          chunk: packetChunk,
+          charCount: packetChunk.length,
+          packetNr,
+        };
+
+        packetBatch.push(packet); // Add to the batch
+
+        // Check if the batch is ready to be inserted
+        if (packetBatch.length >= BATCH_SIZE) {
+          // Insert batch and reinitialize packetBatch array
+          DatabaseService.insertPackets(packetBatch);
+
+          // Clear the batch
+          packetBatch.length = 0;
+        }
+
+        packetNr++;
+        // Remove processed characters from the currentBuffer
+        currentBuffer = currentBuffer.substring(TARGET_CHAR_COUNT);
+      }
+    });
+
+    readStream.on('end', async () => {
+      if (currentBuffer.length > 0) {
+        // Handle the last remaining buffer
+        const packet: Packet = {
+          chunk: currentBuffer,
+          charCount: currentBuffer.length,
+          packetNr,
+        };
+        packetBatch.push(packet);
+      }
+
+      // Insert any remaining packets in the last batch
+      if (packetBatch.length > 0) {
+        await DatabaseService.insertPackets(packetBatch);
+      }
+
+      resolve();
+    });
+
+    readStream.on('error', (err) => {
+      console.error('Stream error:', err);
+      reject(err);
+    });
+  });
+}
+
+export async function processFolder(folderPath: string = FOLDER_PATH) {
+  console.log('Processing data:', folderPath);
+  const files = await fs.promises.readdir(folderPath);
+  for (const fileName of files) {
+    const filePath = path.join(folderPath, fileName);
+    if (fs.statSync(filePath).isFile()) {
+      // Ensure you're reading files
+      // console.log(`Processing file: ${fileName}`);
+      await processFileLetterByLetter(filePath);
+    }
+  }
+}
