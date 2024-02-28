@@ -1,45 +1,22 @@
-import { pullPacketsForParsing } from './pullPacketsForParsing';
-import { initDb, packetQueue } from '../db/dbService';
-import type { Packet } from '../characters/packet.type';
-import { WsServer } from '../websockets/WebsocketServer';
+// import { pullPacketsForParsing } from './pullPacketsForParsing';
+import { DatabaseService } from '../db/database';
+import { cors } from 'hono/cors';
+import { prettyJSON } from 'hono/pretty-json';
+import { Hono } from 'hono';
+import { chars } from './charsRoutes';
 
-const DEFAULT_PORT = 8080;
-const server = new WsServer(DEFAULT_PORT);
-server.start();
-
-initDb();
-
-let isActive = false;
-async function startProcessing() {
-  server.server?.on('message', (message: string) => {
-    console.log('Message from server process:', message);
-
-    try {
-      const packet: Packet = JSON.parse(message.toString()); // Convert Buffer to string before parsing
-      console.info('Received packet:', packet.packetNr);
-      // Validate packet or transform it into the correct format if necessary
-      packetQueue.enqueue(packet); // Enqueue for processing
-      if (!packetQueue.isEmpty) {
-        isActive = true;
-      }
-    } catch (error) {
-      console.error('Error parsing message:', error);
-    }
-  });
-  if (isActive) {
-    // Your polling and processing logic here
-    await pullPacketsForParsing();
-  }
+async function startServer() {
+  await DatabaseService.initDb();
+  const app = new Hono();
+  app.route('/chars', chars)
+  app.use(prettyJSON());
+  app.notFound((c) => c.json({ message: 'Not Found', ok: false }, 404));
+  app.use(cors());
 }
-server.server?.on('message', (message: string) => {
-  console.log('Message Recieved', message);
-  if (message === 'start') {
-    isActive = true;
-    console.log('isActive', isActive);
-  }
-  if (isActive) {
-    startProcessing().catch((err) =>
-      console.error('Error in message processing:', err)
-    );
-  }
-});
+startServer().catch((err: Error) => {
+  console.error('Error starting server:', err);
+}).finally(() => {
+  console.log('Server started');
+
+  // pullPacketsForParsing();
+})
