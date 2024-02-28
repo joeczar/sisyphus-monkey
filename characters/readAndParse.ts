@@ -5,8 +5,8 @@ import { DatabaseService } from '../db/database';
 
 const FOLDER_PATH = './generated-letters-chunked';
 
-// const HIGH_WATER_MARK = 1024;
-const TARGET_CHAR_COUNT = 6000;
+const HIGH_WATER_MARK = 16 * 1024;
+const TARGET_CHAR_COUNT = 42000;
 let currentBuffer = '';
 let packetNr = 0;
 
@@ -14,6 +14,7 @@ async function processFileLetterByLetter(filePath: string) {
   return new Promise<void>(async (resolve, reject) => {
     const readStream = fs.createReadStream(filePath, {
       encoding: 'utf8',
+      highWaterMark: HIGH_WATER_MARK,
     });
 
     // Initialize an array to batch packets
@@ -78,12 +79,15 @@ async function processFileLetterByLetter(filePath: string) {
 export async function processFolder(folderPath: string = FOLDER_PATH) {
   console.log('Processing data:', folderPath);
   const files = await fs.promises.readdir(folderPath);
-  for (const fileName of files) {
+
+  // Create an array of promises
+  const processingPromises = files.map(fileName => {
     const filePath = path.join(folderPath, fileName);
     if (fs.statSync(filePath).isFile()) {
-      // Ensure you're reading files
-      // console.log(`Processing file: ${fileName}`);
-      await processFileLetterByLetter(filePath);
+      return processFileLetterByLetter(filePath); // Return the promise
     }
-  }
+  }).filter(Boolean); // Filter out any undefined entries
+
+  // Wait for all file processing to complete
+  await Promise.all(processingPromises);
 }

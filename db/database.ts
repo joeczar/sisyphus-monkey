@@ -54,10 +54,14 @@ export class DatabaseService {
     return result;
   }
   static async insertPackets(packets: Packet[]) {
-    const insertPromises = packets.map((packet) => {
-      return this.insertPacket(packet);
-    });
-    await Promise.all(insertPromises);
+    const placeholders = packets.map(() => "(?, ?, ?)").join(", ");
+    const flatValues = packets.flatMap(packet => [packet.chunk, packet.charCount, packet.packetNr]);
+
+    const statement = `INSERT INTO packets (chunk, charCount, packetNr) VALUES ${placeholders}`;
+
+    await DatabaseService.db?.exec('BEGIN TRANSACTION');
+    await DatabaseService.db?.run(statement, flatValues);
+    await DatabaseService.db?.exec('COMMIT');
   }
 
   static async getPacket(packetNr: number) {
