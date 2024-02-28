@@ -20,7 +20,7 @@ startServer().catch((err: Error) => {
   console.log('Server started');
 
   // pullPacketsForParsing();
-  DatabaseService.closeDb();
+  // DatabaseService.closeDb();
 })
 export default {
   port: 4000,
