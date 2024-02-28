@@ -5,9 +5,10 @@ import { prettyJSON } from 'hono/pretty-json';
 import { Hono } from 'hono';
 import { chars } from './charsRoutes';
 
+const app = new Hono();
 async function startServer() {
   await DatabaseService.initDb();
-  const app = new Hono();
+
   app.route('/chars', chars)
   app.use(prettyJSON());
   app.notFound((c) => c.json({ message: 'Not Found', ok: false }, 404));
@@ -19,4 +20,9 @@ startServer().catch((err: Error) => {
   console.log('Server started');
 
   // pullPacketsForParsing();
+  DatabaseService.closeDb();
 })
+export default {
+  port: 4000,
+  fetch: app.fetch,
+}
