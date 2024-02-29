@@ -10,24 +10,32 @@ export class AsyncQueue<T> {
   }
 
   enqueue(item: T) {
-    // Ensure item is defined before resolving or pushing to the queue
     if (item === undefined) {
       console.error(`Attempted to enqueue undefined item`);
-    } else if (this.resolveDequeue) {
-      this.resolveDequeue(item);
-      this.resolveDequeue = null;
+      return;
+    }
+
+    if (this.resolveDequeue) {
+      // If the dequeue method is waiting (because the queue was empty),
+      // immediately resolve the dequeue Promise with the newly enqueued item.
+      const resolve = this.resolveDequeue;
+      this.resolveDequeue = null; // Clear the resolve function to accept new dequeues.
+      resolve(item);
     } else {
+      // Put the item into the queue normally.
       this.queue.push(item);
     }
   }
 
   async dequeue(): Promise<T> {
-
+    // If there's an item already in the queue, return it immediately.
     if (this.queue.length > 0) {
       const item = this.queue.shift()!;
-      console.log('Dequeueing', Promise.resolve(item));
-      return Promise.resolve(this.queue.shift()!);
+      console.log("Dequeueing", item);
+      return Promise.resolve(item);
     }
+    // If the queue is empty, return a Promise that will
+    // be resolved when an item is enqueued.
     return new Promise((resolve) => {
       this.resolveDequeue = resolve;
     });
@@ -41,6 +49,10 @@ export class AsyncQueue<T> {
     return this.hasStarted;
   }
 
+  setHasStarted(started: boolean): void {
+    this.hasStarted = started;
+  }
+
   getQueue() {
     return this.queue;
   }
@@ -50,5 +62,4 @@ export class AsyncQueue<T> {
     this.resolveDequeue = null;
     this.hasFinished = true;
   }
-
 }
