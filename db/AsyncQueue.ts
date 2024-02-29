@@ -1,29 +1,35 @@
-export class AsyncQueue<T> {
+import EventEmitter from "events";
+
+export class AsyncQueue<T> extends EventEmitter{
   private queue: T[] = [];
   private resolveDequeue: ((value: T | PromiseLike<T>) => void) | null = null;
   private hasStarted = false;
   private hasFinished = false;
 
-  constructor() {
+
+  constructor(private maxSize: number = Infinity) {
+    super()
     this.queue = [];
     this.resolveDequeue = null;
+    this.maxSize = maxSize
   }
 
-  enqueue(item: T) {
-    if (item === undefined) {
-      console.error(`Attempted to enqueue undefined item`);
-      return;
-    }
-
-    if (this.resolveDequeue) {
-      // If the dequeue method is waiting (because the queue was empty),
-      // immediately resolve the dequeue Promise with the newly enqueued item.
+  
+  enqueue(item: T): boolean {
+    //...
+    if (this.resolveDequeue && this.queue.length < this.maxSize) {
+      // Additional condition to ensure queue length is under maxSize
       const resolve = this.resolveDequeue;
-      this.resolveDequeue = null; // Clear the resolve function to accept new dequeues.
+      this.resolveDequeue = null;
       resolve(item);
-    } else {
-      // Put the item into the queue normally.
+      return true;
+    } else if (this.queue.length < this.maxSize) {
+      // Queue length check
       this.queue.push(item);
+      return true;
+    } else {
+      console.error(`Queue is at maximum capacity (${this.maxSize}). Discarding new item.`);
+      return false;
     }
   }
 
@@ -58,6 +64,7 @@ export class AsyncQueue<T> {
   }
 
   close() {
+    this.emit('finished')
     this.queue = [];
     this.resolveDequeue = null;
     this.hasFinished = true;

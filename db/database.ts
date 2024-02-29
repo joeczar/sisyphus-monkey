@@ -8,9 +8,13 @@ import { open } from "sqlite";
 import { packetNrQueue } from "../characters/printChars";
 
 export class DatabaseService {
+  static lastEnqueueTime = 0;
+  static enqueueRateLimit = 100;
+
   static db: Database | null = null; // Singleton instance variable
 
-  static insertionQueue: AsyncQueue<() => Promise<void>> = new AsyncQueue();
+  static insertionQueue: AsyncQueue<() => Promise<void>> = new AsyncQueue(100);
+  
 
   static async enqueueInsertion(insertFunction: () => Promise<void>) {
     this.insertionQueue.enqueue(() => insertFunction());
@@ -28,6 +32,7 @@ export class DatabaseService {
       await insertFunction();
     }
     this.insertionQueue.setHasStarted(false);
+    this.insertionQueue.close();
   }
   // Private constructor to prevent direct instantiation
   constructor() {}
@@ -96,18 +101,25 @@ export class DatabaseService {
 
   // Method for inserting a packet
   static async insertPacket(packet: Packet) {
-    const { chunk, charCount, packetNr } = packet;
-    const statement = `INSERT INTO packets (chunk, charCount, packetNr) VALUES (?, ?, ?)`;
-    const result = await this.db?.run(statement, [chunk, charCount, packetNr]);
-    packetNrQueue.enqueue(packetNr);
-    charEventsEmitter.emit("packetInserted", packetNr);
-    // console.log(
-    //   `Inserted packet with packetNr ${packetNr}, ID: ${result?.lastID}`
-    // );
-    return result;
+    try {
+      const { chunk, charCount, packetNr } = packet;
+      const statement = `INSERT INTO packets (chunk, charCount, packetNr) VALUES (?, ?, ?)`;
+      const result = await this.db?.run(statement, [chunk, charCount, packetNr]);
+      packetNrQueue.enqueue(packetNr);
+      charEventsEmitter.emit("packetInserted", packetNr);
+      // console.log(
+      //   `Inserted packet with packetNr ${packetNr}, ID: ${result?.lastID}`
+      // );
+      return result;
+    } catch (error) {
+      console.error("Error Inserting packer", error)
+      throw error
+    }
+   
   }
   static async insertPackets(packets: Packet[]) {
-    if (packets.length === 0) return; // Avoid empty inserts
+    try {
+      if (packets.length === 0) return; // Avoid empty inserts
 
     const placeholders = packets.map(() => "(?, ?, ?)").join(", ");
     const flatValues = packets.flatMap((packet) => [
@@ -122,9 +134,26 @@ export class DatabaseService {
     await this.performTransaction(async () => {
       await this.db?.run(statement, flatValues);
     });
+    } catch (error) {
+      console.error("Error in insert Packets", error);
+        throw error
+    }
+    
   }
   static async enqueuePackets(packets: Packet[]) {
-    this.enqueueInsertion(() => this.insertPackets(packets));
+    try {
+      const now = Date.now();
+      const delay = this.lastEnqueueTime + this.enqueueRateLimit - now;
+      if (delay > 0) {
+        await new Promise(res => setTimeout(res, delay));
+      }
+      this.lastEnqueueTime = Date.now();
+      this.enqueueInsertion(() => this.insertPackets(packets));
+    } catch (error) {
+      console.error("Error in enqueuePackets", error);
+      throw error
+    }
+   
   }
 
   static async getPacket(packetNr: number) {
