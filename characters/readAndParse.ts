@@ -24,6 +24,7 @@ async function processFileLetterByLetter(filePath: string) {
     const BATCH_SIZE = 50; // Size of the batch to be inserted
 
     readStream.on("data", async (chunk) => {
+      readStream.pause();
       currentBuffer += chunk;
       while (currentBuffer.length >= TARGET_CHAR_COUNT) {
         // When the currentBuffer has enough characters, add a packet to the batch
@@ -49,6 +50,7 @@ async function processFileLetterByLetter(filePath: string) {
         packetNr++;
         // Remove processed characters from the currentBuffer
         currentBuffer = currentBuffer.substring(TARGET_CHAR_COUNT);
+        setTimeout(() => readStream.resume(), 500);
       }
     });
 
