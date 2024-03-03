@@ -8,11 +8,7 @@
     "words": "bun run words/index.ts",
     "words:dev": "bun run --watch words/index.ts",
     "poems": "bun run poems/index.ts",
-    "poems:dev": "bun run --watch poems/index.ts",
-    "wsTest:char": "bun run websockets/wsTestChar.ts",
-    "wsTest:word": "bun run websockets/wsTestWord.ts",
-    "wsTest:poem": "bun run websockets/wsTestPoem.ts",
-    "db:clear": "bun run db/clearDb.ts"
+    "poems:dev": "bun run --watch poems/index.ts"
   },
   "devDependencies": {
     "@types/bun": "latest"
@@ -24,6 +20,7 @@
     "blinkt-kit": "^2.2.1",
     "events": "^3.3.0",
     "hono": "^4.0.7",
+    "neo4j-driver": "^5.18.0",
     "sqlite": "^5.1.1",
     "sqlite3": "^5.1.7"
   }
