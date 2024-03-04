@@ -9,6 +9,7 @@ export type Packet = {
   id: number;
   content: string;
   source: string;
+  charCount: number;
   timestamp: Date;
 };
 

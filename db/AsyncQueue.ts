@@ -1,4 +1,4 @@
-import EventEmitter from "events";
+import EventEmitter from 'events';
 
 export class AsyncQueue<T> extends EventEmitter {
   private queue: T[] = [];
@@ -38,6 +38,7 @@ export class AsyncQueue<T> extends EventEmitter {
     if (this.queue.length > 0) {
       const item = this.queue.shift()!;
       this.notifyPendingEnqueue();
+      console.log('Dequeued item, queue length:', this.queue.length);
       return Promise.resolve(item);
     }
     // If the queue is empty, return a Promise that will
@@ -73,12 +74,12 @@ export class AsyncQueue<T> extends EventEmitter {
   async close() {
     // Resolve all pending enqueue promises with a rejection when closing the queue.
     for (const resolve of this.pendingEnqueues) {
-      resolve(await Promise.reject(new Error("Queue closed")));
+      resolve(await Promise.reject(new Error('Queue closed')));
     }
     this.pendingEnqueues = [];
 
     // Emit an event to signal closure
-    this.emit("finished");
+    this.emit('finished');
 
     // Perform cleanup
     this.queue = [];

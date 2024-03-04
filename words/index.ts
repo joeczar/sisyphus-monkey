@@ -19,9 +19,8 @@ app.notFound((c) => c.json({ message: 'No Bueno', ok: false }, 404));
 // Function to start the server and process character data
 async function startServerAndProcessData() {
   try {
-    await PacketChannelService.initRedis();
     console.log('Starting server...');
-    await PacketChannelService.processStreamPackets();
+    await DatabaseService.initDb();
   } catch (err) {
     console.error('Error during server startup and data processing:', err);
   }

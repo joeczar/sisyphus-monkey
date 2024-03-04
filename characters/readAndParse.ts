@@ -4,6 +4,7 @@ import type { Packet } from './packet.type';
 import { sleep } from '../utils/sleep';
 import { Transform } from 'stream';
 import { RedisService } from '../db/Redis';
+import { DatabaseService } from '../db/database';
 
 const FOLDER_PATH = './generated-letters-chunked';
 
@@ -27,12 +28,13 @@ function createPacketTransformStream(
       buffer += chunk.toString();
       try {
         while (buffer.length >= targetCharCount) {
-          let packetChunk = buffer.substring(0, targetCharCount);
+          let content = buffer.substring(0, targetCharCount);
           buffer = buffer.substring(targetCharCount);
           const timestamp = new Date();
           let packet: Packet = {
-            content: packetChunk,
+            content,
             id: packetNr++,
+            charCount: content.length,
             timestamp,
             source: fileName,
           };
@@ -40,8 +42,8 @@ function createPacketTransformStream(
           packetBatch.push(packet);
 
           if (packetBatch.length >= batchSize) {
-            await RedisService.directInsertPackets(packetBatch);
-            await sleep(100);
+            await DatabaseService.enqueuePackets(packetBatch);
+            await sleep(3000);
             packetBatch = [];
           }
         }
@@ -54,8 +56,8 @@ function createPacketTransformStream(
     async flush(callback) {
       try {
         if (packetBatch.length > 0) {
-          await RedisService.directInsertPackets(packetBatch);
-          await sleep(100);
+          await DatabaseService.enqueuePackets(packetBatch);
+          await sleep(3000);
         }
         callback();
       } catch (error) {
