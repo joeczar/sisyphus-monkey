@@ -3,7 +3,8 @@
   "module": "index.ts",
   "type": "module",
   "scripts": {
-    "chars": "bun run --watch characters/index.ts",
+    "chars": "bun run characters/index.ts",
+    "chars:dev": "bun run --watch characters/index.ts",
     "ws:serve": "bun run words/ws-server.ts",
     "words": "bun run words/index.ts",
     "words:dev": "bun run --watch words/index.ts",
@@ -17,11 +18,16 @@
     "typescript": "^5.0.0"
   },
   "dependencies": {
+    "@types/redis": "^4.0.11",
+    "@types/uuid": "^9.0.8",
     "blinkt-kit": "^2.2.1",
     "events": "^3.3.0",
     "hono": "^4.0.7",
+    "ioredis": "^5.3.2",
     "neo4j-driver": "^5.18.0",
+    "redis": "^4.6.13",
     "sqlite": "^5.1.1",
-    "sqlite3": "^5.1.7"
+    "sqlite3": "^5.1.7",
+    "uuid": "^9.0.1"
   }
 }

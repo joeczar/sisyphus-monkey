@@ -1,35 +1,35 @@
 import EventEmitter from "events";
 
-export class AsyncQueue<T> extends EventEmitter{
+export class AsyncQueue<T> extends EventEmitter {
   private queue: T[] = [];
+  private pendingEnqueues: ((value: void) => void)[] = [];
   private resolveDequeue: ((value: T | PromiseLike<T>) => void) | null = null;
   private hasStarted = false;
   private hasFinished = false;
 
-
   constructor(private maxSize: number = Infinity) {
-    super()
+    super();
     this.queue = [];
     this.resolveDequeue = null;
-    this.maxSize = maxSize
+    this.maxSize = maxSize;
   }
 
-  
-  enqueue(item: T): boolean {
-    //...
-    if (this.resolveDequeue && this.queue.length < this.maxSize) {
-      // Additional condition to ensure queue length is under maxSize
+  enqueue(item: T): Promise<void> {
+    if (this.resolveDequeue) {
+      // If there is someone waiting to dequeue, resolve their promise and don't add to the queue
       const resolve = this.resolveDequeue;
       this.resolveDequeue = null;
       resolve(item);
-      return true;
+      return Promise.resolve();
     } else if (this.queue.length < this.maxSize) {
       // Queue length check
       this.queue.push(item);
-      return true;
+      return Promise.resolve();
     } else {
-      console.error(`Queue is at maximum capacity (${this.maxSize}). Discarding new item.`);
-      return false;
+      // Wait for space to be available
+      return new Promise((resolve) => {
+        this.pendingEnqueues.push(resolve);
+      });
     }
   }
 
@@ -37,7 +37,7 @@ export class AsyncQueue<T> extends EventEmitter{
     // If there's an item already in the queue, return it immediately.
     if (this.queue.length > 0) {
       const item = this.queue.shift()!;
-      console.log("Dequeueing", item);
+      this.notifyPendingEnqueue();
       return Promise.resolve(item);
     }
     // If the queue is empty, return a Promise that will
@@ -45,6 +45,13 @@ export class AsyncQueue<T> extends EventEmitter{
     return new Promise((resolve) => {
       this.resolveDequeue = resolve;
     });
+  }
+
+  private notifyPendingEnqueue(): void {
+    if (this.pendingEnqueues.length > 0 && this.queue.length < this.maxSize) {
+      const resolve = this.pendingEnqueues.shift()!;
+      resolve();
+    }
   }
 
   isEmpty() {
@@ -63,8 +70,17 @@ export class AsyncQueue<T> extends EventEmitter{
     return this.queue;
   }
 
-  close() {
-    this.emit('finished')
+  async close() {
+    // Resolve all pending enqueue promises with a rejection when closing the queue.
+    for (const resolve of this.pendingEnqueues) {
+      resolve(await Promise.reject(new Error("Queue closed")));
+    }
+    this.pendingEnqueues = [];
+
+    // Emit an event to signal closure
+    this.emit("finished");
+
+    // Perform cleanup
     this.queue = [];
     this.resolveDequeue = null;
     this.hasFinished = true;

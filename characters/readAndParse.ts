@@ -1,44 +1,52 @@
-import fs from "fs";
-import path from "path";
-import type { Packet } from "./packet.type";
-import { DatabaseService } from "../db/database";
+import fs from 'fs';
+import path from 'path';
+import type { Packet } from './packet.type';
+import { sleep } from '../utils/sleep';
 import { Transform } from 'stream';
+import { RedisService } from '../db/Redis';
 
-const FOLDER_PATH = "./generated-letters-chunked";
+const FOLDER_PATH = './generated-letters-chunked';
 
 const HIGH_WATER_MARK = 16 * 1024;
 const TARGET_CHAR_COUNT = 42000;
-const BATCH_SIZE = 20; 
+const BATCH_SIZE = 20;
+let packetNr = 0;
 
-
-function createPacketTransformStream(batchSize: number, targetCharCount: number) {
+function createPacketTransformStream(
+  fileName: string,
+  batchSize: number,
+  targetCharCount: number
+) {
   let buffer = '';
-  let packetNr = 0;
-  let packetBatch: { chunk: string; charCount: number; packetNr: number; }[] = [];
+
+  let packetBatch: Packet[] = [];
 
   return new Transform({
     objectMode: true,
     async transform(chunk, encoding, callback) {
       buffer += chunk.toString();
       try {
-
         while (buffer.length >= targetCharCount) {
           let packetChunk = buffer.substring(0, targetCharCount);
           buffer = buffer.substring(targetCharCount);
-
-          let packet = { chunk: packetChunk, charCount: packetChunk.length, packetNr };
-          packetNr++;
+          const timestamp = new Date();
+          let packet: Packet = {
+            content: packetChunk,
+            id: packetNr++,
+            timestamp,
+            source: fileName,
+          };
+          console.log('Packet:', packet.id);
           packetBatch.push(packet);
-          
+
           if (packetBatch.length >= batchSize) {
-            await DatabaseService.enqueuePackets(packetBatch);
+            await RedisService.directInsertPackets(packetBatch);
+            await sleep(100);
             packetBatch = [];
           }
-
         }
-        
+
         callback();
-        
       } catch (error) {
         callback(error as Error);
       }
@@ -46,40 +54,47 @@ function createPacketTransformStream(batchSize: number, targetCharCount: number)
     async flush(callback) {
       try {
         if (packetBatch.length > 0) {
-          await DatabaseService.enqueuePackets(packetBatch);
+          await RedisService.directInsertPackets(packetBatch);
+          await sleep(100);
         }
         callback();
       } catch (error) {
         callback(error as Error);
       }
-    }
+    },
   });
 }
 
-const packetTransformStream = createPacketTransformStream(BATCH_SIZE, TARGET_CHAR_COUNT);
-
 async function processFileLetterByLetter(filePath: string) {
-  console.log("Processing file:", filePath);
+  console.log('Processing file:', filePath);
   return new Promise<void>(async (resolve, reject) => {
     const readStream = fs.createReadStream(filePath, {
-      encoding: "utf8",
+      encoding: 'utf8',
       highWaterMark: HIGH_WATER_MARK,
     });
 
-    
-    readStream.pipe(packetTransformStream).on('finish', () => {
-      console.log('All data has been processed');
-    });
+    readStream
+      .pipe(
+        createPacketTransformStream(filePath, BATCH_SIZE, TARGET_CHAR_COUNT)
+      )
+      .on('error', (err) => {
+        console.error('Error in transformation stream:', err);
+        reject(err);
+      })
+      .on('finish', () => {
+        console.log('File processing completed for:', filePath);
+        resolve();
+      });
 
-    readStream.on("error", (err) => {
-      console.error("Stream error:", err);
+    readStream.on('error', (err) => {
+      console.error('Stream error:', err);
       reject(err);
     });
   });
 }
 
 export async function processFolder(folderPath: string = FOLDER_PATH) {
-  console.log("Processing data:", folderPath);
+  console.log('Processing data:', folderPath);
   const files = await fs.promises.readdir(folderPath);
 
   // Create an array of promises

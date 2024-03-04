@@ -1,10 +1,13 @@
+import { Redis } from "ioredis";
 import { processFolder } from "../characters/readAndParse";
-import { pullPacketsForParsing } from "./pullPacketsForParsing";
+// import { pullPacketsForParsing } from "./pullPacketsForParsing";
 import { DatabaseService } from "../db/database";
 import { cors } from "hono/cors";
 import { prettyJSON } from "hono/pretty-json";
 import { Hono } from "hono";
 import { chars } from "./charsRoutes";
+import type { Packet } from "./packet.type";
+import { RedisService } from "../db/Redis";
 
 const app = new Hono();
 
@@ -13,16 +16,18 @@ app.route("/chars", chars);
 app.use(prettyJSON());
 app.use(cors());
 app.notFound((c) => c.json({ message: "No Bueno", ok: false }, 404));
-
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception:", err);
+  // Perform necessary cleanup or restart policy
+});
 // Function to start the server and process character data
 async function startServerAndProcessData() {
   try {
-    await DatabaseService.initDb();
-    DatabaseService.insertionQueue.on("finished", () => {
-      console.log("All packets saved to DB");
-    });
+    console.log("Starting server...");
+    await RedisService.initRedis();
+    console.log("Clearing packets");
+    await RedisService.clearPackets();
 
-    console.log("Processing character data...");
     await processFolder();
     // Uncomment the next line if you want to start pulling packets for parsing after processing the folder
     // await pullPacketsForParsing();
