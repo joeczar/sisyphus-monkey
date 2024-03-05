@@ -25,6 +25,7 @@ async function startServerAndProcessData() {
   try {
     console.log('Starting server...');
     await DatabaseService.initDb();
+    await DatabaseService.clearPackets();
 
     await processFolder();
     // Uncomment the next line if you want to start pulling packets for parsing after processing the folder

@@ -9,11 +9,11 @@ import { packetNrQueue } from '../characters/printChars';
 
 export class DatabaseService {
   static lastEnqueueTime = 0;
-  static enqueueRateLimit = 100;
+  static enqueueRateLimit = 10000;
 
   static db: Database | null = null; // Singleton instance variable
 
-  static insertionQueue: AsyncQueue<() => Promise<void>> = new AsyncQueue();
+  static insertionQueue: AsyncQueue<() => Promise<void>> = new AsyncQueue(500);
 
   static async enqueueInsertion(insertFunction: () => Promise<void>) {
     this.insertionQueue.enqueue(() => insertFunction());
