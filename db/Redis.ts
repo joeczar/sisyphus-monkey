@@ -6,8 +6,9 @@ import { charEventsEmitter } from '../characters/charEvents';
 export class RedisService {
   static rateLimit = 0;
   static redisClient: RedisClientType | null = null;
-
+  static isConnected = false;
   static async initRedis(): Promise<void> {
+    console.log('Initializing Redis client...');
     this.redisClient = createClient({
       url: process.env.REDIS_HOST,
     });

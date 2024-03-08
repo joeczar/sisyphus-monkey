@@ -6,6 +6,7 @@ import { prettyJSON } from 'hono/pretty-json';
 import { Hono } from 'hono';
 import { getCharPacketById } from '../api/apiSservice';
 import { PacketChannelService } from './RedisWordService';
+import { getAndParsePackets } from './getAndParsePackets';
 
 const PACKETS_URL = `${process.env.CHARS_URL}/chars`;
 
@@ -20,7 +21,26 @@ app.notFound((c) => c.json({ message: 'No Bueno', ok: false }, 404));
 async function startServerAndProcessData() {
   try {
     console.log('Starting server...');
-    await DatabaseService.initDb();
+
+    await PacketChannelService.initRedis();
+
+    if (!PacketChannelService.isConnected) {
+      // if the connection to redis fails, wait and try again 3 times then throw an error
+      let retries = 0;
+      while (!PacketChannelService.isConnected && retries < 3) {
+        console.log('Retrying Redis connection...');
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+        if (PacketChannelService.isConnected) {
+          break;
+        }
+        retries++;
+      }
+      if (!PacketChannelService.isConnected) {
+        throw new Error('Redis connection failed');
+      }
+    }
+    // // Process the character data
+    await getAndParsePackets();
   } catch (err) {
     console.error('Error during server startup and data processing:', err);
   }
