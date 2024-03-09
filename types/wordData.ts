@@ -4,7 +4,7 @@ export type WordData = {
   position: { start: number; end: number };
   wordNr: number;
   chars: number;
-  meaning?: Meaning;
+  meaning?: Meaning | Meaning[];;
   metadata?: any[];
 };
 

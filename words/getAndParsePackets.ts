@@ -30,7 +30,8 @@ export async function getAndParsePackets() {
     // console.log(`Processing packet ${packet.id}...`);
     const packetWords = await processPackets(packet);
     console.log(
-      `Processed packet ${packet.id} with ${packetWords.length} words`
+      `Processed packet ${packet.id} with ${packetWords.length} words`,
+      packetWords
     );
 
     // // Check for boundary words if there was a previous packet

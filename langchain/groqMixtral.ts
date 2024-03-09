@@ -4,69 +4,7 @@ import type { Meaning, WordDefinition } from '../types/wordData';
 import { ChatGroq } from '@langchain/groq';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import type { WordData } from '../types/wordData';
-import { PacketChannelService } from '../words/RedisWordService';
-import type { BaseMessageChunk } from 'langchain/schema';
-
-export async function fetchMeaning(word: string) {
-  if (!word) {
-    throw new Error('No word provided');
-  }
-  // Check if the definition exists in Redis cache
-  const cachedDefinition = await PacketChannelService.getWord(word);
-  if (cachedDefinition) {
-    return JSON.parse(cachedDefinition);
-  }
-
-  // If not in cache, fetch the definition from the dictionary API
-  // const response = await fetch(
-  //   `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`
-  // );
-  // const data = (await response.json()) as WordDefinition;
-  // const meaning = data.meanings[0];
-  const fetchDataWithTimeout = (url: string, options = {}, timeout = 10000) => {
-    return Promise.race([
-      fetch(url, options),
-      new Promise((_, reject) =>
-        setTimeout(() => reject(new Error('Timeout')), timeout)
-      ),
-    ]);
-  };
-
-  try {
-    const response = (await fetchDataWithTimeout(
-      `https://api.dictionaryapi.dev/api/v2/entries/en/${word}`,
-      {
-        method: 'GET',
-      }
-    )) as unknown as Response;
-
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch data: ${response.status} ${response.statusText}`
-      );
-    }
-
-    const data = (await response.json()) as WordDefinition[];
-    const meaning = data[0].meanings[0];
-    // Store the definition in Redis cache for future lookups
-    await PacketChannelService.setWord(word, JSON.stringify(meaning));
-
-    return meaning;
-  } catch (error) {
-    console.error('Error fetching data:', error);
-  }
-}
-
-export async function addMeaning(wordData: WordData): Promise<WordData> {
-  const meaning = await fetchMeaning(wordData.word);
-
-  const wordObject: WordData = {
-    ...wordData,
-    meaning,
-  };
-
-  return wordObject;
-}
+import { metadataPrompt } from './metadataPrompt';
 
 async function groqPrompt(wordObject: WordData) {
   const model = new ChatGroq({
@@ -75,16 +13,7 @@ async function groqPrompt(wordObject: WordData) {
     temperature: 1.1,
   });
 
-  const input = `Please generate additional metadata for the word "${
-    wordObject.word
-  }" based on its definition: ${JSON.stringify(
-    wordObject.meaning
-  )}. The metadata will be used to create connections in neo4j where we are building a "Poetry building knowledge graph". Your data constraints are to return an array of whatever you think could be useful for this purpose. Be creative! This is art! What images does the word evoke? What sounds? What feelings? Just remember, these are nodes in a neo4j graph database. Please create nodes other words can connect to to create the poem.
-  - The metadata should be relevant to the word and its definition.
-  - The metadata should be in a structured format and should be relevant to the word and its definition.
-  - PLEASE RETURN ONLY JSON!
-
-  Thank you!`;
+  const input = metadataPrompt(wordObject);
 
   const prompt = ChatPromptTemplate.fromMessages(['human', '{input}']);
   const chain = prompt.pipe(model);
@@ -101,15 +30,17 @@ async function groqPrompt(wordObject: WordData) {
 export async function generateMetadata(wordObject: WordData) {
   try {
     const { response } = await groqPrompt(wordObject);
+    console.log('generateMetadata Response:', response);
     if (!response) {
       throw new Error('No response from Groq');
     }
-    const metadata = JSON.parse(response.lc_kwargs.content);
-    console.log('response', {
-      response,
-      metadata,
-    });
-    return metadata;
+    if (
+      typeof response.content === 'string' &&
+      response.content.includes('"metadata":')
+    ) {
+      const { metadata } = JSON.parse(response.content);
+      return metadata;
+    }
   } catch (error) {
     console.error('Error generating metadata:', error);
   }
