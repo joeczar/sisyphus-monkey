@@ -2,7 +2,7 @@ import { createClient, type RedisClientType } from 'redis';
 
 import { charEventsEmitter } from '../characters/charEvents';
 import type { Packet } from '../characters/packet.type';
-import type { WordData } from '../types/wordData';
+import type { WordData, WordDefinition } from '../types/wordData';
 
 export class PacketChannelService {
   static rateLimit = 0;
@@ -52,7 +52,15 @@ export class PacketChannelService {
       throw new Error('Redis client not initialized');
     }
     try {
-      return await this.redisClient.get(word);
+      const wordData = await this.redisClient.get(word);
+      if (!wordData) {
+        return null;
+      }
+      const parsed = JSON.parse(wordData) as WordData;
+      if (parsed.trash) {
+        return 'trash';
+      }
+      return parsed;
     } catch (error) {
       console.error('Error fetching word definition:', error);
       return null;
@@ -70,13 +78,17 @@ export class PacketChannelService {
     }
   }
 
-  static async setDefinition(word: string, definition: string) {
+  static async setDefinition(
+    word: string,
+    definition: WordDefinition[] | '404'
+  ) {
     if (!this.redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      const key = `definition:${word}`;
-      await this.redisClient?.set(key, definition);
+      const stringified = JSON.stringify(definition);
+      const key = `def:${word}`;
+      await this.redisClient?.set(key, stringified);
     } catch (error) {
       console.error('Error setting word definition:', error);
     }
@@ -86,7 +98,7 @@ export class PacketChannelService {
       throw new Error('Redis client not initialized');
     }
     try {
-      const key = `definition:${word}`;
+      const key = `def:${word}`;
       const definition = await this.redisClient.get(key);
       if (!definition) {
         return null;
@@ -94,6 +106,56 @@ export class PacketChannelService {
       return definition;
     } catch (error) {
       console.error('Error fetching word definition:', error);
+      return null;
+    }
+  }
+  static async saveState(state: any) {
+    if (!this.redisClient) {
+      throw new Error('Redis client not initialized');
+    }
+    try {
+      await this.redisClient.set('state', JSON.stringify(state));
+    } catch (error) {
+      console.error('Error saving state:', error);
+    }
+  }
+  static async getState() {
+    if (!this.redisClient) {
+      throw new Error('Redis client not initialized');
+    }
+    try {
+      const state = await this.redisClient.get('state');
+      if (!state) {
+        return null;
+      }
+      return JSON.parse(state);
+    } catch (error) {
+      console.error('Error fetching state:', error);
+      return null;
+    }
+  }
+  static async setMetadata(word: string, metadata: any) {
+    if (!this.redisClient) {
+      throw new Error('Redis client not initialized');
+    }
+    try {
+      await this.redisClient.set(`meta:${word}`, JSON.stringify(metadata));
+    } catch (error) {
+      console.error('Error setting metadata:', error);
+    }
+  }
+  static async getMetadata(word: string) {
+    if (!this.redisClient) {
+      throw new Error('Redis client not initialized');
+    }
+    try {
+      const metadata = await this.redisClient.get(`meta:${word}`);
+      if (!metadata) {
+        return null;
+      }
+      return JSON.parse(metadata);
+    } catch (error) {
+      console.error('Error fetching metadata:', error);
       return null;
     }
   }

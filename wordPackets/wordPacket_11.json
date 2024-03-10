@@ -1,0 +1,831 @@
+[
+  {
+    "word": "po",
+    "packetNr": 11,
+    "position": {
+      "start": 41975,
+      "end": 41976
+    },
+    "wordNr": 378411,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A peacock.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "animal_symbolism",
+        "associated_concepts": [
+          "pride",
+          "vanity",
+          "beauty"
+        ],
+        "images": [
+          "peacock_feathers",
+          "spread_tail",
+          "royal_blue"
+        ],
+        "sounds": [
+          "peacock_call",
+          "rustling_feathers"
+        ],
+        "feelings": [
+          "pride",
+          "majesty",
+          "grace"
+        ],
+        "related_colors": [
+          "royal_blue",
+          "green",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "tropical_forests",
+          "exotic_birds"
+        ]
+      },
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "poetry",
+          "rhyme",
+          "elegance"
+        ],
+        "images": [
+          "quill_pen",
+          "ancient_scrolls",
+          "calligraphy"
+        ],
+        "sounds": [
+          "gentle_writing",
+          "quill_on_paper"
+        ],
+        "feelings": [
+          "creativity",
+          "artistic_expression",
+          "contemplation"
+        ],
+        "related_colors": [
+          "brown",
+          "cream",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "parchment",
+          "ink"
+        ]
+      },
+      {
+        "type": "cultural_significance",
+        "associated_concepts": [
+          "india",
+          "royalty",
+          "hinduism"
+        ],
+        "images": [
+          "indian_palace",
+          "peacock_throne",
+          "dance"
+        ],
+        "sounds": [
+          "sitar_music",
+          "indian_chanting"
+        ],
+        "feelings": [
+          "celebration",
+          "luxury",
+          "devotion"
+        ],
+        "related_colors": [
+          "saffron",
+          "indigo",
+          "green"
+        ],
+        "related_natural_elements": [
+          "incense",
+          "marigold_garlands"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 11,
+    "position": {
+      "start": 41976,
+      "end": 41976
+    },
+    "wordNr": 378412,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 11,
+    "position": {
+      "start": 41977,
+      "end": 41977
+    },
+    "wordNr": 378413,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "my",
+    "packetNr": 11,
+    "position": {
+      "start": 41979,
+      "end": 41980
+    },
+    "wordNr": 378415,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "interjection",
+        "definitions": [
+          {
+            "definition": "Used to express surprise, shock or amazement.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "My, what big teeth you have!"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "interjection_association",
+        "associated_concepts": [
+          "surprise",
+          "shock",
+          "amazement"
+        ],
+        "images": [
+          "open_mouth",
+          "raised_eyebrows",
+          "wide_eyes"
+        ],
+        "sounds": [
+          "gasp",
+          "intake_of_breath",
+          "stutter"
+        ],
+        "feelings": [
+          "astonishment",
+          "wonder",
+          "admiration"
+        ],
+        "related_colors": [
+          "bright",
+          "vibrant"
+        ],
+        "related_natural_elements": [
+          "lightning",
+          "thunder"
+        ]
+      },
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "first_person_perspective",
+          "personal_possession"
+        ],
+        "images": [
+          "personal_belongings",
+          "memories",
+          "individuality"
+        ],
+        "sounds": [
+          "whispered_secrets",
+          "soft_murmurs"
+        ],
+        "feelings": [
+          "intimacy",
+          "personal_connection",
+          "belonging"
+        ],
+        "related_colors": [
+          "soft_pastels",
+          "neutral_tones"
+        ],
+        "related_natural_elements": [
+          "private_garden",
+          "personal_corner"
+        ]
+      },
+      {
+        "type": "emotion",
+        "associated_concepts": [
+          "warmth",
+          "affection",
+          "tenderness"
+        ],
+        "images": [
+          "hug",
+          "caring_touch",
+          "warm_embrace"
+        ],
+        "sounds": [
+          "loving_voice",
+          "soft_laughter"
+        ],
+        "feelings": [
+          "compassion",
+          "kindness",
+          "endearment"
+        ],
+        "related_colors": [
+          "soft_pink",
+          "light_red"
+        ],
+        "related_natural_elements": [
+          "blooming_flower",
+          "gentle_rain"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "yi",
+    "packetNr": 11,
+    "position": {
+      "start": 41980,
+      "end": 41981
+    },
+    "wordNr": 378416,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "pronoun",
+        "definitions": [
+          {
+            "definition": "The Cyrillic letter Ї ї, used in the Ukrainian and Rusyn alphabets.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "abstract",
+        "associated_concepts": [
+          "letters",
+          "alphabet",
+          "cyrillic",
+          "typography"
+        ],
+        "images": [
+          "calligraphy",
+          "handwriting",
+          "printing_press"
+        ],
+        "sounds": [
+          "pen_on_paper",
+          "keyboard_typing"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "intellectualism"
+        ],
+        "related_colors": [
+          "black",
+          "ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "geography",
+        "associated_concepts": [
+          "Ukraine",
+          "Rusyn",
+          "Slavic"
+        ],
+        "images": [
+          "ukrainian_flag",
+          "russian_nesting_dolls",
+          "slavic_folklore"
+        ],
+        "sounds": [
+          "ukrainian_language",
+          "russian_language"
+        ],
+        "feelings": [
+          "cultural_pride",
+          "ethnic_heritage"
+        ],
+        "related_colors": [
+          "blue_and_yellow",
+          "red_and_white"
+        ],
+        "related_natural_elements": [
+          "steppe",
+          "forest"
+        ]
+      },
+      {
+        "type": "artistic_medium",
+        "associated_concepts": [
+          "illustration",
+          "design",
+          "typography"
+        ],
+        "images": [
+          "poster",
+          "logo",
+          "book_cover"
+        ],
+        "sounds": [
+          "brush_strokes",
+          "vector_editing"
+        ],
+        "feelings": [
+          "creativity",
+          "aesthetics",
+          "visual_appeal"
+        ],
+        "related_colors": [
+          "varied",
+          ""
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "i",
+    "packetNr": 11,
+    "position": {
+      "start": 41981,
+      "end": 41981
+    },
+    "wordNr": 378417,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "ss",
+    "packetNr": 11,
+    "position": {
+      "start": 41982,
+      "end": 41983
+    },
+    "wordNr": 378418,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "An image of computer or smartphone screen output at a given moment in time.",
+            "synonyms": [
+              "screen capture",
+              "screen dump",
+              "screencap",
+              "screencast",
+              "screengrab",
+              "screenie"
+            ],
+            "antonyms": [],
+            "example": "I grabbed a screenshot of my desktop."
+          }
+        ],
+        "synonyms": [
+          "screen capture",
+          "screen dump",
+          "screencap",
+          "screencast",
+          "screengrab",
+          "screenie"
+        ],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "computer",
+          "smartphone",
+          "screen",
+          "output"
+        ],
+        "images": [
+          "computer_screen",
+          "smartphone_screen",
+          "desktop_display"
+        ],
+        "sounds": [
+          "clicking",
+          "typing",
+          "beeping"
+        ],
+        "feelings": [
+          "productivity",
+          "communication",
+          "information"
+        ],
+        "related_colors": [
+          "blue_light",
+          "screen_glow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "creativity",
+        "associated_concepts": [
+          "design",
+          "art",
+          "documentation"
+        ],
+        "images": [
+          "graphic_design",
+          "screenshot_of_artwork",
+          "illustration"
+        ],
+        "sounds": [
+          "clicking_of_a_mouse",
+          "dragging_and_dropping"
+        ],
+        "feelings": [
+          "inspiration",
+          "innovation",
+          "originality"
+        ],
+        "related_colors": [
+          "vibrant_colors",
+          "artistic_palette"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "education",
+        "associated_concepts": [
+          "tutorial",
+          "demonstration",
+          "presentation"
+        ],
+        "images": [
+          "step-by-step_guide",
+          "educational_video",
+          "technical_presentation"
+        ],
+        "sounds": [
+          "voice_over",
+          "narration",
+          "explanation"
+        ],
+        "feelings": [
+          "learning",
+          "understanding",
+          "knowledge_acquisition"
+        ],
+        "related_colors": [
+          "whiteboard",
+          "classroom",
+          "textbook"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  }
+]

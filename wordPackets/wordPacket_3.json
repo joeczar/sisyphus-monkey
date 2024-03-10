@@ -1,0 +1,696 @@
+[
+  {
+    "word": "i",
+    "packetNr": 2,
+    "position": {
+      "start": 41964,
+      "end": 0
+    },
+    "wordNr": 103071,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ],
+    "nextPacketNr": 3
+  },
+  {
+    "word": "hs",
+    "packetNr": 3,
+    "position": {
+      "start": 41976,
+      "end": 41977
+    },
+    "wordNr": 103065,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "adjective",
+        "definitions": [
+          {
+            "definition": "(of a biochemical assay) Abbreviation of high-sensitivity.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "scientific_concept",
+        "associated_concepts": [
+          "laboratory_testing",
+          "biochemistry",
+          "sensitivity",
+          "assay_methods"
+        ],
+        "images": [
+          "test_tubes",
+          "microplates",
+          "laboratory_equipment"
+        ],
+        "sounds": [
+          "beakers_clinking",
+          "pipette_clicking",
+          "computer_data_processing"
+        ],
+        "feelings": [
+          "curiosity",
+          "focus",
+          "investigation"
+        ],
+        "related_colors": [
+          "white",
+          "steel_grey"
+        ],
+        "related_natural_elements": [
+          "biological_samples",
+          "laboratory_reagents"
+        ]
+      },
+      {
+        "type": "emotion",
+        "associated_concepts": [
+          "precision",
+          "accuracy",
+          "reliability"
+        ],
+        "images": [
+          "precision_instruments",
+          "calibration_chart",
+          "quality_control"
+        ],
+        "sounds": [
+          "clicking_metronome",
+          "steady_pulse",
+          "consistent_rhythm"
+        ],
+        "feelings": [
+          "confidence",
+          "trust",
+          "reassurance"
+        ],
+        "related_colors": [
+          "gold",
+          "dark_blue"
+        ],
+        "related_natural_elements": [
+          "precious_stones",
+          "dependable_geological_formations"
+        ]
+      },
+      {
+        "type": "abstraction",
+        "associated_concepts": [
+          "limitations",
+          "trade-offs",
+          "optimization"
+        ],
+        "images": [
+          "balancing_scale",
+          "tension_between_forces",
+          "adjusting_settings"
+        ],
+        "sounds": [
+          "dial_adjustment",
+          "sliding_scale",
+          "tuning_process"
+        ],
+        "feelings": [
+          "struggle",
+          "compromise",
+          "accomplishment"
+        ],
+        "related_colors": [
+          "grey",
+          "mixed_colors"
+        ],
+        "related_natural_elements": [
+          "mountain_peaks",
+          "turbulent_waters"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 3,
+    "position": {
+      "start": 41978,
+      "end": 41978
+    },
+    "wordNr": 103066,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "sh",
+    "packetNr": 3,
+    "position": {
+      "start": 41979,
+      "end": 41980
+    },
+    "wordNr": 103067,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "interjection",
+        "definitions": [
+          {
+            "definition": "Requesting silence.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [
+          "hush",
+          "shush"
+        ],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "communication",
+        "associated_concepts": [
+          "silence",
+          "whisper",
+          "secrecy"
+        ],
+        "images": [
+          "fingers_on_lips",
+          "quill_pen",
+          "library"
+        ],
+        "sounds": [
+          "whispered_voice",
+          "rustling_paper",
+          "typewriter"
+        ],
+        "feelings": [
+          "secrecy",
+          "intimacy",
+          "seriousness"
+        ],
+        "related_colors": [
+          "grey",
+          "brown",
+          "black"
+        ],
+        "related_natural_elements": [
+          "wind",
+          "forest",
+          "rain"
+        ]
+      },
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "transition",
+          "dialogue",
+          "instruction"
+        ],
+        "images": [
+          "playwright",
+          "screenwriter",
+          "novelist"
+        ],
+        "sounds": [
+          "page_turning",
+          "theater_curtain",
+          "film_reel"
+        ],
+        "feelings": [
+          "anticipation",
+          "continuity",
+          "drama"
+        ],
+        "related_colors": [
+          "black",
+          "white",
+          "red"
+        ],
+        "related_natural_elements": [
+          "quill_pen",
+          "paper",
+          "typewriter"
+        ]
+      },
+      {
+        "type": "sensory_association",
+        "associated_concepts": [
+          "calmness",
+          "secrecy",
+          "intimacy"
+        ],
+        "images": [
+          "moonlit_night",
+          "secret_garden",
+          "whispered_confessions"
+        ],
+        "sounds": [
+          "rustling_leaves",
+          "crackling_fire",
+          "drizzling_rain"
+        ],
+        "feelings": [
+          "peacefulness",
+          "secrecy",
+          "warmth"
+        ],
+        "related_colors": [
+          "grey",
+          "green",
+          "brown"
+        ],
+        "related_natural_elements": [
+          "forest",
+          "rain",
+          "wind"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "si",
+    "packetNr": 3,
+    "position": {
+      "start": 41982,
+      "end": 41983
+    },
+    "wordNr": 103069,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A syllable used in solfège to represent the seventh note of a major scale.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "musical_association",
+        "associated_concepts": [
+          "solfège",
+          "musical_scale",
+          "note"
+        ],
+        "images": [
+          "musical_notes_on_staff",
+          "piano_keys",
+          "violin_strings"
+        ],
+        "sounds": [
+          "musical_scale_tone",
+          "note_played_on_instrument"
+        ],
+        "feelings": [
+          "harmony",
+          "rhythm",
+          "creativity"
+        ],
+        "related_colors": [],
+        "related_natural_elements": []
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "order",
+          "sequence",
+          "position"
+        ],
+        "images": [
+          "ascending_stairs",
+          "numbered_list",
+          "sequence_of_colors"
+        ],
+        "sounds": [
+          "counting",
+          "ticking_clock",
+          "ordered_tapping"
+        ],
+        "feelings": [
+          "structure",
+          "organization",
+          "pattern"
+        ],
+        "related_colors": [],
+        "related_natural_elements": []
+      },
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "poetry",
+          "rhyme",
+          "meter"
+        ],
+        "images": [
+          "open_book",
+          "quill_pen",
+          "typewriter"
+        ],
+        "sounds": [
+          "page_turning",
+          "quill_on_paper",
+          "typing"
+        ],
+        "feelings": [
+          "inspiration",
+          "imagination",
+          "expression"
+        ],
+        "related_colors": [],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "i",
+    "packetNr": 3,
+    "position": {
+      "start": 41983,
+      "end": 41983
+    },
+    "wordNr": 103070,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  }
+]

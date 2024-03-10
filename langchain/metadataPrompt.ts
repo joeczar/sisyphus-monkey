@@ -1,6 +1,9 @@
 import type { WordData } from '../types/wordData';
 
 export const metadataPrompt = (wordData: WordData) => {
+  if (!wordData.meaning) {
+    throw new Error('No meaning found for word');
+  }
   const input = `Please generate additional metadata for the word "${
     wordData.word
   }" based on its definition: ${JSON.stringify(

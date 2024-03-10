@@ -1,18 +1,18 @@
 import neo4j from 'neo4j-driver';
-import type {Driver} from 'neo4j-driver';
+import type { Driver } from 'neo4j-driver';
 
 export type Packet = {
   id: number;
   content: string;
   source: string;
   timestamp: Date;
-}
+};
 
 export type Word = {
   text: string;
   length: number;
   originalOrder: number;
-}
+};
 
 class Neo4jDatabase {
   private driver: Driver;
@@ -30,6 +30,10 @@ class Neo4jDatabase {
   }
   public async checkConnection(): Promise<boolean> {
     const session = this.driver.session();
+    if (!session) {
+      console.error('Error creating Neo4j session');
+      return false;
+    }
     try {
       // Running a simple query to fetch the Neo4j version
       await session.run('RETURN "Connection successful" as message');
@@ -42,14 +46,13 @@ class Neo4jDatabase {
     }
   }
 
-
   private async processQueue() {
     while (this.queue.length > 0) {
       const task = this.queue.shift();
       if (task) {
         try {
-           await task();
-          console.log("Queue task complete. Remaining ",this.queue.length)
+          await task();
+          console.log('Queue task complete. Remaining ', this.queue.length);
         } catch (error) {
           console.error('Error processing task:', error);
         }
@@ -88,19 +91,19 @@ class Neo4jDatabase {
   }
   public async batchPackets(packetBatch: Packet[]): Promise<void> {
     try {
-
-    for (const packet of packetBatch) {
-      await this.createPacket(packet);
-    }
+      for (const packet of packetBatch) {
+        await this.createPacket(packet);
+      }
     } catch (error) {
-      console.error("Error in batchPackets", error)
+      console.error('Error in batchPackets', error);
     }
-    
   }
   public async countPackets(): Promise<number> {
     const session = this.driver.session();
     try {
-      const result = await session.run('MATCH (packet:Packet) RETURN COUNT(packet) as count');
+      const result = await session.run(
+        'MATCH (packet:Packet) RETURN COUNT(packet) as count'
+      );
       const count = result.records[0].get('count').toNumber();
       return count;
     } catch (error) {
@@ -121,14 +124,14 @@ class Neo4jDatabase {
         LIMIT toInteger($limit)`, // Use Cypher's toInteger function
         { limit } // Pass the original number (JavaScript will ensure it is an integer)
       );
-  
+
       const packets = result.records.map((record) => ({
         id: record.get('id'),
         content: record.get('content'),
         source: record.get('source'),
-        timestamp:new Date(record.get('timestamp')),
+        timestamp: new Date(record.get('timestamp')),
       }));
-      
+
       return packets;
     } catch (error) {
       throw error;

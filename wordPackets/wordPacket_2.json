@@ -1,0 +1,3203 @@
+[
+  {
+    "word": "ee",
+    "packetNr": 2,
+    "position": {
+      "start": 41953,
+      "end": 41954
+    },
+    "wordNr": 68609,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "An eye.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "sensory_association",
+        "associated_concepts": [
+          "sight",
+          "perception",
+          "observation"
+        ],
+        "images": [
+          "glossy_surface",
+          "curved_shape",
+          "round_object"
+        ],
+        "sounds": [
+          "soft_click",
+          "gentle_roll"
+        ],
+        "feelings": [
+          "curiosity",
+          "insight",
+          "contemplation"
+        ],
+        "related_colors": [
+          "black",
+          "brown",
+          "hazel"
+        ],
+        "related_natural_elements": [
+          "trees",
+          "forests",
+          "rain"
+        ]
+      },
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "poetry",
+          "rhyme",
+          "visual_poetry"
+        ],
+        "images": [
+          "stanzas",
+          "verses",
+          "rhyming_words"
+        ],
+        "sounds": [
+          "spoken_word",
+          "recitation",
+          "rhythm"
+        ],
+        "feelings": [
+          "creativity",
+          "expression",
+          "imagination"
+        ],
+        "related_colors": [
+          "ink",
+          "paper",
+          "parchment"
+        ],
+        "related_natural_elements": [
+          "quills",
+          "typewriters",
+          "books"
+        ]
+      },
+      {
+        "type": "abstract",
+        "associated_concepts": [
+          "mathematics",
+          "complexity",
+          "infinity"
+        ],
+        "images": [
+          "fractals",
+          "curves",
+          "geometric_shapes"
+        ],
+        "sounds": [
+          "calculation",
+          "approximation",
+          "estimation"
+        ],
+        "feelings": [
+          "challenge",
+          "discovery",
+          "enlightenment"
+        ],
+        "related_colors": [
+          "white",
+          "clear",
+          "iridescent"
+        ],
+        "related_natural_elements": [
+          "crystals",
+          "geodes",
+          "minerals"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "eh",
+    "packetNr": 2,
+    "position": {
+      "start": 41954,
+      "end": 41955
+    },
+    "wordNr": 68610,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "definition": "To use the interjection eh",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      },
+      {
+        "partOfSpeech": "adjective",
+        "definitions": [
+          {
+            "definition": "(predicative only) Of mediocre quality; unremarkable.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "My French fries were eh."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      },
+      {
+        "partOfSpeech": "interjection",
+        "definitions": [
+          {
+            "definition": "Used as a tag question, to emphasise what goes before or to request that the listener express an opinion about what has been said.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "These hot dogs are pretty good, eh?"
+          },
+          {
+            "definition": "In isolation, a request for repetition or clarification of what has just been said. Compare what, pardon.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "An interjection used to ascertain the continued attention of an individual addressed by the speaker",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "I went to the restaurant, eh, but my friends didn't show up."
+          },
+          {
+            "definition": "Expressing apathy or lack of enthusiasm; meh.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "interjection_use",
+        "associated_concepts": [
+          "communication",
+          "affirmation",
+          "questioning"
+        ],
+        "images": [
+          "speech_bubble",
+          "question_mark",
+          "conversation"
+        ],
+        "sounds": [
+          "questioning_intonation",
+          "spoken_word"
+        ],
+        "feelings": [
+          "connection",
+          "understanding",
+          "engagement"
+        ],
+        "related_colors": [
+          "verbal",
+          "speech"
+        ],
+        "related_natural_elements": [
+          "wind",
+          "water_flow"
+        ]
+      },
+      {
+        "type": "quality_assessment",
+        "associated_concepts": [
+          "mediocrity",
+          "unremarkable",
+          "indifference"
+        ],
+        "images": [
+          "plain_fries",
+          "uninteresting_landscape",
+          "monotonous_pattern"
+        ],
+        "sounds": [
+          "flat_tone",
+          "unexcited_voice"
+        ],
+        "feelings": [
+          "disappointment",
+          "boredom",
+          "lukewarm_reaction"
+        ],
+        "related_colors": [
+          "grey",
+          "beige",
+          "dull_brown"
+        ],
+        "related_natural_elements": [
+          "mud",
+          "stagnant_water"
+        ]
+      },
+      {
+        "type": "attention_seeking",
+        "associated_concepts": [
+          "continued_attention",
+          "confirmation_request",
+          "storytelling"
+        ],
+        "images": [
+          "listening_ear",
+          "speech_bubble_chain",
+          "storyteller"
+        ],
+        "sounds": [
+          "storytelling_intonation",
+          "continuous_conversation"
+        ],
+        "feelings": [
+          "engagement",
+          "inclusion",
+          "shared_experience"
+        ],
+        "related_colors": [
+          "listening",
+          "conversation"
+        ],
+        "related_natural_elements": [
+          "river_flow",
+          "wind_whisper"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "ho",
+    "packetNr": 2,
+    "position": {
+      "start": 41955,
+      "end": 41956
+    },
+    "wordNr": 68611,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A stop; a halt; a moderation of pace.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      },
+      {
+        "partOfSpeech": "interjection",
+        "definitions": [
+          {
+            "definition": "Used to attract attention to something sighted, usually by lookouts.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Halloo; hey; a call to excite attention, or to give notice of approach",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Said as a limb is swung in attack.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "interjection_use",
+        "associated_concepts": [
+          "attention",
+          "sighting",
+          "lookout"
+        ],
+        "images": [
+          "lookout_tower",
+          "binoculars",
+          "distant_view"
+        ],
+        "sounds": [
+          "whistle",
+          "call",
+          "rustle_of_movement"
+        ],
+        "feelings": [
+          "anticipation",
+          "alertness",
+          "excitement"
+        ],
+        "related_colors": [
+          "sky_blue",
+          "forest_green",
+          "sand_brown"
+        ],
+        "related_natural_elements": [
+          "mountains",
+          "forests",
+          "deserts"
+        ]
+      },
+      {
+        "type": "combat_use",
+        "associated_concepts": [
+          "attack",
+          "limb_movement",
+          "strike"
+        ],
+        "images": [
+          "sword_fight",
+          "boxing_match",
+          "capoeira_dance"
+        ],
+        "sounds": [
+          "clashing_swords",
+          "grunts",
+          "impact_thud"
+        ],
+        "feelings": [
+          "tension",
+          "determination",
+          "power"
+        ],
+        "related_colors": [
+          "blood_red",
+          "steel_grey",
+          "flesh_pink"
+        ],
+        "related_natural_elements": [
+          "thunder",
+          "lightning",
+          "storm"
+        ]
+      },
+      {
+        "type": "moderation_use",
+        "associated_concepts": [
+          "pace",
+          "halt",
+          "control"
+        ],
+        "images": [
+          "horse_riding",
+          "dancing",
+          "gymnastics"
+        ],
+        "sounds": [
+          "galloping_hooves",
+          "music_rhythm",
+          "breathing_control"
+        ],
+        "feelings": [
+          "harmony",
+          "balance",
+          "self_discipline"
+        ],
+        "related_colors": [
+          "earth_brown",
+          "grey_ash",
+          "misty_white"
+        ],
+        "related_natural_elements": [
+          "wind",
+          "rain",
+          "snow"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 2,
+    "position": {
+      "start": 41956,
+      "end": 41956
+    },
+    "wordNr": 68612,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 2,
+    "position": {
+      "start": 41957,
+      "end": 41957
+    },
+    "wordNr": 68613,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "ss",
+    "packetNr": 2,
+    "position": {
+      "start": 41958,
+      "end": 41959
+    },
+    "wordNr": 68614,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "An image of computer or smartphone screen output at a given moment in time.",
+            "synonyms": [
+              "screen capture",
+              "screen dump",
+              "screencap",
+              "screencast",
+              "screengrab",
+              "screenie"
+            ],
+            "antonyms": [],
+            "example": "I grabbed a screenshot of my desktop."
+          }
+        ],
+        "synonyms": [
+          "screen capture",
+          "screen dump",
+          "screencap",
+          "screencast",
+          "screengrab",
+          "screenie"
+        ],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "computer",
+          "smartphone",
+          "screen",
+          "output"
+        ],
+        "images": [
+          "computer_screen",
+          "smartphone_screen",
+          "desktop_display"
+        ],
+        "sounds": [
+          "clicking",
+          "typing",
+          "beeping"
+        ],
+        "feelings": [
+          "productivity",
+          "communication",
+          "information"
+        ],
+        "related_colors": [
+          "blue_light",
+          "screen_glow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "creativity",
+        "associated_concepts": [
+          "design",
+          "art",
+          "documentation"
+        ],
+        "images": [
+          "graphic_design",
+          "screenshot_of_artwork",
+          "illustration"
+        ],
+        "sounds": [
+          "clicking_of_a_mouse",
+          "dragging_and_dropping"
+        ],
+        "feelings": [
+          "inspiration",
+          "innovation",
+          "originality"
+        ],
+        "related_colors": [
+          "vibrant_colors",
+          "artistic_palette"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "education",
+        "associated_concepts": [
+          "tutorial",
+          "demonstration",
+          "presentation"
+        ],
+        "images": [
+          "step-by-step_guide",
+          "educational_video",
+          "technical_presentation"
+        ],
+        "sounds": [
+          "voice_over",
+          "narration",
+          "explanation"
+        ],
+        "feelings": [
+          "learning",
+          "understanding",
+          "knowledge_acquisition"
+        ],
+        "related_colors": [
+          "whiteboard",
+          "classroom",
+          "textbook"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "se",
+    "packetNr": 2,
+    "position": {
+      "start": 41959,
+      "end": 41960
+    },
+    "wordNr": 68615,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A type of ancient Chinese plucked zither.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "musical_instrument",
+        "associated_concepts": [
+          "chinese_culture",
+          "music",
+          "ancient_wisdom"
+        ],
+        "images": [
+          "ancient_chinese_scrolls",
+          "orchid_garden",
+          "moonlit_river"
+        ],
+        "sounds": [
+          "plucked_strings",
+          "soft_melodies",
+          "meditative_rhythm"
+        ],
+        "feelings": [
+          "serenity",
+          "contemplation",
+          "harmony"
+        ],
+        "related_colors": [
+          "jade_green",
+          "golden_brown",
+          "ink_black"
+        ],
+        "related_natural_elements": [
+          "bamboo",
+          "water",
+          "moon"
+        ]
+      },
+      {
+        "type": "artistic_expression",
+        "associated_concepts": [
+          "chinese_poetry",
+          "artistic_creation",
+          "meditative_state"
+        ],
+        "images": [
+          "calligraphy_brushstrokes",
+          "zen_garden",
+          "incense_smoke"
+        ],
+        "sounds": [
+          "whispered_secrets",
+          "breathing_meditation",
+          "paper_rustle"
+        ],
+        "feelings": [
+          "inspiration",
+          "mindfulness",
+          "focus"
+        ],
+        "related_colors": [
+          "ivory_white",
+          "slate_grey",
+          "earth_brown"
+        ],
+        "related_natural_elements": [
+          "paper",
+          "stone",
+          "wood"
+        ]
+      },
+      {
+        "type": "spiritual_connection",
+        "associated_concepts": [
+          "chinese_philosophy",
+          "harmony_with_nature",
+          "inner_peace"
+        ],
+        "images": [
+          "mountain_retreat",
+          "ancient_temple",
+          "bamboo_forest"
+        ],
+        "sounds": [
+          "chanting_monks",
+          "singing_birds",
+          "running_water"
+        ],
+        "feelings": [
+          "enlightenment",
+          "compassion",
+          "gratitude"
+        ],
+        "related_colors": [
+          "monk_robe_saffron",
+          "forest_green",
+          "sky_blue"
+        ],
+        "related_natural_elements": [
+          "mountains",
+          "forests",
+          "waterfalls"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "ey",
+    "packetNr": 2,
+    "position": {
+      "start": 41960,
+      "end": 41961
+    },
+    "wordNr": 68616,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "An egg.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "abstract",
+        "associated_concepts": [
+          "birth",
+          "vulnerability",
+          "potential"
+        ],
+        "images": [
+          "round_shape",
+          "soft_shell",
+          "delicate_membrane"
+        ],
+        "sounds": [
+          "soft_crackle",
+          "hushed_whisper"
+        ],
+        "feelings": [
+          "hope",
+          "anticipation",
+          "fragility"
+        ],
+        "related_colors": [
+          "pastel_yellow",
+          "cream"
+        ],
+        "related_natural_elements": [
+          "nest",
+          "womb"
+        ]
+      },
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "surprise",
+          "transformation",
+          "secrets"
+        ],
+        "images": [
+          "mystical_orb",
+          "alchemical_symbol",
+          "fairy_tale_treasure"
+        ],
+        "sounds": [
+          "magical_hum",
+          "reveal"
+        ],
+        "feelings": [
+          "wonder",
+          "intrigue",
+          "awe"
+        ],
+        "related_colors": [
+          "iridescent",
+          "mother_of_pearl"
+        ],
+        "related_natural_elements": [
+          "crystal_cave"
+        ]
+      },
+      {
+        "type": "sensory_association",
+        "associated_concepts": [
+          "nurturing",
+          "bonding",
+          "life"
+        ],
+        "images": [
+          "incubating_hands",
+          "nestling_under_wing",
+          "holding_potential"
+        ],
+        "sounds": [
+          "heartbeat",
+          "lullaby"
+        ],
+        "feelings": [
+          "protection",
+          "hope",
+          "love"
+        ],
+        "related_colors": [
+          "earth_tone",
+          "skin_tone"
+        ],
+        "related_natural_elements": [
+          "mother_earth",
+          "human_touch"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "yi",
+    "packetNr": 2,
+    "position": {
+      "start": 41961,
+      "end": 41962
+    },
+    "wordNr": 68617,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "pronoun",
+        "definitions": [
+          {
+            "definition": "The Cyrillic letter Ї ї, used in the Ukrainian and Rusyn alphabets.",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "abstract",
+        "associated_concepts": [
+          "letters",
+          "alphabet",
+          "cyrillic",
+          "typography"
+        ],
+        "images": [
+          "calligraphy",
+          "handwriting",
+          "printing_press"
+        ],
+        "sounds": [
+          "pen_on_paper",
+          "keyboard_typing"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "intellectualism"
+        ],
+        "related_colors": [
+          "black",
+          "ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "geography",
+        "associated_concepts": [
+          "Ukraine",
+          "Rusyn",
+          "Slavic"
+        ],
+        "images": [
+          "ukrainian_flag",
+          "russian_nesting_dolls",
+          "slavic_folklore"
+        ],
+        "sounds": [
+          "ukrainian_language",
+          "russian_language"
+        ],
+        "feelings": [
+          "cultural_pride",
+          "ethnic_heritage"
+        ],
+        "related_colors": [
+          "blue_and_yellow",
+          "red_and_white"
+        ],
+        "related_natural_elements": [
+          "steppe",
+          "forest"
+        ]
+      },
+      {
+        "type": "artistic_medium",
+        "associated_concepts": [
+          "illustration",
+          "design",
+          "typography"
+        ],
+        "images": [
+          "poster",
+          "logo",
+          "book_cover"
+        ],
+        "sounds": [
+          "brush_strokes",
+          "vector_editing"
+        ],
+        "feelings": [
+          "creativity",
+          "aesthetics",
+          "visual_appeal"
+        ],
+        "related_colors": [
+          "varied",
+          ""
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "i",
+    "packetNr": 2,
+    "position": {
+      "start": 41962,
+      "end": 41962
+    },
+    "wordNr": 68618,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "i",
+    "packetNr": 2,
+    "position": {
+      "start": 41963,
+      "end": 41963
+    },
+    "wordNr": 68619,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "i",
+    "packetNr": 2,
+    "position": {
+      "start": 41964,
+      "end": 41964
+    },
+    "wordNr": 68620,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "k",
+    "packetNr": 2,
+    "position": {
+      "start": 41965,
+      "end": 41965
+    },
+    "wordNr": 68621,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A kilobyte (more formally KB or kB).",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A kilobit (more formally kb), especially in measuring Internet connection.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Kilometre or kilometres.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "We drove 15 ks before we realised Billy wasn't in the back seat."
+          },
+          {
+            "definition": "Thousand or thousands.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "Just about 65 k of Jack's full salary comes from servicing the Baker account."
+          },
+          {
+            "definition": "The SI measurement value of 1,000",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "data",
+          "computing",
+          "measurement"
+        ],
+        "images": [
+          "binary_code",
+          "hard_drive",
+          "computer_screen"
+        ],
+        "sounds": [
+          "clicking_sounds",
+          "beeping",
+          "whirring"
+        ],
+        "feelings": [
+          "efficiency",
+          "complexity",
+          "organization"
+        ],
+        "related_colors": [
+          "silver",
+          "black",
+          "blue"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "measurement",
+        "associated_concepts": [
+          "numbers",
+          "multiples",
+          "divisibility"
+        ],
+        "images": [
+          "calculator",
+          "math_problems",
+          "multiplication_table"
+        ],
+        "sounds": [
+          "typing",
+          "calculator_buttons",
+          "pencil_on_paper"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "precision"
+        ],
+        "related_colors": [
+          "white",
+          "grey",
+          "yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "distance",
+        "associated_concepts": [
+          "travel",
+          "speed",
+          "distance"
+        ],
+        "images": [
+          "map",
+          "car",
+          "airplane"
+        ],
+        "sounds": [
+          "engine_noise",
+          "wind",
+          "tire_on_road"
+        ],
+        "feelings": [
+          "journey",
+          "adventure",
+          "exploration"
+        ],
+        "related_colors": [
+          "red",
+          "orange",
+          "brown"
+        ],
+        "related_natural_elements": [
+          "landscape",
+          "mountains",
+          "forest"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 2,
+    "position": {
+      "start": 41966,
+      "end": 41966
+    },
+    "wordNr": 68622,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "pp",
+    "packetNr": 2,
+    "position": {
+      "start": 41967,
+      "end": 41968
+    },
+    "wordNr": 68623,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "One hundredth of a given value, used to measure the difference of two percentages.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "The difference between 20 percent and 30 percent is 10 percentage points, not 10 percent. In fact, an increase from 20 to 30 percent is an increase of 50 percent. Only if, for example, 20 percent of buyers choose a certain company's products in one year and 22 percent do so the next year, can one speak of an increase of 10 percent."
+          }
+        ],
+        "synonyms": [
+          "%p",
+          "pp",
+          "ppt"
+        ],
+        "antonyms": []
+      },
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "Proton and proton (used attributively to describe a collision or other interaction of these two particles)",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "percentage",
+          "fraction",
+          "decimal"
+        ],
+        "images": [
+          "fraction_pie",
+          "decimal_grid"
+        ],
+        "sounds": [
+          "calculator_buttons",
+          "math_class"
+        ],
+        "feelings": [
+          "problem_solving",
+          "mental_arithmetic"
+        ],
+        "related_colors": [
+          "black_and_white"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "particle_physics",
+        "associated_concepts": [
+          "proton",
+          "interaction",
+          "collision"
+        ],
+        "images": [
+          "particle_accelerator",
+          "atom_structure"
+        ],
+        "sounds": [
+          "high_energy_collision",
+          "particle_detector"
+        ],
+        "feelings": [
+          "scientific_discovery",
+          "research"
+        ],
+        "related_colors": [
+          "neutral_colors"
+        ],
+        "related_natural_elements": [
+          "subatomic_particles"
+        ]
+      },
+      {
+        "type": "abstract_notation",
+        "associated_concepts": [
+          "shorthand",
+          "notation",
+          "symbol"
+        ],
+        "images": [
+          "written_symbol",
+          "typography"
+        ],
+        "sounds": [
+          "typing_sounds",
+          "paper_rustle"
+        ],
+        "feelings": [
+          "note_taking",
+          "annotation"
+        ],
+        "related_colors": [
+          "black",
+          "grey"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "pi",
+    "packetNr": 2,
+    "position": {
+      "start": 41968,
+      "end": 41969
+    },
+    "wordNr": 68624,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The 16th letter of the Classical and Modern Greek alphabets and the seventeenth in Old Greek.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "An irrational and transcendental constant representing the ratio of the circumference of a Euclidean circle to its diameter; approximately 3.14159265358979323846264338327950; usually written π.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Metal type that has been spilled, mixed together, or disordered.",
+            "synonyms": [
+              "pie"
+            ],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [
+          "Archimedes' constant",
+          "Ludolph's constant",
+          "Ludolph's number",
+          "Ludolphian number",
+          "pie"
+        ],
+        "antonyms": []
+      },
+      {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "definition": "To spill or mix printing type.",
+            "synonyms": [
+              "pie"
+            ],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [
+          "pie"
+        ],
+        "antonyms": []
+      },
+      {
+        "partOfSpeech": "adjective",
+        "definitions": [
+          {
+            "definition": "Not part of the usual font character set; especially, non-Roman type or symbols as opposed to standard alphanumeric Roman type.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "In computing, pi characters may be entered with special key combinations."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "circumference",
+          "diameter",
+          "ratio",
+          "irrational_number",
+          "transcendental_number"
+        ],
+        "images": [
+          "endless_spiral",
+          "golden_ratio_spiral",
+          "circular_patterns"
+        ],
+        "sounds": [
+          "fractal_expansion",
+          "repeating_decimals",
+          "mathematical_equations"
+        ],
+        "feelings": [
+          "intrigue",
+          "fascination",
+          "curiosity"
+        ],
+        "related_colors": [
+          "cool_metallic_silver",
+          "precise_black_and_white"
+        ],
+        "related_natural_elements": [
+          "geometric_patterns_in_nature",
+          "fractals_in_art"
+        ]
+      },
+      {
+        "type": "greek_alphabet",
+        "associated_concepts": [
+          "classical_greek",
+          "ancient_alphabets",
+          "typography"
+        ],
+        "images": [
+          "ancient_greek_inscriptions",
+          "classical_sculptures",
+          "old_manuscripts"
+        ],
+        "sounds": [
+          "pronunciation_of_ancient_greek",
+          "rustling_of_papyrus_scrolls"
+        ],
+        "feelings": [
+          "historical_contemplation",
+          "scholarly_research",
+          "appreciation_for_antiquity"
+        ],
+        "related_colors": [
+          "antique_sepia",
+          "aged_brown"
+        ],
+        "related_natural_elements": [
+          "parchment",
+          "wax_tablets"
+        ]
+      },
+      {
+        "type": "disordered_type",
+        "associated_concepts": [
+          "printing_techniques",
+          "typography_chaos",
+          "mixed_letters"
+        ],
+        "images": [
+          "spilled_type_tray",
+          "jumbled_letters",
+          "chaotic_compositions"
+        ],
+        "sounds": [
+          "clattering_type",
+          "keys_mashing",
+          "computer_generated_noise"
+        ],
+        "feelings": [
+          "mild_confusion",
+          "creative_disorder",
+          "playful_mess"
+        ],
+        "related_colors": [
+          "printer_ink_smears",
+          "computer_screen_glow"
+        ],
+        "related_natural_elements": [
+          "recycled_paper_waste"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "i",
+    "packetNr": 2,
+    "position": {
+      "start": 41969,
+      "end": 41969
+    },
+    "wordNr": 68625,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter I.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "the position of an i-dot (the dot of an i)"
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "letter_form",
+        "associated_concepts": [
+          "alphabet",
+          "typography",
+          "writing"
+        ],
+        "images": [
+          "handwriting",
+          "printed_text",
+          "calligraphy"
+        ],
+        "sounds": [
+          "tapping_on_keyboard",
+          "scratching_on_paper"
+        ],
+        "feelings": [
+          "learning",
+          "curiosity",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "blue_ink"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "roman_mythology",
+        "associated_concepts": [
+          "Iuppiter",
+          "god",
+          "king"
+        ],
+        "images": [
+          "thunderbolt",
+          "eagle",
+          "ancient_statue"
+        ],
+        "sounds": [
+          "thunder",
+          "eagle_scream"
+        ],
+        "feelings": [
+          "power",
+          "wisdom",
+          "protection"
+        ],
+        "related_colors": [
+          "stormy_grey",
+          "gold"
+        ],
+        "related_natural_elements": [
+          "sky",
+          "lightning"
+        ]
+      },
+      {
+        "type": "abstract_concept",
+        "associated_concepts": [
+          "self",
+          "individuality",
+          "identity"
+        ],
+        "images": [
+          "mirror_reflection",
+          "fingerprint",
+          "silhouette"
+        ],
+        "sounds": [
+          "whisper",
+          "heartbeat"
+        ],
+        "feelings": [
+          "introspection",
+          "uniqueness",
+          "empowerment"
+        ],
+        "related_colors": [
+          "eggplant",
+          "ivory"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "k",
+    "packetNr": 2,
+    "position": {
+      "start": 41970,
+      "end": 41970
+    },
+    "wordNr": 68626,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A kilobyte (more formally KB or kB).",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A kilobit (more formally kb), especially in measuring Internet connection.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Kilometre or kilometres.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "We drove 15 ks before we realised Billy wasn't in the back seat."
+          },
+          {
+            "definition": "Thousand or thousands.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "Just about 65 k of Jack's full salary comes from servicing the Baker account."
+          },
+          {
+            "definition": "The SI measurement value of 1,000",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "data",
+          "computing",
+          "measurement"
+        ],
+        "images": [
+          "binary_code",
+          "hard_drive",
+          "computer_screen"
+        ],
+        "sounds": [
+          "clicking_sounds",
+          "beeping",
+          "whirring"
+        ],
+        "feelings": [
+          "efficiency",
+          "complexity",
+          "organization"
+        ],
+        "related_colors": [
+          "silver",
+          "black",
+          "blue"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "measurement",
+        "associated_concepts": [
+          "numbers",
+          "multiples",
+          "divisibility"
+        ],
+        "images": [
+          "calculator",
+          "math_problems",
+          "multiplication_table"
+        ],
+        "sounds": [
+          "typing",
+          "calculator_buttons",
+          "pencil_on_paper"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "precision"
+        ],
+        "related_colors": [
+          "white",
+          "grey",
+          "yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "distance",
+        "associated_concepts": [
+          "travel",
+          "speed",
+          "distance"
+        ],
+        "images": [
+          "map",
+          "car",
+          "airplane"
+        ],
+        "sounds": [
+          "engine_noise",
+          "wind",
+          "tire_on_road"
+        ],
+        "feelings": [
+          "journey",
+          "adventure",
+          "exploration"
+        ],
+        "related_colors": [
+          "red",
+          "orange",
+          "brown"
+        ],
+        "related_natural_elements": [
+          "landscape",
+          "mountains",
+          "forest"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "ss",
+    "packetNr": 2,
+    "position": {
+      "start": 41972,
+      "end": 41973
+    },
+    "wordNr": 68628,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "An image of computer or smartphone screen output at a given moment in time.",
+            "synonyms": [
+              "screen capture",
+              "screen dump",
+              "screencap",
+              "screencast",
+              "screengrab",
+              "screenie"
+            ],
+            "antonyms": [],
+            "example": "I grabbed a screenshot of my desktop."
+          }
+        ],
+        "synonyms": [
+          "screen capture",
+          "screen dump",
+          "screencap",
+          "screencast",
+          "screengrab",
+          "screenie"
+        ],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "computer",
+          "smartphone",
+          "screen",
+          "output"
+        ],
+        "images": [
+          "computer_screen",
+          "smartphone_screen",
+          "desktop_display"
+        ],
+        "sounds": [
+          "clicking",
+          "typing",
+          "beeping"
+        ],
+        "feelings": [
+          "productivity",
+          "communication",
+          "information"
+        ],
+        "related_colors": [
+          "blue_light",
+          "screen_glow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "creativity",
+        "associated_concepts": [
+          "design",
+          "art",
+          "documentation"
+        ],
+        "images": [
+          "graphic_design",
+          "screenshot_of_artwork",
+          "illustration"
+        ],
+        "sounds": [
+          "clicking_of_a_mouse",
+          "dragging_and_dropping"
+        ],
+        "feelings": [
+          "inspiration",
+          "innovation",
+          "originality"
+        ],
+        "related_colors": [
+          "vibrant_colors",
+          "artistic_palette"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "education",
+        "associated_concepts": [
+          "tutorial",
+          "demonstration",
+          "presentation"
+        ],
+        "images": [
+          "step-by-step_guide",
+          "educational_video",
+          "technical_presentation"
+        ],
+        "sounds": [
+          "voice_over",
+          "narration",
+          "explanation"
+        ],
+        "feelings": [
+          "learning",
+          "understanding",
+          "knowledge_acquisition"
+        ],
+        "related_colors": [
+          "whiteboard",
+          "classroom",
+          "textbook"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "ss",
+    "packetNr": 2,
+    "position": {
+      "start": 41975,
+      "end": 41976
+    },
+    "wordNr": 68630,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "An image of computer or smartphone screen output at a given moment in time.",
+            "synonyms": [
+              "screen capture",
+              "screen dump",
+              "screencap",
+              "screencast",
+              "screengrab",
+              "screenie"
+            ],
+            "antonyms": [],
+            "example": "I grabbed a screenshot of my desktop."
+          }
+        ],
+        "synonyms": [
+          "screen capture",
+          "screen dump",
+          "screencap",
+          "screencast",
+          "screengrab",
+          "screenie"
+        ],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "computer",
+          "smartphone",
+          "screen",
+          "output"
+        ],
+        "images": [
+          "computer_screen",
+          "smartphone_screen",
+          "desktop_display"
+        ],
+        "sounds": [
+          "clicking",
+          "typing",
+          "beeping"
+        ],
+        "feelings": [
+          "productivity",
+          "communication",
+          "information"
+        ],
+        "related_colors": [
+          "blue_light",
+          "screen_glow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "creativity",
+        "associated_concepts": [
+          "design",
+          "art",
+          "documentation"
+        ],
+        "images": [
+          "graphic_design",
+          "screenshot_of_artwork",
+          "illustration"
+        ],
+        "sounds": [
+          "clicking_of_a_mouse",
+          "dragging_and_dropping"
+        ],
+        "feelings": [
+          "inspiration",
+          "innovation",
+          "originality"
+        ],
+        "related_colors": [
+          "vibrant_colors",
+          "artistic_palette"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "education",
+        "associated_concepts": [
+          "tutorial",
+          "demonstration",
+          "presentation"
+        ],
+        "images": [
+          "step-by-step_guide",
+          "educational_video",
+          "technical_presentation"
+        ],
+        "sounds": [
+          "voice_over",
+          "narration",
+          "explanation"
+        ],
+        "feelings": [
+          "learning",
+          "understanding",
+          "knowledge_acquisition"
+        ],
+        "related_colors": [
+          "whiteboard",
+          "classroom",
+          "textbook"
+        ],
+        "related_natural_elements": []
+      }
+    ]
+  },
+  {
+    "word": "sk",
+    "packetNr": 2,
+    "position": {
+      "start": 41976,
+      "end": 41977
+    },
+    "wordNr": 68631,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "verb",
+        "definitions": [
+          {
+            "definition": "Skip",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "motion",
+        "associated_concepts": [
+          "movement",
+          "jumping",
+          "avoidance"
+        ],
+        "images": [
+          "leap_of_faith",
+          "playful_jump",
+          "dance_moves"
+        ],
+        "sounds": [
+          "light_feet_tapping",
+          "playful_laughter"
+        ],
+        "feelings": [
+          "freedom",
+          "lightheartedness",
+          "playfulness"
+        ],
+        "related_colors": [
+          "bright_blue",
+          "light_green",
+          "sky_blue"
+        ],
+        "related_natural_elements": [
+          "clouds",
+          "grass",
+          "wind"
+        ]
+      },
+      {
+        "type": "time",
+        "associated_concepts": [
+          "quickness",
+          "speed",
+          "haste"
+        ],
+        "images": [
+          "rushing_river",
+          "fleeting_moment",
+          "blink_of_an_eye"
+        ],
+        "sounds": [
+          "rapid_water_flow",
+          "quick_rustle"
+        ],
+        "feelings": [
+          "urgency",
+          "swiftness",
+          "transience"
+        ],
+        "related_colors": [
+          "shimmering_silver",
+          "rushing_water",
+          "flickering_flame"
+        ],
+        "related_natural_elements": [
+          "water",
+          "fire",
+          "wind"
+        ]
+      },
+      {
+        "type": "learning",
+        "associated_concepts": [
+          "omission",
+          "selectivity",
+          "focus"
+        ],
+        "images": [
+          "overlooking_details",
+          "focused_study",
+          "cherry_picking"
+        ],
+        "sounds": [
+          "quick_reading",
+          "selective_listening"
+        ],
+        "feelings": [
+          "concentration",
+          "intention",
+          "purposefulness"
+        ],
+        "related_colors": [
+          "bright_yellow",
+          "vibrant_orange",
+          "intense_red"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "autumn_leaves",
+          "ripe_fruits"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "k",
+    "packetNr": 2,
+    "position": {
+      "start": 41977,
+      "end": 41977
+    },
+    "wordNr": 68632,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A kilobyte (more formally KB or kB).",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A kilobit (more formally kb), especially in measuring Internet connection.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Kilometre or kilometres.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "We drove 15 ks before we realised Billy wasn't in the back seat."
+          },
+          {
+            "definition": "Thousand or thousands.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "Just about 65 k of Jack's full salary comes from servicing the Baker account."
+          },
+          {
+            "definition": "The SI measurement value of 1,000",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "data",
+          "computing",
+          "measurement"
+        ],
+        "images": [
+          "binary_code",
+          "hard_drive",
+          "computer_screen"
+        ],
+        "sounds": [
+          "clicking_sounds",
+          "beeping",
+          "whirring"
+        ],
+        "feelings": [
+          "efficiency",
+          "complexity",
+          "organization"
+        ],
+        "related_colors": [
+          "silver",
+          "black",
+          "blue"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "measurement",
+        "associated_concepts": [
+          "numbers",
+          "multiples",
+          "divisibility"
+        ],
+        "images": [
+          "calculator",
+          "math_problems",
+          "multiplication_table"
+        ],
+        "sounds": [
+          "typing",
+          "calculator_buttons",
+          "pencil_on_paper"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "precision"
+        ],
+        "related_colors": [
+          "white",
+          "grey",
+          "yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "distance",
+        "associated_concepts": [
+          "travel",
+          "speed",
+          "distance"
+        ],
+        "images": [
+          "map",
+          "car",
+          "airplane"
+        ],
+        "sounds": [
+          "engine_noise",
+          "wind",
+          "tire_on_road"
+        ],
+        "feelings": [
+          "journey",
+          "adventure",
+          "exploration"
+        ],
+        "related_colors": [
+          "red",
+          "orange",
+          "brown"
+        ],
+        "related_natural_elements": [
+          "landscape",
+          "mountains",
+          "forest"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "k",
+    "packetNr": 2,
+    "position": {
+      "start": 41978,
+      "end": 41978
+    },
+    "wordNr": 68633,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "A kilobyte (more formally KB or kB).",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A kilobit (more formally kb), especially in measuring Internet connection.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "Kilometre or kilometres.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "We drove 15 ks before we realised Billy wasn't in the back seat."
+          },
+          {
+            "definition": "Thousand or thousands.",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "Just about 65 k of Jack's full salary comes from servicing the Baker account."
+          },
+          {
+            "definition": "The SI measurement value of 1,000",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "technology",
+        "associated_concepts": [
+          "data",
+          "computing",
+          "measurement"
+        ],
+        "images": [
+          "binary_code",
+          "hard_drive",
+          "computer_screen"
+        ],
+        "sounds": [
+          "clicking_sounds",
+          "beeping",
+          "whirring"
+        ],
+        "feelings": [
+          "efficiency",
+          "complexity",
+          "organization"
+        ],
+        "related_colors": [
+          "silver",
+          "black",
+          "blue"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "measurement",
+        "associated_concepts": [
+          "numbers",
+          "multiples",
+          "divisibility"
+        ],
+        "images": [
+          "calculator",
+          "math_problems",
+          "multiplication_table"
+        ],
+        "sounds": [
+          "typing",
+          "calculator_buttons",
+          "pencil_on_paper"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "precision"
+        ],
+        "related_colors": [
+          "white",
+          "grey",
+          "yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "distance",
+        "associated_concepts": [
+          "travel",
+          "speed",
+          "distance"
+        ],
+        "images": [
+          "map",
+          "car",
+          "airplane"
+        ],
+        "sounds": [
+          "engine_noise",
+          "wind",
+          "tire_on_road"
+        ],
+        "feelings": [
+          "journey",
+          "adventure",
+          "exploration"
+        ],
+        "related_colors": [
+          "red",
+          "orange",
+          "brown"
+        ],
+        "related_natural_elements": [
+          "landscape",
+          "mountains",
+          "forest"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "yo",
+    "packetNr": 2,
+    "position": {
+      "start": 41982,
+      "end": 41983
+    },
+    "wordNr": 68634,
+    "chars": 2,
+    "meaning": [
+      {
+        "partOfSpeech": "interjection",
+        "definitions": [
+          {
+            "definition": "A greeting similar to hi.",
+            "synonyms": [
+              "oi",
+              "wotcher"
+            ],
+            "antonyms": [],
+            "example": "Yo Paulie! How's it going?"
+          },
+          {
+            "definition": "An interjection similar to hey.",
+            "synonyms": [
+              "ahoy",
+              "oi"
+            ],
+            "antonyms": [],
+            "example": "Yo, check this out!"
+          },
+          {
+            "definition": "Present! Here!",
+            "synonyms": [],
+            "antonyms": []
+          }
+        ],
+        "synonyms": [
+          "ahoy",
+          "oi",
+          "oi",
+          "wotcher"
+        ],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "interjection_use",
+        "associated_concepts": [
+          "greeting",
+          "informality",
+          "familiarity"
+        ],
+        "images": [
+          "casual_encounter",
+          "friendly_wave",
+          "meeting_of_eyes"
+        ],
+        "sounds": [
+          "voiced_greeting",
+          "informal_tone",
+          "friendly_laughter"
+        ],
+        "feelings": [
+          "warmth",
+          "inclusion",
+          "camaraderie"
+        ],
+        "related_colors": [
+          "warm_yellow",
+          "bright_orange"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "fire",
+          "summer_breeze"
+        ]
+      },
+      {
+        "type": "attention_seeking",
+        "associated_concepts": [
+          "calling_attention",
+          "grabbing_notice",
+          "making_a_point"
+        ],
+        "images": [
+          "raising_hand",
+          "pointing_finger",
+          "making_a_speech"
+        ],
+        "sounds": [
+          "loud_whistle",
+          "striking_gavel",
+          "clapping_hands"
+        ],
+        "feelings": [
+          "assertiveness",
+          "confidence",
+          "authoritativeness"
+        ],
+        "related_colors": [
+          "bold_red",
+          "deep_blue"
+        ],
+        "related_natural_elements": [
+          "thunder",
+          "lightning",
+          "crashing_waves"
+        ]
+      },
+      {
+        "type": "presence_announcement",
+        "associated_concepts": [
+          "arrival",
+          "check-in",
+          "acknowledgement"
+        ],
+        "images": [
+          "arriving_scene",
+          "entering_room",
+          "taking_place"
+        ],
+        "sounds": [
+          "door_opening",
+          "footsteps",
+          "intro_music"
+        ],
+        "feelings": [
+          "anticipation",
+          "expectation",
+          "readiness"
+        ],
+        "related_colors": [
+          "bright_green",
+          "loud_yellow"
+        ],
+        "related_natural_elements": [
+          "dawn",
+          "spring_blossoms",
+          "rainbow"
+        ]
+      }
+    ]
+  },
+  {
+    "word": "o",
+    "packetNr": 2,
+    "position": {
+      "start": 41983,
+      "end": 41983
+    },
+    "wordNr": 68635,
+    "chars": 1,
+    "meaning": [
+      {
+        "partOfSpeech": "noun",
+        "definitions": [
+          {
+            "definition": "The name of the Latin-script letter O.",
+            "synonyms": [],
+            "antonyms": []
+          },
+          {
+            "definition": "A zero (used in reading out numbers).",
+            "synonyms": [],
+            "antonyms": [],
+            "example": "It is currently two-o-five in the afternoon (2:05 PM)."
+          }
+        ],
+        "synonyms": [],
+        "antonyms": []
+      }
+    ],
+    "metadata": [
+      {
+        "type": "literary_use",
+        "associated_concepts": [
+          "letter",
+          "alphabet",
+          "typography"
+        ],
+        "images": [
+          "cursive_letter",
+          "printed_letter",
+          "calligraphy"
+        ],
+        "sounds": [
+          "typewriter",
+          "pen_on_paper",
+          "chalkboard_eraser"
+        ],
+        "feelings": [
+          "learning",
+          "discovery",
+          "creativity"
+        ],
+        "related_colors": [
+          "black",
+          "ink_blue",
+          "school_bus_yellow"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "mathematical_concept",
+        "associated_concepts": [
+          "zero",
+          "numeral",
+          "digit"
+        ],
+        "images": [
+          "numerals_on_calculator",
+          "spreadsheet_cell",
+          "binary_code"
+        ],
+        "sounds": [
+          "beeping_calculator",
+          "typing_numbers",
+          "data_processing"
+        ],
+        "feelings": [
+          "problem_solving",
+          "analysis",
+          "computation"
+        ],
+        "related_colors": [
+          "digital_green",
+          "binary_blue",
+          "silicon_grey"
+        ],
+        "related_natural_elements": []
+      },
+      {
+        "type": "temporal_association",
+        "associated_concepts": [
+          "minutes",
+          "hours",
+          "time"
+        ],
+        "images": [
+          "analog_clock",
+          "digital_clock",
+          "timezone_map"
+        ],
+        "sounds": [
+          "ticking_clock",
+          "alarm_bell",
+          "time_announcement"
+        ],
+        "feelings": [
+          "routine",
+          "passage",
+          "daily_structure"
+        ],
+        "related_colors": [
+          "clockwork_orange",
+          "midnight_black",
+          "sunrise_pink"
+        ],
+        "related_natural_elements": [
+          "sun",
+          "moon",
+          "seasons"
+        ]
+      }
+    ]
+  }
+]

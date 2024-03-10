@@ -3,11 +3,13 @@ import fs from 'fs';
 import path from 'path';
 import { processPackets, processBoundaryWords } from './processPackets';
 import { PacketChannelService } from './RedisWordService';
+import { state } from '../state/stateManager';
 
 const FOLDER_PATH = path.join(__dirname, '..', 'generated-letters-chunked');
 const GOAL_PATH = path.join(__dirname, '..', 'wordPackets');
 
 export async function getAndParsePackets() {
+  state.loadState();
   let files = await fs.promises.readdir(FOLDER_PATH);
   const numberOfFiles = files.length;
   console.log(`Found ${numberOfFiles} files`);
@@ -27,30 +29,30 @@ export async function getAndParsePackets() {
     const filePath = path.join(FOLDER_PATH, file);
     let fileContent = await fs.promises.readFile(filePath, 'utf-8');
     let packet = JSON.parse(fileContent);
-    // console.log(`Processing packet ${packet.id}...`);
+    console.log(`Processing packet ${packet.id}...`);
     const packetWords = await processPackets(packet);
     console.log(
       `Processed packet ${packet.id} with ${packetWords.length} words`,
       packetWords
     );
 
-    // // Check for boundary words if there was a previous packet
-    // if (previousPacket) {
-    //   const boundaryWord = processBoundaryWords(previousPacket, packet);
-    //   if (boundaryWord) {
-    //     // Add the found boundary word to the word list of the previous packet
-    //     packetWords.unshift(boundaryWord);
-    //   }
+    // Check for boundary words if there was a previous packet
+    if (previousPacket) {
+      const boundaryWord = await processBoundaryWords(previousPacket, packet);
+      if (boundaryWord) {
+        // Add the found boundary word to the word list of the previous packet
+        packetWords.unshift(boundaryWord);
+      }
+    }
+    console.log(`Saving packet ${packet.id}...`);
+    // Save the processed packet words to a file in the GOAL_PATH
+    const outputFile = path.join(GOAL_PATH, `wordPacket_${packet.id}.json`);
+    await fs.promises.writeFile(
+      outputFile,
+      JSON.stringify(packetWords, null, 2),
+      'utf-8'
+    );
+    console.log(`Packet ${packet.id} saved to ${outputFile}`);
+    previousPacket = packet; // Update previousPacket for the next iteration boundary word check
   }
-
-  // // Save the processed packet words to a file in the GOAL_PATH
-  // const outputFile = path.join(GOAL_PATH, `wordPacket_${packet.id}.json`);
-  // await fs.promises.writeFile(
-  //   outputFile,
-  //   JSON.stringify(packetWords, null, 2),
-  //   'utf-8'
-  // );
-
-  // previousPacket = packet; // Update previousPacket for the next iteration boundary word check
 }
-// }

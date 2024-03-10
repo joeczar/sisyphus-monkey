@@ -5,6 +5,7 @@ import { ChatGroq } from '@langchain/groq';
 import { ChatPromptTemplate } from '@langchain/core/prompts';
 import type { WordData } from '../types/wordData';
 import { metadataPrompt } from './metadataPrompt';
+import { PacketChannelService } from '../words/RedisWordService';
 
 async function groqPrompt(wordObject: WordData) {
   const model = new ChatGroq({
@@ -46,9 +47,16 @@ export async function generateMetadata(wordObject: WordData) {
   }
 }
 export async function addMetadata(wordData: WordData): Promise<WordData> {
+  const savedMetadata = await PacketChannelService.getMetadata(wordData.word);
+  if (savedMetadata) {
+    console.log('Metadata already saved:', savedMetadata);
+    wordData.metadata = savedMetadata;
+    return wordData;
+  }
   const metadata = await generateMetadata(wordData);
   if (metadata) {
     if (metadata && Array.isArray(metadata)) {
+      await PacketChannelService.setMetadata(wordData.word, metadata);
       wordData.metadata = metadata;
     }
   }

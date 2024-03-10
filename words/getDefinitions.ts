@@ -28,6 +28,7 @@ const fetchWithTimeout = (url: string, options = {}, timeout = 10000) => {
  */
 const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
   let lastError;
+  const word = url.split('/').pop();
 
   for (let i = 0; i < maxRetries; i++) {
     try {
@@ -35,13 +36,13 @@ const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
       if (response.ok) {
         return response;
       }
+      if (word) await PacketChannelService.setDefinition(word, '404');
       lastError = new Error(
-        `Failed to fetch data: ${response.status} ${response.statusText}`
+        `Failed to fetch ${word}: ${response.status} ${response.statusText}`
       );
     } catch (error) {
       lastError = error;
     }
-    console.log(`Retrying fetch attempt ${i + 1}`);
   }
 
   throw lastError;
@@ -55,7 +56,6 @@ const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
 const getCachedDefinition = async (word: string) => {
   const cachedDefinition = await PacketChannelService.getDefinition(word);
   if (cachedDefinition) {
-    console.log('Definition found in cache');
     return JSON.parse(cachedDefinition);
   }
   return null;
@@ -69,42 +69,64 @@ export const getDefinition = async (word: string) => {
   try {
     const cachedDefinition = await getCachedDefinition(word);
     if (cachedDefinition) {
-      return cachedDefinition;
+      if (cachedDefinition === '404') {
+        console.log(word, 'Word does not exist');
+        return null;
+      }
+      return JSON.parse(cachedDefinition) as WordDefinition[];
     }
 
-    const response = (await fetchWithRetry(`${API_URL}/${word}`, {
+    const response = await fetchWithRetry(`${API_URL}/${word}`, {
       method: 'GET',
-    })) as unknown as Response;
-    const data = (await response.json()) as WordDefinition[];
+    });
 
+    if (!response.ok) {
+      if (response.status === 404) {
+        console.log(word, 'Word does not exist');
+        await PacketChannelService.setDefinition(word, '404');
+        return null;
+      }
+      throw new Error(
+        `Failed to fetch data: ${response.status} ${response.statusText}`
+      );
+    }
+
+    const data = (await response.json()) as WordDefinition[];
+    await PacketChannelService.setDefinition(word, data);
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
+    return null;
   }
 };
 
 export const getMeaning = async (word: string) => {
-  const cachedDefinition = await getCachedDefinition(word);
-  if (cachedDefinition) {
-    return cachedDefinition[0].meanings[0];
-  }
-
   try {
-    const response = (await getDefinition(word)) as WordDefinition[];
-    const meaning = response[0].meanings[0];
-    return meaning;
+    const definitions = await getDefinition(word);
+    if (definitions && definitions.length > 0 && definitions[0].meanings) {
+      return definitions[0].meanings[0];
+    } else {
+      console.log('No meaning found for word:', word);
+      return null;
+    }
   } catch (error) {
     console.error('Error fetching data:', error);
+    return null;
   }
 };
 
-export async function addMeaning(wordData: WordData): Promise<WordData> {
+export async function addMeaning(
+  wordData: WordData
+): Promise<WordData | undefined> {
   const meaning = await getMeaning(wordData.word);
-
-  const wordObject: WordData = {
-    ...wordData,
-    meaning,
-  };
-
-  return wordObject;
+  if (meaning !== undefined && meaning !== null) {
+    const wordObject: WordData = {
+      ...wordData,
+      meaning,
+    };
+    return wordObject;
+  } else {
+    console.log('No meaning found for word:', wordData.word);
+    return;
+  }
 }

@@ -1,5 +1,5 @@
+import neo4j from 'neo4j-driver';
 import { processFolder } from '../characters/readAndParse';
-import { pullPacketsForParsing } from './pullPacketsForParsing';
 import { DatabaseService } from '../db/database';
 import { cors } from 'hono/cors';
 import { prettyJSON } from 'hono/pretty-json';
@@ -7,6 +7,7 @@ import { Hono } from 'hono';
 import { getCharPacketById } from '../api/apiSservice';
 import { PacketChannelService } from './RedisWordService';
 import { getAndParsePackets } from './getAndParsePackets';
+import neo4jDb from '../db/Neo4jDb';
 
 const PACKETS_URL = `${process.env.CHARS_URL}/chars`;
 
@@ -23,26 +24,35 @@ async function startServerAndProcessData() {
     console.log('Starting server...');
 
     await PacketChannelService.initRedis();
+    console.log('Redis connected:', PacketChannelService.isConnected);
 
-    if (!PacketChannelService.isConnected) {
-      // if the connection to redis fails, wait and try again 3 times then throw an error
-      let retries = 0;
-      while (!PacketChannelService.isConnected && retries < 3) {
-        console.log('Retrying Redis connection...');
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        if (PacketChannelService.isConnected) {
-          break;
-        }
-        retries++;
-      }
-      if (!PacketChannelService.isConnected) {
-        throw new Error('Redis connection failed');
-      }
+    const neo4jConnected = await neo4jDb.checkConnection();
+    console.log('Neo4j connected:', neo4jConnected);
+
+    if (!neo4jConnected) {
+      throw new Error('Neo4j connection failed');
     }
-    // // Process the character data
+
+    // if (!PacketChannelService.isConnected) {
+    //   // if the connection to redis fails, wait and try again 3 times then throw an error
+    //   let retries = 0;
+    //   while (!PacketChannelService.isConnected && retries < 3) {
+    //     console.log('Retrying Redis connection...');
+    //     await new Promise((resolve) => setTimeout(resolve, 1000));
+    //     if (PacketChannelService.isConnected) {
+    //       break;
+    //     }
+    //     retries++;
+    //   }
+    //   if (!PacketChannelService.isConnected) {
+    //     throw new Error('Redis connection failed');
+    //   }
+    // }
+    console.log('Processing character data...');
     await getAndParsePackets();
   } catch (err) {
     console.error('Error during server startup and data processing:', err);
+    throw err;
   }
 }
 

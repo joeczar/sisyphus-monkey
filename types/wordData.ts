@@ -1,11 +1,41 @@
+export type Position = {
+  start: number;
+  end: number;
+};
+
+export type Definition = {
+  definition: string;
+  synonyms: string[];
+  antonyms: string[];
+  example?: string; // Optional
+};
+
+export type Meaning = {
+  partOfSpeech: string;
+  definitions: Definition[];
+  synonyms: string[];
+  antonyms: string[];
+};
+
+export type Metadata = {
+  type: string;
+  associatedConcepts: string[];
+  images: string[];
+  sounds: string[];
+  feelings: string[];
+  relatedColors: string[];
+  relatedNaturalElements: string[];
+};
+
 export type WordData = {
   word: string;
   packetNr: number;
-  position: { start: number; end: number };
+  position: Position;
   wordNr: number;
   chars: number;
-  meaning?: Meaning | Meaning[];;
-  metadata?: any[];
+  meaning?: Meaning[]; // Assuming a word can have multiple meanings
+  metadata?: Metadata[];
+  trash?: boolean;
 };
 
 export type BoundaryWordData = WordData & {
@@ -15,17 +45,6 @@ export type BoundaryWordData = WordData & {
 export type WordDataPacket = {
   wordData: WordData[];
   nextPacketNr: number;
-};
-
-export type Definition = {
-  definition: string;
-  example: string;
-  synonyms: string[];
-  antonyms: string[];
-};
-export type Meaning = {
-  partOfSpeech: string;
-  definitions: Definition[];
 };
 
 export type Phonetic = {

@@ -9,11 +9,14 @@ import readline from 'readline';
 import { addMetadata } from '../langchain/groqMixtral';
 import { PacketChannelService } from './RedisWordService';
 import { addMeaning, getDefinition } from './getDefinitions';
+import { state } from '../state/stateManager';
+import { neo4jDb } from '../db/Neo4jWordData';
+import { validateWordData } from '../utils/validateWordData';
 
 const MAX_WORD_LENGTH = 20;
 let wordNr = 0;
 const trie = wordTrie;
-
+const wordDataArray: WordData[] = [];
 const wordsURL =
   'https://raw.githubusercontent.com/joeczar/english-words/master/words.txt';
 
@@ -45,17 +48,31 @@ async function fetchWords(wordsURL: string): Promise<string[]> {
 async function fetchWordList() {
   try {
     const response = await fetchWords(wordsURL);
-    return new Set(response);
+    return response;
   } catch (error) {
     console.error('Error fetching word list:', error);
     return null;
   }
 }
-const wordList = fetchWordList();
+const wordList = await fetchWordList();
+async function loadAndFilterWords() {
+  const singleLetterWords = ['a', 'i', 'o', 'u', 'k'];
+  const filteredWordList = wordList?.filter((word) => {
+    if (word.length < 2) {
+      return singleLetterWords.includes(word);
+    }
+    return true; // Keep words longer than one letter
+  });
+  const wordSet = new Set(filteredWordList);
+
+  return wordSet;
+}
 
 export async function processPackets(packet: Packet) {
-  console.log('Processing packet:', packet.id);
-  const words: WordData[] = [];
+  state.addPacket(packet);
+
+  // const wordSet = await loadAndFilterWords();
+  let words: WordData[] = [];
 
   for (let i = 0; i < packet.content.length; i++) {
     let boundaryBuffer = '';
@@ -68,19 +85,22 @@ export async function processPackets(packet: Packet) {
       boundaryBuffer += packet.content[j];
 
       if (trie.search(boundaryBuffer.toLowerCase())) {
-        console.log('Found word:', boundaryBuffer);
         const hasWord = await PacketChannelService.getWord(boundaryBuffer);
 
         if (hasWord) {
-          const parsed = JSON.parse(hasWord) as WordData;
+          if (hasWord === 'trash') {
+            console.log('Word is trash:', boundaryBuffer);
+            break;
+          }
           console.log('Word already in Redis:', boundaryBuffer);
           const wordData: WordData = {
-            ...parsed,
+            ...hasWord,
             packetNr: packet.id,
             position: { start: i, end: j },
             wordNr: wordNr++,
             chars: boundaryBuffer.length,
           };
+          state.lastWord = { number: wordData.wordNr, word: wordData.word };
           words.push(wordData);
         } else {
           const wordData: WordData = {
@@ -93,32 +113,76 @@ export async function processPackets(packet: Packet) {
           const response = await prepareForGraph(wordData);
           if (response) {
             await PacketChannelService.setWord(boundaryBuffer, response);
+            state.lastWord = { number: response.wordNr, word: response.word };
             words.push(response);
           }
         }
         break;
+      }
+      const result = await insertToNeo4j(words);
+      if (result) {
+        words = [];
       }
     }
   }
 
   return words;
 }
+
+const insertToNeo4j = async (wordDataList: WordData[]) => {
+  try {
+    if (wordDataList.length < 50) {
+      return false;
+    }
+    console.log('Inserting to Neo4j:', wordDataList.length);
+    const results = validateWordData(wordDataList);
+    console.log(
+      'Results good:',
+      results.good.length,
+      'Bad',
+      results.bad.length,
+      results.bad
+    );
+    if (results.bad.length) {
+      console.error('Incomplete data:', results.bad);
+      throw new Error('Incomplete data');
+    }
+    await neo4jDb.insertWordData(wordDataList);
+    await neo4jDb.createIndexes();
+    await neo4jDb.createWordOrderConnections();
+    // const words = await neo4jDb.createWordNodes(wordDataList);
+    // const meanings = await neo4jDb.createMeaningRelationships(wordDataList);
+    // const metadata = await neo4jDb.createMetadataRelationships(wordDataList);
+    wordDataList = [];
+    return true;
+  } catch (error) {
+    console.error('Error inserting to Neo4j:', error);
+
+    throw error;
+  }
+};
+
 async function prepareForGraph(response: WordData) {
   const { word } = response;
   try {
-    const definition: WordDefinition = await getDefinition(word);
+    const definition = await getDefinition(word);
 
     if (!definition) {
-      console.log('No definition found for:', word);
       return;
     }
     const withMeaning = {
       ...response,
-      meaning: definition.meanings,
+      meaning: definition[0].meanings,
     };
-    const complete = await addMetadata(withMeaning);
-    console.log({ complete });
-    return complete;
+    if (withMeaning.meaning) {
+      const complete = await addMetadata(withMeaning);
+      if (complete && complete.meaning && complete.metadata) return complete;
+    }
+    const trash = {
+      ...response,
+      trash: true,
+    };
+    await PacketChannelService.setWord(word, trash);
   } catch (error) {
     console.error('Error fetching definition:', error);
   }
@@ -128,6 +192,7 @@ export async function processBoundaryWords(
   currentPacket: Packet,
   nextPacket: Packet
 ) {
+  const wordSet = await loadAndFilterWords();
   let boundaryBuffer = '';
 
   // Check the last N characters of the current packet, where N is the maximum word length you expect - 1
@@ -150,7 +215,11 @@ export async function processBoundaryWords(
         const hasWord = await PacketChannelService.getWord(boundaryBuffer);
 
         if (hasWord) {
-          const parsed = JSON.parse(hasWord) as WordData;
+          if (hasWord === 'trash') {
+            console.log('Word is trash:', boundaryBuffer);
+            break;
+          }
+          const parsed = hasWord;
           console.log('Word already in Redis:', boundaryBuffer);
           const wordData: BoundaryWordData = {
             ...parsed,
@@ -194,6 +263,7 @@ export async function parsePacketBatch(packetBatch: Packet[]) {
       console.error(`Error processing packet ${i}: ${error}`);
     }
   }
+  await insertToNeo4j(words);
   const result = addBoundaryWordstoWords(words, boundaryWords);
   return result;
 }
