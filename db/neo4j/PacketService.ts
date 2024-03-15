@@ -24,6 +24,32 @@ export class PacketService extends Neo4jServiceBase {
     }
   }
 
+  public async savePacketBatch(packets: Packet[]) {
+    const session = this.driver.session();
+    try {
+      const result = await session.run(
+        `UNWIND $packets AS packet
+         CREATE (p:Packet {id: packet.id, content: packet.content, source: packet.source, charCount: packet.charCount })
+         WITH p
+         ORDER BY p.id
+         WITH collect(p) AS packets
+         FOREACH (i IN RANGE(0, size(packets)-2) |
+           FOREACH (p1 IN [packets[i]] |
+             FOREACH (p2 IN [packets[i+1]] |
+               CREATE (p1)-[:NEXT]->(p2)
+             )
+           )
+         )`,
+        {
+          packets,
+        }
+      );
+      return result;
+    } finally {
+      session.close();
+    }
+  }
+
   public async getPacket(id: string) {
     const session = this.driver.session();
     try {
@@ -36,3 +62,6 @@ export class PacketService extends Neo4jServiceBase {
     }
   }
 }
+
+const packetService = new PacketService()
+export {packetService}
