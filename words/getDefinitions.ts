@@ -1,5 +1,7 @@
-import type { WordData, WordDefinition } from '../types/wordData';
-import { PacketChannelService } from './RedisWordService';
+
+import type { ApiDefinition, ApiMeaning, ApiWordDefinition } from '../types/ApiDefinition';
+import type { AntonymNode, MeaningNode, SynonymNode, WordNode,  } from '../types/wordNode';
+import { RedisService } from './RedisService';
 
 const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
@@ -36,7 +38,7 @@ const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
       if (response.ok) {
         return response;
       }
-      if (word) await PacketChannelService.setDefinition(word, '404');
+      if (word) await RedisService.setDefinition(word, '404');
       lastError = new Error(
         `Failed to fetch ${word}: ${response.status} ${response.statusText}`
       );
@@ -54,9 +56,9 @@ const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
  * @returns A promise that resolves to the cached definition or null if not found.
  */
 const getCachedDefinition = async (word: string) => {
-  const cachedDefinition = await PacketChannelService.getDefinition(word);
+  const cachedDefinition = await RedisService.getDefinition(word);
   if (cachedDefinition) {
-    return JSON.parse(cachedDefinition);
+    return JSON.parse(cachedDefinition) as ;
   }
   return null;
 };
@@ -73,7 +75,7 @@ export const getDefinition = async (word: string) => {
         console.log(word, 'Word does not exist');
         return null;
       }
-      return JSON.parse(cachedDefinition) as WordDefinition[];
+      return JSON.parse(cachedDefinition) as ApiWordDefinition[];
     }
 
     const response = await fetchWithRetry(`${API_URL}/${word}`, {
@@ -83,7 +85,7 @@ export const getDefinition = async (word: string) => {
     if (!response.ok) {
       if (response.status === 404) {
         console.log(word, 'Word does not exist');
-        await PacketChannelService.setDefinition(word, '404');
+        await RedisService.setDefinition(word, '404');
         return null;
       }
       throw new Error(
@@ -91,20 +93,43 @@ export const getDefinition = async (word: string) => {
       );
     }
 
-    const data = (await response.json()) as WordDefinition[];
-    await PacketChannelService.setDefinition(word, data);
+    const data = (await response.json()) as ApiWordDefinition[];
+    await RedisService.setDefinition(word, data);
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
     return null;
   }
 };
+const mapDefinitions = (definitions: ApiDefinition[]): MeaningNode => {
+  const mappedDefinitions: MeaningNode = {
+    partsOfSpeech: [], 
+    definitions: definitions.map(def => def.definition),
+    examples: definitions.filter(def => def.example !== undefined).map(def => def.example!),
+    synonyms: definitions.flatMap(def => def.synonyms.map(synonym => ({ word: synonym }))),
+    antonyms: definitions.flatMap(def => def.antonyms.map(antonym => ({ word: antonym }))),
+  };
+  return mappedDefinitions;
+}
+const mapApiMeaningToNodes = (apiMeaning: ApiMeaning[]): MeaningNode[] => {
+  return apiMeaning.map((apiMeaning) => {
+    const { partOfSpeech, definitions, synonyms, antonyms } = apiMeaning;
+
+    const meaningNode: MeaningNode = {
+      partsOfSpeech: [],
+      definitions: mapDefinitions(definitions)
+    }
+    return meaningNode;
+    
+    
+  });
+}
 
 export const getMeaning = async (word: string) => {
   try {
     const definitions = await getDefinition(word);
     if (definitions && definitions.length > 0 && definitions[0].meanings) {
-      return definitions[0].meanings[0];
+      return mapApiMeaningToNodes(definitions[0].meanings);
     } else {
       console.log('No meaning found for word:', word);
       return null;
@@ -116,17 +141,17 @@ export const getMeaning = async (word: string) => {
 };
 
 export async function addMeaning(
-  wordData: WordData
-): Promise<WordData | undefined> {
-  const meaning = await getMeaning(wordData.word);
-  if (meaning !== undefined && meaning !== null) {
-    const wordObject: WordData = {
-      ...wordData,
-      meaning,
+  wordNode: WordNode
+): Promise<WordNode | undefined> {
+  const meanings = await getMeaning(wordNode.word);
+  if (meanings !== undefined && meanings !== null) {
+    const wordObject: WordNode = {
+      ...wordNode,
+      meanings,
     };
     return wordObject;
   } else {
-    console.log('No meaning found for word:', wordData.word);
+    console.log('No meaning found for word:', wordNode.word);
     return;
   }
 }

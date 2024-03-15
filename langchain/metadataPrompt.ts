@@ -1,13 +1,13 @@
-import type { WordData } from '../types/wordData';
+import type { WordNode } from '../types/wordNode';
 
-export const metadataPrompt = (wordData: WordData) => {
-  if (!wordData.meaning) {
+export const metadataPrompt = (wordNode: WordNode) => {
+  if (!wordNode.meanings) {
     throw new Error('No meaning found for word');
   }
   const input = `Please generate additional metadata for the word "${
-    wordData.word
+    wordNode.word
   }" based on its definition: ${JSON.stringify(
-    wordData.meaning
+    wordNode.meanings
   )}. The metadata will be used to create connections in a Neo4j "Poetry Building Knowledge Graph".
 
   Please provide the metadata as a JSON array containing 3 objects, each with the following properties:
