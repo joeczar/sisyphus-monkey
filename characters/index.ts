@@ -1,5 +1,10 @@
 import { getAndParsePackets } from './readAndSavePackets';
 import { packetService } from '../db/neo4j/PacketService';
+import { CharServer } from '../server/CharServer';
+import { charsState } from '../state/CharsState';
+
+// const server = new CharServer();
+// const app = server.getApp();
 
 async function initializeChars() {
   if ((await packetService.checkConnection()) === false) {
@@ -18,14 +23,20 @@ async function initializeChars() {
       process.exit(1);
     }
   }
+  charsState.setIsReady(true);
   // get user input to start the process
   const prompt = 'Press any key to start the process';
   process.stdout.write(prompt);
   for await (const line of console) {
     if (line) {
-      await getAndParsePackets();
+      // await getAndParsePackets();
+      charsState.addToTotalPackets(1);
     }
   }
 }
 
 await initializeChars();
+// export default {
+//   port: 4001, // Port is specified here for environments like Bun that use it
+//   fetch: app.fetch.bind(app),
+// };

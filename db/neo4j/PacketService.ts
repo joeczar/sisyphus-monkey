@@ -64,6 +64,21 @@ export class PacketService extends Neo4jServiceBase {
       session.close();
     }
   }
+  getPackets(amount: number, offset: number = 0) {
+    const session = this.driver.session();
+    try {
+      const result = session.run(
+        `MATCH (p:Packet) RETURN p SKIP $offset LIMIT $amount`,
+        {
+          amount,
+          offset,
+        }
+      );
+      return result;
+    } finally {
+      session.close();
+    }
+  }
 }
 
 const packetService = new PacketService();
