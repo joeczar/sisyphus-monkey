@@ -12,7 +12,7 @@ export abstract class Neo4jServiceBase {
     const session = this.driver.session();
     try {
       const result = await session.run(
-        'RETURN "Connection successful" as message'
+        'RETURN "Message from Neo4j" as message'
       );
       console.log('Connection successful', result.records[0].get('message'));
       return true;

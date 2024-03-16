@@ -29,19 +29,22 @@ export class PacketService extends Neo4jServiceBase {
     try {
       const result = await session.run(
         `UNWIND $packets AS packet
-         CREATE (p:Packet {id: packet.id, content: packet.content, source: packet.source, charCount: packet.charCount })
-         WITH p
-         ORDER BY p.id
-         WITH collect(p) AS packets
-         FOREACH (i IN RANGE(0, size(packets)-2) |
-           FOREACH (p1 IN [packets[i]] |
-             FOREACH (p2 IN [packets[i+1]] |
-               CREATE (p1)-[:NEXT]->(p2)
-             )
-           )
-         )`,
+        MERGE (s:Source {id: packet.source})
+        CREATE (p:Packet {packetNr: packet.id, content: packet.content, charCount: packet.charCount, timestamp: packet.timestamp})
+        CREATE (p)-[:ORIGINATES_FROM]->(s)
+        WITH p, packet
+        ORDER BY p.packetNr
+        WITH collect(p) AS packets
+        FOREACH (i IN RANGE(0, size(packets)-2) |
+          FOREACH (p1 IN [packets[i]] |
+            FOREACH (p2 IN [packets[i+1]] |
+              CREATE (p1)-[:NEXT]->(p2)
+            )
+          )
+        )
+        RETURN packets`,
         {
-          packets,
+          packets, // Ensure your 'packets' array has the correct structure expected by the query
         }
       );
       return result;
@@ -63,5 +66,5 @@ export class PacketService extends Neo4jServiceBase {
   }
 }
 
-const packetService = new PacketService()
-export {packetService}
+const packetService = new PacketService();
+export { packetService };
