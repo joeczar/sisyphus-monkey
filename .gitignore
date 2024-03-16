@@ -4,3 +4,4 @@ sysyphos_original/
 found-words/words.txt
 mydatabase.db
 mydatabase.db-journal
+.env
