@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { state } from '../state/stateManager';
 import { packetService } from '../db/neo4j/PacketService';
+import { charsState } from '../state/CharsState';
 
 const FOLDER_PATH = path.join(__dirname, '..', 'generated-letters-chunked');
 const BATCH_LENGTH = 50;
@@ -24,22 +25,7 @@ export async function getAndParsePackets() {
       }))
       .slice(0, 10)
   );
-  files.sort((a, b) => {
-    const matchA = a.match(/^(\d+)_sisyphos-chunk-(\d+)\.json$/);
-    const matchB = b.match(/^(\d+)_sisyphos-chunk-(\d+)\.json$/);
-    if (!matchA || !matchB) return 0; // or handle this case as an error
-
-    const numA1 = parseInt(matchA[1], 10);
-    const numA2 = parseInt(matchA[2], 10);
-    const numB1 = parseInt(matchB[1], 10);
-    const numB2 = parseInt(matchB[2], 10);
-
-    if (numA1 !== numB1) {
-      return numA1 - numB1;
-    } else {
-      return numA2 - numB2;
-    }
-  });
+  files.sort((a, b) => sortFilesByTitleNumbers(a, b));
 
   let packetBatch: Packet[] = [];
   for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
@@ -53,6 +39,7 @@ export async function getAndParsePackets() {
     if (packetBatch.length === BATCH_LENGTH) {
       try {
         await packetService.savePacketBatch(packetBatch);
+        charsState.addToTotalPackets(packetBatch.length);
         packetBatch = [];
       } catch (error) {
         console.error('Error saving packet batch', error);
@@ -62,3 +49,20 @@ export async function getAndParsePackets() {
     }
   }
 }
+
+const sortFilesByTitleNumbers = (a: string, b: string) => {
+  const matchA = a.match(/^(\d+)_sisyphos-chunk-(\d+)\.json$/);
+  const matchB = b.match(/^(\d+)_sisyphos-chunk-(\d+)\.json$/);
+  if (!matchA || !matchB) return 0; // or handle this case as an error
+
+  const numA1 = parseInt(matchA[1], 10);
+  const numA2 = parseInt(matchA[2], 10);
+  const numB1 = parseInt(matchB[1], 10);
+  const numB2 = parseInt(matchB[2], 10);
+
+  if (numA1 !== numB1) {
+    return numA1 - numB1;
+  } else {
+    return numA2 - numB2;
+  }
+};
