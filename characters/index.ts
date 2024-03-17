@@ -8,7 +8,8 @@ import { redisClient } from '../db/redis/redisConnect';
 // const app = server.getApp();
 
 async function initializeChars() {
-  redisClient.connect();
+  const pong = await redisClient.ping();
+  console.log('Redis ping:', pong);
   if ((await packetService.checkConnection()) === false) {
     console.error('Could not connect to Neo4j');
     // retry 3 times
