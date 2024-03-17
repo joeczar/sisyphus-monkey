@@ -8,6 +8,8 @@ import { redisClient } from '../db/redis/redisConnect';
 // const app = server.getApp();
 
 async function initializeChars() {
+  console.log('Initializing chars server...');
+  await redisClient.connect();
   const pong = await redisClient.ping();
   console.log('Redis ping:', pong);
   if ((await packetService.checkConnection()) === false) {
