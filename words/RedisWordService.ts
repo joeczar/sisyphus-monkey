@@ -12,31 +12,31 @@ export class PacketChannelService {
   static async initRedis(): Promise<void> {
     console.log('Initializing Redis client...');
 
-    if (!this.redisClient) {
-      this.redisClient = createClient({
-        url: process.env.REDIS_HOST,
-      });
-      console.log('Redis client created.');
+    // if (!this.redisClient) {
+    //   this.redisClient = createClient({
+    //     url: process.env.REDIS_HOST,
+    //   });
+    //   console.log('Redis client created.');
 
-      this.redisClient.on('connect', () => {
-        this.isConnected = true;
-        console.log('Redis connection established.');
-      });
+    //   this.redisClient.on('connect', () => {
+    //     this.isConnected = true;
+    //     console.log('Redis connection established.');
+    //   });
 
-      this.redisClient.on('error', (error) => {
-        this.isConnected = false;
-        console.error('Error connecting to Redis:', error);
-        throw error;
-      });
+    //   this.redisClient.on('error', (error) => {
+    //     this.isConnected = false;
+    //     console.error('Error connecting to Redis:', error);
+    //     throw error;
+    //   });
 
-      this.redisClient.on('close', () => {
-        this.isConnected = false;
-        console.log('Connection to Redis closed.');
-      });
+    //   this.redisClient.on('close', () => {
+    //     this.isConnected = false;
+    //     console.log('Connection to Redis closed.');
+    //   });
 
-      await this.redisClient.connect();
-      console.log('Redis client initialized.');
-    }
+    //   // await this.redisClient.connect();
+    //   console.log('Redis client initialized.');
+    // }
   }
 
   static async addPacketToStream(packet: Packet) {

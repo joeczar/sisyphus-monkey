@@ -15,7 +15,7 @@ export class RedisService {
 
     try {
       console.log('Connecting to Redis...');
-      await this.redisClient.connect();
+      // await this.redisClient.connect();
       console.log('Redis connection established.');
     } catch (error) {
       console.error('Error connecting to Redis:', error);
