@@ -1,4 +1,5 @@
-import { type RedisConfig, redisConfig } from '../db/redisConfig';
+import { type RedisConfig, redisConfig } from '../db/redis/redisConfig';
+import { redisClient } from '../db/redis/redisConnect';
 import BaseState from './BaseState';
 
 export type CharsStateType = {
@@ -17,7 +18,7 @@ const defaultState: CharsStateType = {
 // TODO: htop system state
 class CharsState extends BaseState<CharsStateType> {
   private constructor() {
-    super();
+    super('chars');
     this.state = defaultState;
   }
 
@@ -44,4 +45,4 @@ class CharsState extends BaseState<CharsStateType> {
   }
 }
 
-export const charsState = CharsState.getInstance('chars');
+export const charsState = CharsState.getInstance('chars', redisClient);

@@ -2,11 +2,13 @@ import { getAndParsePackets } from './readAndSavePackets';
 import { packetService } from '../db/neo4j/PacketService';
 import { CharServer } from '../server/CharServer';
 import { charsState } from '../state/CharsState';
+import { redisClient } from '../db/redis/redisConnect';
 
 // const server = new CharServer();
 // const app = server.getApp();
 
 async function initializeChars() {
+  redisClient.connect();
   if ((await packetService.checkConnection()) === false) {
     console.error('Could not connect to Neo4j');
     // retry 3 times
@@ -23,16 +25,16 @@ async function initializeChars() {
       process.exit(1);
     }
   }
-  charsState.setIsReady(true);
-  // get user input to start the process
-  const prompt = 'Press any key to start the process';
-  process.stdout.write(prompt);
-  for await (const line of console) {
-    if (line) {
-      // await getAndParsePackets();
-      charsState.addToTotalPackets(1);
-    }
-  }
+  // charsState.setIsReady(true);
+  // // get user input to start the process
+  // const prompt = 'Press any key to start the process';
+  // process.stdout.write(prompt);
+  // for await (const line of console) {
+  //   if (line) {
+  //     // await getAndParsePackets();
+  //     charsState.addToTotalPackets(1);
+  //   }
+  // }
 }
 
 await initializeChars();
