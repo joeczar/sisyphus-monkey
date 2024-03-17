@@ -29,27 +29,12 @@ export async function parsePacket(packet: Packet) {
       boundaryBuffer += packet.content[j];
 
       if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-        const hasWord = await PacketChannelService.getWord(boundaryBuffer);
-
-        if (hasWord) {
-          if (hasWord === 'trash') {
-            console.log('Word is trash:', boundaryBuffer);
-            break;
-          }
-          console.log('Word already in Redis:', boundaryBuffer);
-          const wordNode = createWordNode(boundaryBuffer, packet.id, {
-            start: i,
-            end: j,
-          });
-          words.push(wordNode);
-        } else {
-          const wordNode = createWordNode(boundaryBuffer, packet.id, {
-            start: i,
-            end: j,
-          });
-          words.push(wordNode);
-        }
-        break;
+        console.log('Word found', boundaryBuffer);
+        const wordNode = createWordNode(boundaryBuffer, packet.id, {
+          start: i,
+          end: j,
+        });
+        words.push(wordNode);
       }
     }
   }
