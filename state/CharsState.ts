@@ -14,11 +14,20 @@ const defaultState: CharsStateType = {
   totalChars: 0,
   totalPackets: 0,
 };
-
+// TODO: htop system state
 class CharsState extends BaseState<CharsStateType> {
-  constructor() {
+  private static instance: CharsState;
+
+  private constructor() {
     super('chars');
     this.state = defaultState;
+  }
+
+  public static getInstance(): CharsState {
+    if (!CharsState.instance) {
+      CharsState.instance = new CharsState();
+    }
+    return CharsState.instance;
   }
 
   async setIsReady(isReady: boolean) {
@@ -44,4 +53,4 @@ class CharsState extends BaseState<CharsStateType> {
   }
 }
 
-export const charsState = new CharsState();
+export const charsState = CharsState.getInstance();

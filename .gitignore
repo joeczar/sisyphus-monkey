@@ -6,3 +6,4 @@ mydatabase.db
 mydatabase.db-journal
 .env
 Neo4j-f2a1ada2-Created-2024-03-05.txt
+dump.rdb

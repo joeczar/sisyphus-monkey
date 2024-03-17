@@ -17,9 +17,18 @@ const defaultState: WordStateType = {
 };
 
 class WordsState extends BaseState<WordStateType> {
-  constructor() {
+  private static instance: WordsState;
+
+  private constructor() {
     super('words');
     this.state = defaultState;
+  }
+
+  public static getInstance(): WordsState {
+    if (!WordsState.instance) {
+      WordsState.instance = new WordsState();
+    }
+    return WordsState.instance;
   }
 
   async setWordsForProcessing(words: WordNode[]) {
@@ -53,4 +62,4 @@ class WordsState extends BaseState<WordStateType> {
   }
 }
 
-export const wordsState = new WordsState();
+export const wordsState = WordsState.getInstance();
