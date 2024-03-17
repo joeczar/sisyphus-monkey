@@ -1,4 +1,3 @@
-import { type RedisConfig, redisConfig } from '../db/redis/redisConfig';
 import { redisClient } from '../db/redis/redisConnect';
 import type { WordNode } from '../types/wordNode';
 import BaseState from './BaseState';
@@ -18,14 +17,22 @@ const defaultState: WordStateType = {
 };
 
 class WordsState extends BaseState<WordStateType> {
-  private constructor() {
-    super('words');
+  static #instance: WordsState;
+  private constructor(private identifier: string, defaultState: WordStateType) {
+    super(identifier, defaultState);
     this.state = defaultState;
+  }
+
+  public static getInstance(identifier: string, defaultState: WordStateType) {
+    if (!this.#instance) {
+      this.#instance = new WordsState(identifier, defaultState);
+    }
+    return this.#instance;
   }
 
   async setWordsForProcessing(words: WordNode[]) {
     this.addToTotalWords(words.length);
-    const pipeline = this.redisClient?.pipeline();
+    const pipeline = redisClient.multi();
     words.forEach((word) => {
       pipeline?.set(`word:${word.wordNr}`, JSON.stringify(word));
     });
@@ -46,6 +53,9 @@ class WordsState extends BaseState<WordStateType> {
       totalWords: this.state.totalWords + totalWords,
     };
   }
+  get totalWords() {
+    return this.state.totalWords;
+  }
   async addToPacketsProcessed(packetsProcessed: number) {
     this.state = {
       ...this.state,
@@ -54,4 +64,4 @@ class WordsState extends BaseState<WordStateType> {
   }
 }
 
-// export const wordsState = WordsState.getInstance('words', redisClient);
+export const wordsState = WordsState.getInstance('words', defaultState);

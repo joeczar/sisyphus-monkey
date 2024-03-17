@@ -42,8 +42,8 @@ export type BoundaryWordData = WordData & {
   nextPacketNr: number;
 };
 
-export type WordDataPacket = {
-  wordData: WordData[];
+export type WordNodePacket = {
+  wordNode: WordData[];
   nextPacketNr: number;
 };
 

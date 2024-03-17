@@ -1,4 +1,4 @@
-import { type RedisClientType } from 'redis';
+import { redisClient } from '../db/redis/redisConnect';
 
 export enum Channel {
   chars = 'channel:chars',
@@ -11,26 +11,24 @@ export enum Channel {
 class BaseState<T> {
   protected prefix: string = '';
   protected channel: Channel = Channel.db;
-  protected isConnected = false;
-  protected static instance: BaseState<any>;
-  protected redisClient: RedisClientType | undefined;
-  #state: T;
 
-  constructor(identifier: string, redisClient: RedisClientType) {
+  #state!: T;
+
+  constructor(identifier: string, defaultState: T) {
     this.prefix = `state:${identifier}`;
     this.channel = Channel[identifier as keyof typeof Channel] || Channel.db;
-    this.redisClient = redisClient;
-    this.#state = {} as T;
+    this.#state = defaultState;
+    this.initializeState().catch(console.error);
   }
 
-  public static getInstance<T>(
-    identifier: string,
-    redisClient: RedisClientType
-  ): BaseState<T> {
-    if (!BaseState.instance) {
-      BaseState.instance = new BaseState<T>(identifier, redisClient);
+  async initializeState(): Promise<void> {
+    const state = await this.fetchStateFromRedis();
+    if (state) {
+      // console.log('Fetched state from Redis:', this.channel, state);
+      this.#state = state;
+    } else {
+      this.#state = { ...this.#state, ...this.#state };
     }
-    return BaseState.instance;
   }
 
   get state(): T {
@@ -38,25 +36,34 @@ class BaseState<T> {
   }
 
   set state(newState: T) {
-    this.#state = { ...this.state, ...newState };
+    this.#state = { ...this.#state, ...newState };
     this.syncStateWithRedis().catch(console.error);
-    console.log('State updated:', this.channel, this.#state);
+    // console.log('State updated:', this.channel, this.#state);
     this.publishState(this.#state).catch(console.error);
   }
 
-  private async syncStateWithRedis() {
-    await this.redisClient?.set(this.prefix, JSON.stringify(this.#state));
+  protected async syncStateWithRedis() {
+    await redisClient?.set(this.prefix, JSON.stringify(this.#state));
+    // console.log('State synced with Redis:', this.channel, this.#state);
+  }
+
+  protected async fetchStateFromRedis(): Promise<T | null> {
+    const state = await redisClient?.get(this.prefix);
+    if (!state) {
+      return null;
+    }
+    return JSON.parse(state);
   }
 
   async publishState(state: T): Promise<void> {
-    await this.redisClient?.publish(this.channel, JSON.stringify(state));
+    await redisClient?.publish(this.channel, JSON.stringify(state));
   }
 
   subscribeToChannel(
     channel: string,
     callback: (message: string) => void
   ): void {
-    this.redisClient
+    redisClient
       ?.subscribe(channel, (message) => {
         callback(message);
       })
