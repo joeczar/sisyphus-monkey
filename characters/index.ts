@@ -1,7 +1,7 @@
 import { getAndParsePackets } from './readAndSavePackets';
 import { packetService } from '../db/neo4j/PacketService';
-import { CharServer } from '../server/CharServer';
-import { charsState } from '../state/CharsState';
+// import { CharServer } from '../server/CharServer';
+// import { charsState } from '../state/CharsState';
 import { redisClient } from '../db/redis/redisConnect';
 
 // const server = new CharServer();
@@ -9,7 +9,7 @@ import { redisClient } from '../db/redis/redisConnect';
 
 async function initializeChars() {
   console.log('Initializing chars server...');
-  await redisClient.connect();
+  redisClient.set('chars:isReady', 'true');
   const pong = await redisClient.ping();
   console.log('Redis ping:', pong);
   if ((await packetService.checkConnection()) === false) {

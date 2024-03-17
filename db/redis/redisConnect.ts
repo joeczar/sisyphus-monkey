@@ -1,30 +1,34 @@
-import { redisConfig, type RedisConfig } from './redisConfig';
-import RedisClient, { type Redis } from 'ioredis';
+import { createClient } from 'redis';
+import { redisConfig } from './redisConfig';
 
-let hasConnected = false;
-export const redisConnect = (redisConfig: RedisConfig) => {
-  const redisClient = new RedisClient(redisConfig);
+let isConnected = false;
 
-  console.log('Redis client created.');
-  if (!hasConnected) {
-    redisClient.on('connect', () => {
-      console.log('Redis connection established.');
-      hasConnected = true;
-    });
+const client = createClient({
+  url: `${redisConfig.host}`,
+  password: redisConfig.password,
+});
 
-    redisClient.on('error', (error) => {
-      console.error('Error connecting to Redis:', error);
-      throw error;
-    });
+client.on('connect', () => {
+  isConnected = true;
+  console.log('Redis connection established.');
+});
 
-    redisClient.on('close', () => {
-      console.log('Connection to Redis closed.');
-    });
+client.on('error', (error) => {
+  isConnected = false;
+  console.error('Error connecting to Redis:', error);
+});
+
+(async () => {
+  try {
+    if (!isConnected) {
+      console.log('Preparing to connect to Redis...', { isConnected });
+      await client.connect();
+      console.log('Successfully connected to Redis.');
+    }
+  } catch (error) {
+    console.error('Failed to connect to Redis:', error);
+    process.exit(1);
   }
+})();
 
-  console.log('Redis client initialized.');
-
-  return redisClient;
-};
-
-export const redisClient = redisConnect(redisConfig);
+export const redisClient = client;
