@@ -17,25 +17,16 @@ const defaultState: WordStateType = {
 };
 
 class WordsState extends BaseState<WordStateType> {
-  private static instance: WordsState;
-
   private constructor() {
-    super('words');
+    super();
     this.state = defaultState;
-  }
-
-  public static getInstance(): WordsState {
-    if (!WordsState.instance) {
-      WordsState.instance = new WordsState();
-    }
-    return WordsState.instance;
   }
 
   async setWordsForProcessing(words: WordNode[]) {
     this.addToTotalWords(words.length);
     const pipeline = this.redisClient.pipeline();
     words.forEach((word) => {
-      this.redisClient.set(this.prefix, JSON.stringify(words));
+      pipeline.set(`word:${word.wordNr}`, JSON.stringify(word));
     });
     await pipeline.exec();
   }
@@ -62,4 +53,4 @@ class WordsState extends BaseState<WordStateType> {
   }
 }
 
-export const wordsState = WordsState.getInstance();
+export const wordsState = WordsState.getInstance('words');
