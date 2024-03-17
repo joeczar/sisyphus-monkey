@@ -54,4 +54,4 @@ class WordsState extends BaseState<WordStateType> {
   }
 }
 
-export const wordsState = WordsState.getInstance('words', redisClient);
+// export const wordsState = WordsState.getInstance('words', redisClient);

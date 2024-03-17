@@ -1,5 +1,4 @@
-import { type Redis } from 'ioredis';
-import { redisClient } from '../db/redis/redisConnect';
+import { type RedisClientType } from 'redis';
 
 export enum Channel {
   chars = 'channel:chars',
@@ -11,26 +10,27 @@ export enum Channel {
 
 class BaseState<T> {
   protected prefix: string = '';
-  protected channel: string = '';
+  protected channel: Channel = Channel.db;
   protected isConnected = false;
-  protected static instance: BaseState<unknown>;
-  protected redisClient: Redis | undefined;
-  #state: T = {} as T;
+  protected static instance: BaseState<any>;
+  protected redisClient: RedisClientType | undefined;
+  #state: T;
 
-  constructor(private identifier: string) {
-    this.prefix = `state:${this.identifier}`;
-    this.channel = `channel:${this.identifier}`;
+  constructor(identifier: string, redisClient: RedisClientType) {
+    this.prefix = `state:${identifier}`;
+    this.channel = Channel[identifier as keyof typeof Channel] || Channel.db;
+    this.redisClient = redisClient;
+    this.#state = {} as T;
   }
 
-  public static getInstance(
+  public static getInstance<T>(
     identifier: string,
-    redisClient: Redis
-  ): BaseState<unknown> {
-    if (!this.instance) {
-      this.instance = new BaseState(identifier);
-      this.instance.redisClient = redisClient;
+    redisClient: RedisClientType
+  ): BaseState<T> {
+    if (!BaseState.instance) {
+      BaseState.instance = new BaseState<T>(identifier, redisClient);
     }
-    return this.instance;
+    return BaseState.instance;
   }
 
   get state(): T {
@@ -45,10 +45,10 @@ class BaseState<T> {
   }
 
   private async syncStateWithRedis() {
-    this.redisClient?.set(this.prefix, JSON.stringify(this.#state));
+    await this.redisClient?.set(this.prefix, JSON.stringify(this.#state));
   }
 
-  async publishState<T>(state: T): Promise<void> {
+  async publishState(state: T): Promise<void> {
     await this.redisClient?.publish(this.channel, JSON.stringify(state));
   }
 
@@ -56,26 +56,12 @@ class BaseState<T> {
     channel: string,
     callback: (message: string) => void
   ): void {
-    // Subscribe to the channel
-    this.redisClient?.subscribe(channel, (err, count) => {
-      if (err) {
-        // Handle error case
-        console.error('Failed to subscribe: %s', err.message);
-      } else {
-        // Success case: Possibly log the subscription count or other success indication
-        console.log(
-          `Subscribed successfully! This client is currently subscribed to ${count} channels.`
-        );
-      }
-    });
-
-    // Listen for messages on the channel
-    this.redisClient?.on('message', (subscribedChannel, message) => {
-      if (channel === subscribedChannel) {
+    this.redisClient
+      ?.subscribe(channel, (message) => {
         callback(message);
-      }
-    });
+      })
+      .catch(console.error);
   }
 }
-const baseState = BaseState.getInstance('base', redisClient);
+
 export default BaseState;
