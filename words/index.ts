@@ -21,12 +21,10 @@ const handleCharsMessage = async (parsedMessage: any) => {
     console.log('Chars server is ready');
     let packetsProcessed = 0;
     while (packetsProcessed <= packetCount) {
-      console.log('Processing packets...', packetsProcessed);
       const packets = await packetService
         .getPackets(50, packetsProcessed)
         .catch((error) => console.error('Error processing packets', error));
       packetsProcessed += 50;
-      console.log('Packets:', packets);
     }
   }
 };
