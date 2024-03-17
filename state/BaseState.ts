@@ -12,14 +12,16 @@ export enum Channel {
 
 class BaseState<T> {
   protected redisClient: Redis;
-  protected prefix: string = 'state';
-  protected channel = 'state';
+
+  protected prefix: string = '';
+  protected channel: string = '';
   protected isConnected = false;
+  protected static instances: Map<string, BaseState<any>> = new Map();
   #state: T = {} as T;
 
-  constructor(identifier: string) {
+  constructor() {
     this.redisClient = new RedisClient(redisConfig);
-    if (this.redisClient) {
+    if (!BaseState.instances.has(this.prefix)) {
       console.log('Redis client created.');
 
       this.redisClient.on('connect', () => {
@@ -42,8 +44,13 @@ class BaseState<T> {
       console.log('Redis client initialized.');
     }
     console.log(`Redis ${this.prefix} client created.`);
-    this.prefix = `state:${identifier}`;
-    this.channel = `channel:${identifier}`;
+  }
+
+  public static getInstance(identifier: string): BaseState<unknown> {
+    if (!BaseState.instances.has(identifier)) {
+      BaseState.instances.set(identifier, new this());
+    }
+    return BaseState.instances.get(identifier) as BaseState<unknown>;
   }
 
   get state(): T {
@@ -90,5 +97,5 @@ class BaseState<T> {
     });
   }
 }
-
+const baseState = BaseState.getInstance('base');
 export default BaseState;
