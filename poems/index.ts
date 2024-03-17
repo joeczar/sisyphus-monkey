@@ -1,35 +1,43 @@
-import { processFolder } from "./readAndParse"
-import { Hono } from "hono";
-import { cors } from "hono/cors";
-import { prettyJSON } from "hono/pretty-json";
-import neo4jDb from "../db/Neo4jDb";
+import { redisClient } from '../db/redis/redisConnect';
+import { poemsState } from '../state/PoemsState';
+import type { WordStateType } from '../state/WordsState';
+import { safeParseJson } from '../utils/safeJsonParse';
 
-const app = new Hono();
+// const server = new PoemsServer();
+// const app = server.getApp();
 
-app.get("/", async (c) => c.json({ server: "Poems", neo4j:await neo4jDb.checkConnection(), packets: await neo4jDb.countPackets() }));
-app.get("/packets", async (c) => {
-  const packets = await neo4jDb.getPackets(5)
-  console.log(packets)
-  return c.json(packets)
-})
+// Utility function for safe JSON parsing
 
-app.use(prettyJSON());
-app.use(cors());
-app.notFound((c) => c.json({ message: "No Bueno", ok: false }, 404));
-export const main = async ()=>{
-  console.log("Starting POEMS")
-  const connection = await neo4jDb.checkConnection()
-  await neo4jDb.clearDatabase()
-  console.log("Connected: ", connection)
-  if (!connection) {
-
+const handleWordsMessage = async (parsedMessage: WordStateType) => {
+  const { isReady, isFinishedWithWords, totalWords } = parsedMessage;
+  const { isFinishedWithPoems, totalDefinitions, totalMetadata, totalPoems } =
+    poemsState.state;
+  if (isFinishedWithWords) {
+    console.log('Words server is finished');
   }
-  await processFolder()
+  if (isReady && !isFinishedWithWords) {
+    console.log('poems server is ready');
+  }
+};
 
-}
-main()
+const initializePoems = async () => {
+  console.log('Initializing poems server...');
+  await poemsState.setIsReady(true);
+  console.log('Poems server is ready');
+  redisClient.subscribe('channel:words', async (message) => {
+    console.log('Received message from words:', message);
+    const parsedMessage = await safeParseJson(message);
+    if (parsedMessage) {
+      await handleWordsMessage(parsedMessage).catch((error) =>
+        console.error('Error handling words message for poems:', error)
+      );
+    }
+  });
+};
+
+await initializePoems();
 
 export default {
-  port: 4002,
-  fetch: app.fetch,
+  port: 4003,
+  fetch: app.fetch.bind(app),
 };

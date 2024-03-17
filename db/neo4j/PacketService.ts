@@ -64,19 +64,52 @@ export class PacketService extends Neo4jServiceBase {
       session.close();
     }
   }
-  getPackets(amount: number, offset: number = 0) {
+
+  async getPackets(
+    amount: number,
+    offset: number = 0
+  ): Promise<Packet[] | undefined> {
     const session = this.driver.session();
     try {
-      const result = session.run(
-        `MATCH (p:Packet) RETURN p SKIP $offset LIMIT $amount`,
+      const result = await session.run(
+        `MATCH (p:Packet) RETURN p SKIP toInteger($offset) LIMIT toInteger($amount)`,
         {
           amount,
           offset,
         }
       );
-      return result;
+      if (result.records.length > 0) {
+        const packets: Packet[] = result.records.map((record) =>
+          record.get('p')
+        );
+        console.log('Packets:', packets);
+        return result.records.map((record) => record.get('p'));
+      }
     } finally {
       session.close();
+    }
+  }
+
+  async getPacketCount(): Promise<number> {
+    const session = this.driver.session();
+    try {
+      const result = await session.run(
+        'MATCH (p:Packet) RETURN count(p) AS count'
+      );
+      if (result.records.length > 0) {
+        // For numbers within JavaScript’s safe integer range, .low is sufficient
+        const countResult = result.records[0].get('count');
+
+        return Math.floor(countResult.toInt());
+      } else {
+        // No result scenario
+        return 0;
+      }
+    } catch (error) {
+      console.error('Error in getPacketCount:', error);
+      throw error; // Rethrow or handle as per your error handling strategy
+    } finally {
+      await session.close();
     }
   }
 }

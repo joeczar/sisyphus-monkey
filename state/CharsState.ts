@@ -1,4 +1,6 @@
-// import { redisClient } from '../db/redis/RedisManager';
+// Make sure to import your newly set up Redis client
+
+import { redisClient } from '../db/redis/redisConnect';
 import BaseState from './BaseState';
 
 export type CharsStateType = {
@@ -14,11 +16,24 @@ const defaultState: CharsStateType = {
   totalChars: 0,
   totalPackets: 0,
 };
-// TODO: htop system state
+
 class CharsState extends BaseState<CharsStateType> {
+  static #instance: CharsState;
+
   private constructor() {
-    super('chars');
-    this.state = defaultState;
+    super('chars', {
+      isReady: false,
+      isFinishedWithChars: false,
+      totalChars: 0,
+      totalPackets: 0,
+    });
+  }
+
+  public static getInstance(): CharsState {
+    if (!this.#instance) {
+      this.#instance = new CharsState();
+    }
+    return this.#instance;
   }
 
   async setIsReady(isReady: boolean) {
@@ -44,4 +59,5 @@ class CharsState extends BaseState<CharsStateType> {
   }
 }
 
-// export const charsState = CharsState.getInstance('chars', redisClient);
+// Initialize the CharsState with the Redis client
+export const charsState = CharsState.getInstance();

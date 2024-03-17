@@ -2,61 +2,32 @@ import { createClient, type RedisClientType } from 'redis';
 
 import { charEventsEmitter } from '../characters/charEvents';
 import type { Packet } from '../characters/packet.type';
-import type { WordData, WordDefinition } from '../types/wordData';
+import type { WordNode, WordDefinition } from '../types/wordNode';
+import { redisClient } from '../db/redis/redisConnect';
 
 export class PacketChannelService {
   static rateLimit = 0;
   static redisClient: RedisClientType | null = null;
   static isConnected = false;
 
-  static async initRedis(): Promise<void> {
-    console.log('Initializing Redis client...');
-
-    // if (!this.redisClient) {
-    //   this.redisClient = createClient({
-    //     url: process.env.REDIS_HOST,
-    //   });
-    //   console.log('Redis client created.');
-
-    //   this.redisClient.on('connect', () => {
-    //     this.isConnected = true;
-    //     console.log('Redis connection established.');
-    //   });
-
-    //   this.redisClient.on('error', (error) => {
-    //     this.isConnected = false;
-    //     console.error('Error connecting to Redis:', error);
-    //     throw error;
-    //   });
-
-    //   this.redisClient.on('close', () => {
-    //     this.isConnected = false;
-    //     console.log('Connection to Redis closed.');
-    //   });
-
-    //   // await this.redisClient.connect();
-    //   console.log('Redis client initialized.');
-    // }
-  }
-
   static async addPacketToStream(packet: Packet) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
-    await this.redisClient.xAdd('packetsStream', '*', {
+    await redisClient.xAdd('packetsStream', '*', {
       packet: JSON.stringify(packet),
     });
   }
   static async getWord(word: string) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      const wordData = await this.redisClient.get(word);
-      if (!wordData) {
+      const wordNode = await redisClient.get(word);
+      if (!wordNode) {
         return null;
       }
-      const parsed = JSON.parse(wordData) as WordData;
+      const parsed = JSON.parse(wordNode) as WordNode;
       if (parsed.trash) {
         return 'trash';
       }
@@ -67,12 +38,12 @@ export class PacketChannelService {
     }
   }
 
-  static async setWord(word: string, wordData: WordData) {
-    if (!this.redisClient) {
+  static async setWord(word: string, wordNode: WordNode) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      await this.redisClient?.set(word, JSON.stringify(wordData));
+      await redisClient?.set(word, JSON.stringify(wordNode));
     } catch (error) {
       console.error('Error setting word definition:', error);
     }
@@ -82,24 +53,24 @@ export class PacketChannelService {
     word: string,
     definition: WordDefinition[] | '404'
   ) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
       const stringified = JSON.stringify(definition);
       const key = `def:${word}`;
-      await this.redisClient?.set(key, stringified);
+      await redisClient?.set(key, stringified);
     } catch (error) {
       console.error('Error setting word definition:', error);
     }
   }
   static async getDefinition(word: string) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
       const key = `def:${word}`;
-      const definition = await this.redisClient.get(key);
+      const definition = await redisClient.get(key);
       if (!definition) {
         return null;
       }
@@ -110,21 +81,21 @@ export class PacketChannelService {
     }
   }
   static async saveState(state: any) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      await this.redisClient.set('state', JSON.stringify(state));
+      await redisClient.set('state', JSON.stringify(state));
     } catch (error) {
       console.error('Error saving state:', error);
     }
   }
   static async getState() {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      const state = await this.redisClient.get('state');
+      const state = await redisClient.get('state');
       if (!state) {
         return null;
       }
@@ -135,21 +106,21 @@ export class PacketChannelService {
     }
   }
   static async setMetadata(word: string, metadata: any) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      await this.redisClient.set(`meta:${word}`, JSON.stringify(metadata));
+      await redisClient.set(`meta:${word}`, JSON.stringify(metadata));
     } catch (error) {
       console.error('Error setting metadata:', error);
     }
   }
   static async getMetadata(word: string) {
-    if (!this.redisClient) {
+    if (!redisClient) {
       throw new Error('Redis client not initialized');
     }
     try {
-      const metadata = await this.redisClient.get(`meta:${word}`);
+      const metadata = await redisClient.get(`meta:${word}`);
       if (!metadata) {
         return null;
       }
@@ -161,13 +132,13 @@ export class PacketChannelService {
   }
 
   // static async processStreamPackets() {
-  //   if (!this.redisClient) {
+  //   if (!redisClient) {
   //     throw new Error('Redis client not initialized');
   //   }
 
   //   // Create a consumer group for the first time (ignore error if exists)
   //   try {
-  //     await this.redisClient.xGroupCreate(
+  //     await redisClient.xGroupCreate(
   //       'packetsStream',
   //       'packetProcessors',
   //       '0',
@@ -187,7 +158,7 @@ export class PacketChannelService {
 
   //   // Continuously read and process packets from the stream
   //   while (true) {
-  //     const data = await this.redisClient.xReadGroup(
+  //     const data = await redisClient.xReadGroup(
   //       'packetProcessors', // Consumer Group name
   //       'processor1', // Consumer name
   //       [{ key: 'packetsStream', id: '>' }], // Read only new messages
@@ -198,7 +169,7 @@ export class PacketChannelService {
   //       for (const message of data[0].messages) {
   //         const packet = JSON.parse(message.message.packet);
   //         await this.processPacket(packet); // Your function to process the packet
-  //         await this.redisClient.xAck(
+  //         await redisClient.xAck(
   //           'packetsStream',
   //           'packetProcessors',
   //           message.id
