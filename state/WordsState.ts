@@ -1,4 +1,5 @@
-import { type RedisConfig, redisConfig } from '../db/redisConfig';
+import { type RedisConfig, redisConfig } from '../db/redis/redisConfig';
+import { redisClient } from '../db/redis/redisConnect';
 import type { WordNode } from '../types/wordNode';
 import BaseState from './BaseState';
 
@@ -18,17 +19,17 @@ const defaultState: WordStateType = {
 
 class WordsState extends BaseState<WordStateType> {
   private constructor() {
-    super();
+    super('words');
     this.state = defaultState;
   }
 
   async setWordsForProcessing(words: WordNode[]) {
     this.addToTotalWords(words.length);
-    const pipeline = this.redisClient.pipeline();
+    const pipeline = this.redisClient?.pipeline();
     words.forEach((word) => {
-      pipeline.set(`word:${word.wordNr}`, JSON.stringify(word));
+      pipeline?.set(`word:${word.wordNr}`, JSON.stringify(word));
     });
-    await pipeline.exec();
+    await pipeline?.exec();
   }
 
   async setIsReady(isReady: boolean) {
@@ -53,4 +54,4 @@ class WordsState extends BaseState<WordStateType> {
   }
 }
 
-export const wordsState = WordsState.getInstance('words');
+export const wordsState = WordsState.getInstance('words', redisClient);
