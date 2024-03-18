@@ -38,7 +38,7 @@ class WordsState extends BaseState<WordStateType> {
     words.forEach((word) => {
       const key = `word:${word.wordNr}`;
       console.log('Setting word:', key, word);
-      pipeline?.set(`word:${word.wordNr}`, JSON.stringify(word));
+      pipeline?.set(key, JSON.stringify(word));
     });
     await pipeline?.exec();
   }
