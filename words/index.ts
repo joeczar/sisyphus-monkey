@@ -4,6 +4,7 @@ import { redisClient } from '../db/redis/redisConnect';
 import { safeParseJson } from '../utils/safeJsonParse';
 import { packetService } from '../db/neo4j/PacketService';
 import type { Packet } from '../characters/packet.type';
+import { processPackets } from './parsePackets';
 
 // const server = new WordsServer();
 // const app = server.getApp();
@@ -22,18 +23,20 @@ const handleCharsMessage = async (parsedMessage: any) => {
 
   // while (packetsProcessed <= packetCount) {
   try {
-    const packets = (await packetService
-      .getPackets(50, packetsProcessed)
-      .catch((error) =>
-        console.error('Error fetching packets', error)
-      )) as Packet[];
+    // const packets = (await packetService
+    //   .getPackets(50, packetsProcessed)
+    //   .catch((error) =>
+    //     console.error('Error fetching packets', error)
+    //   )) as Packet[];
 
-    console.log('Packets:', packets?.length);
+    // console.log('Packets:', packets?.length);
 
-    if (packets?.length === 0) {
-      console.log('No packets to process');
-    }
-    wordsState.addToPacketsProcessed(packets.length);
+    // if (packets?.length === 0) {
+    //   console.log('No packets to process');
+    // }
+    // wordsState.addToPacketsProcessed(packets.length);
+    const wordNodes = processPackets(50, packetsProcessed);
+    console.log('Word nodes:', wordNodes);
   } catch (error) {
     console.error('Error fetching packets:', error);
   }
