@@ -35,8 +35,7 @@ const handleCharsMessage = async (parsedMessage: any) => {
     //   console.log('No packets to process');
     // }
     // wordsState.addToPacketsProcessed(packets.length);
-    const wordNodes = processPackets(50, packetsProcessed);
-    console.log('Word nodes:', wordNodes);
+    const wordNodes = await processPackets(50, packetsProcessed);
   } catch (error) {
     console.error('Error fetching packets:', error);
   }

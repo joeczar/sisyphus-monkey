@@ -16,7 +16,7 @@ export const processPackets = async (batchSize: number, offset: number) => {
   }
 };
 
-export async function parsePacket(packet: Packet) {
+export async function parsePacket(packet: Packet): Promise<WordNode[]> {
   let words: WordNode[] = [];
 
   for (let i = 0; i < packet.content.length; i++) {
