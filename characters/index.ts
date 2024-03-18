@@ -10,6 +10,8 @@ import { charsState } from '../state/CharsState';
 
 async function initializeChars() {
   console.log('Initializing chars server...');
+  console.log('Flushing Redis');
+  await redisClient.flushAll();
   redisClient.set('chars:isReady', 'true');
   const pong = await redisClient.ping();
   console.log('Redis ping:', pong);

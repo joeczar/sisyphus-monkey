@@ -46,6 +46,8 @@ const handleCharsMessage = async (parsedMessage: any) => {
 
 const initializeWords = async () => {
   console.log('Initializing words server...');
+  await redisClient.flushAll();
+  console.log('Flushing Redis');
   await wordsState.setIsReady(true);
   console.log('Words server is ready');
 
