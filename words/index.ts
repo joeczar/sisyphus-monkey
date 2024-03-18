@@ -39,7 +39,7 @@ const initializeWords = async () => {
   await wordsState.setIsReady(true);
   console.log('Words server is ready');
 
-  redisClient.subscribe('channel:chars', async (message) => {
+  wordsState.subscribeToChannel('channel:chars', async (message) => {
     console.log('Received message from chars:', message);
     const parsedMessage = await safeParseJson(message);
     if (true || parsedMessage) {

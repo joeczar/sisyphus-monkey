@@ -1,4 +1,6 @@
 import { redisClient } from '../db/redis/redisConnect';
+import { redisPubClient } from '../db/redis/redisPubConnect';
+import { redisSubClient } from '../db/redis/redisSubConnect';
 
 export enum Channel {
   chars = 'channel:chars',
@@ -56,14 +58,14 @@ class BaseState<T> {
   }
 
   async publishState(state: T): Promise<void> {
-    await redisClient?.publish(this.channel, JSON.stringify(state));
+    await redisPubClient?.publish(this.channel, JSON.stringify(state));
   }
 
   subscribeToChannel(
     channel: string,
     callback: (message: string) => void
   ): void {
-    redisClient
+    redisSubClient
       ?.subscribe(channel, (message) => {
         callback(message);
       })
