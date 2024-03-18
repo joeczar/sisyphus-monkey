@@ -29,13 +29,16 @@ export async function parsePacket(packet: Packet) {
     ) {
       boundaryBuffer += packet.content[j];
 
-      if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-        // console.log('Word found', boundaryBuffer);
-        const wordNode = createWordNode(boundaryBuffer, packet.id, {
-          start: i,
-          end: j,
-        });
-        words.push(wordNode);
+      try {
+        if (wordTrie.search(boundaryBuffer.toLowerCase())) {
+          const wordNode = createWordNode(boundaryBuffer, packet.id, {
+            start: i,
+            end: j,
+          });
+          words.push(wordNode);
+        }
+      } catch (error) {
+        console.error('Error occurred while searching for word:', error);
       }
     }
   }
