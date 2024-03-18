@@ -21,15 +21,23 @@ const handleCharsMessage = async (parsedMessage: any) => {
   console.log('Chars server is ready');
 
   // while (packetsProcessed <= packetCount) {
-  const packets = (await packetService
-    .getPackets(50, packetsProcessed)
-    .catch((error) =>
-      console.error('Error fetching packets', error)
-    )) as Packet[];
-  if (packets?.length === 0) {
-    console.log('No packets to process');
+  try {
+    const packets = (await packetService
+      .getPackets(50, packetsProcessed)
+      .catch((error) =>
+        console.error('Error fetching packets', error)
+      )) as Packet[];
+
+    console.log('Packets:', packets?.length);
+
+    if (packets?.length === 0) {
+      console.log('No packets to process');
+    }
+    wordsState.addToPacketsProcessed(packets.length);
+  } catch (error) {
+    console.error('Error fetching packets:', error);
   }
-  wordsState.addToPacketsProcessed(packets.length);
+
   // }
   // }
 };
