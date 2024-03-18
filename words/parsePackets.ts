@@ -8,11 +8,21 @@ import type { WordNode } from '../types/wordNode';
 const MAX_WORD_LENGTH = 20;
 
 export const processPackets = async (batchSize: number, offset: number) => {
-  const packets = await packetService.getPackets(batchSize, offset);
-  for (const packet of packets) {
-    const wordNodes = await parsePacket(packet);
-    console.log('Word nodes:', wordNodes.length, wordNodes[0]);
-    wordsState.setWordsForProcessing(wordNodes);
+  console.log('Processing packets:', batchSize, offset);
+  try {
+    const packets = await packetService.getPackets(batchSize, offset);
+    console.log('Packets:', packets.length);
+    for (const packet of packets) {
+      try {
+        const wordNodes = await parsePacket(packet);
+        console.log('Word nodes:', wordNodes.length, wordNodes[0]);
+        wordsState.setWordsForProcessing(wordNodes);
+      } catch (error) {
+        console.error('Error occurred while parsing packet:', error);
+      }
+    }
+  } catch (error) {
+    console.error('Error occurred while getting packets:', error);
   }
 };
 
