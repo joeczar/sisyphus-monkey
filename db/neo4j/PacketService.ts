@@ -65,10 +65,7 @@ export class PacketService extends Neo4jServiceBase {
     }
   }
 
-  async getPackets(
-    amount: number,
-    offset: number = 0
-  ): Promise<Packet[] | undefined> {
+  async getPackets(amount: number, offset: number = 0): Promise<Packet[]> {
     const session = this.driver.session();
     try {
       const result = await session.run(
@@ -79,12 +76,19 @@ export class PacketService extends Neo4jServiceBase {
         }
       );
       if (result.records.length > 0) {
-        const packets: Packet[] = result.records.map((record) =>
-          record.get('p')
-        );
-        console.log('Packets:', packets);
-        return result.records.map((record) => record.get('p'));
+        const packets = result.records
+          .map((record) => record.get('p'))
+          .map((p) => {
+            return {
+              id: p.properties.id,
+              content: p.properties.content,
+              source: p.properties.source,
+              charCount: p.properties.charCount,
+            } as Packet;
+          });
+        return packets;
       }
+      return [];
     } finally {
       session.close();
     }
