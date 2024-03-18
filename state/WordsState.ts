@@ -32,13 +32,13 @@ class WordsState extends BaseState<WordStateType> {
 
   async setWordsForProcessing(words: WordNode[]) {
     try {
-      // console.log('Setting words for processing:', words.length);
+      console.log('Setting words for processing:', words.length);
       this.addToTotalWords(words.length);
       const pipeline = redisClient.multi();
 
       words.forEach((word) => {
         const key = `word:${word.wordNr}`;
-        console.log('Setting word:', key, word);
+        // console.log('Setting word:', key, word);
         pipeline?.set(key, JSON.stringify(word));
       });
       const results = await pipeline.exec();
