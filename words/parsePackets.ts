@@ -30,7 +30,7 @@ export async function parsePacket(packet: Packet) {
       boundaryBuffer += packet.content[j];
 
       if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-        console.log('Word found', boundaryBuffer);
+        // console.log('Word found', boundaryBuffer);
         const wordNode = createWordNode(boundaryBuffer, packet.id, {
           start: i,
           end: j,
