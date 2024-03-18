@@ -1,9 +1,9 @@
 import { wordsState } from '../state/WordsState';
-import { WordsServer } from '../server/WordsServer';
-import { parsePackets } from './parsePackets';
+// import { WordsServer } from '../server/WordsServer';
 import { redisClient } from '../db/redis/redisConnect';
 import { safeParseJson } from '../utils/safeJsonParse';
 import { packetService } from '../db/neo4j/PacketService';
+import type { Packet } from '../characters/packet.type';
 
 // const server = new WordsServer();
 // const app = server.getApp();
@@ -17,16 +17,22 @@ const handleCharsMessage = async (parsedMessage: any) => {
   if (isFinishedWithChars) {
     console.log('Chars server is finished');
   }
-  if (isReady && !isFinishedWithWords) {
-    console.log('Chars server is ready');
-    let packetsProcessed = 0;
-    while (packetsProcessed <= packetCount) {
-      const packets = await packetService
-        .getPackets(50, packetsProcessed)
-        .catch((error) => console.error('Error processing packets', error));
-      packetsProcessed += 50;
+  // if (isReady && !isFinishedWithWords) {
+  console.log('Chars server is ready');
+
+  while (packetsProcessed <= packetCount) {
+    const packets = (await packetService
+      .getPackets(50, packetsProcessed)
+      .catch((error) =>
+        console.error('Error fetching packets', error)
+      )) as Packet[];
+    if (packets?.length === 0) {
+      console.log('No packets to process');
+      break;
     }
+    wordsState.addToPacketsProcessed(packets.length);
   }
+  // }
 };
 
 const initializeWords = async () => {
