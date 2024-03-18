@@ -31,6 +31,7 @@ class WordsState extends BaseState<WordStateType> {
   }
 
   async setWordsForProcessing(words: WordNode[]) {
+    console.log('Setting words for processing:', words.length);
     this.addToTotalWords(words.length);
     const pipeline = redisClient.multi();
 
