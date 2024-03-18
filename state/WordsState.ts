@@ -31,16 +31,22 @@ class WordsState extends BaseState<WordStateType> {
   }
 
   async setWordsForProcessing(words: WordNode[]) {
-    console.log('Setting words for processing:', words.length);
-    this.addToTotalWords(words.length);
-    const pipeline = redisClient.multi();
+    try {
+      // console.log('Setting words for processing:', words.length);
+      this.addToTotalWords(words.length);
+      const pipeline = redisClient.multi();
 
-    words.forEach((word) => {
-      const key = `word:${word.wordNr}`;
-      console.log('Setting word:', key, word);
-      pipeline?.set(key, JSON.stringify(word));
-    });
-    await pipeline?.exec();
+      words.forEach((word) => {
+        const key = `word:${word.wordNr}`;
+        console.log('Setting word:', key, word);
+        pipeline?.set(key, JSON.stringify(word));
+      });
+      const results = await pipeline.exec();
+      console.log('Transaction results:', results);
+    } catch (error) {
+      console.error('Error setting words for processing:', error);
+      // Handle the error here
+    }
   }
 
   async setIsReady(isReady: boolean) {
