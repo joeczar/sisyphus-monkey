@@ -36,22 +36,30 @@ class WordsState extends BaseState<WordStateType> {
     const batchSize = 50;
     try {
       console.log('Setting words for processing:', words.length);
-      this.addToTotalWords(words.length);
+      this.addToTotalWords(words.length); // Assuming this updates some internal state or Redis
 
       for (let i = 0; i < words.length; i += batchSize) {
         const batch = words.slice(i, i + batchSize);
 
-        // Wait for the current batch to be fully processed before starting the next one
-        await Promise.all(
-          batch.map(async (word) => {
-            const key = `word:${word.wordNr}`;
-            await redisClient?.set(key, JSON.stringify(word));
-          })
-        );
+        // Create a new multi operation for each batch
+        const multi = redisClient?.multi();
+
+        batch.forEach((word) => {
+          const key = `word:${word.wordNr}`;
+          multi?.set(key, JSON.stringify(word));
+        });
+
+        // Execute all commands in the batch
+        const results = await multi?.exec();
+
+        if (results === null) {
+          console.error('Transaction was rolled back');
+        } else {
+          console.log(`Batch ${i / batchSize + 1} processed:`, results);
+        }
       }
     } catch (error) {
       console.error('Error setting words for processing:', error);
-      // Handle the error here
     }
   }
 
