@@ -18,7 +18,7 @@ export class RedisClient {
       this.client = this.createClient();
       this.pubClient = this.createClient();
       this.subClient = this.createClient();
-      this.operationQueue = new AsyncQueue<RedisOperation>();
+      this.operationQueue = new AsyncQueue<RedisOperation>(1000);
 
       this.startProcessingQueue();
       RedisClient.instance = this;

@@ -7,7 +7,7 @@ type DefinitionStateType = {
   isReady: boolean;
   definitionApiIsReady: boolean;
   isFinishedWithDefinitions: boolean;
-  wordsDefined: number;
+  definitions: number;
   totalWords: number;
   definition: ApiWordDefinition | null;
 };
@@ -16,7 +16,7 @@ const defaultState: DefinitionStateType = {
   isReady: false,
   definitionApiIsReady: false,
   isFinishedWithDefinitions: false,
-  wordsDefined: 0,
+  definitions: 0,
   totalWords: 0,
   definition: null,
 };
@@ -24,6 +24,7 @@ const defaultState: DefinitionStateType = {
 class DefinitionState extends BaseState<DefinitionStateType> {
   private API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
   static #instance: DefinitionState;
+  logging = false;
 
   private constructor() {
     super('definition', defaultState);
@@ -52,17 +53,17 @@ class DefinitionState extends BaseState<DefinitionStateType> {
     this.state = { ...this.state, isFinishedWithDefinitions };
   }
 
-  set wordsDefined(wordsDefined: number) {
+  set definitions(definitions: number) {
     this.state = {
       ...this.state,
-      wordsDefined: this.state.wordsDefined + wordsDefined,
+      definitions: this.state.definitions + definitions,
     };
   }
 
-  set totalWords(totalWords: number) {
+  set totalWords(wordNumber: number) {
     this.state = {
       ...this.state,
-      totalWords: this.state.totalWords + totalWords,
+      totalWords: (this.state.totalWords || 0) + wordNumber,
     };
   }
 
@@ -83,7 +84,7 @@ class DefinitionState extends BaseState<DefinitionStateType> {
 
   private async getDefinitionFromCache(
     word: string
-  ): Promise<ApiWordDefinition | null> {
+  ): Promise<ApiWordDefinition | '404' | null> {
     const cached = await redisClientManager.getKey(`definition:${word}`);
     return cached ? JSON.parse(cached) : null;
   }
@@ -107,9 +108,11 @@ class DefinitionState extends BaseState<DefinitionStateType> {
       });
       if (!response?.ok) {
         console.log(`${word}: Word does not exist`);
+        redisClientManager.setKey(`definition:${word}`, '404');
         return null;
       }
       const data = (await response.json()) as ApiWordDefinition;
+      console.log(`Fetched definition for ${word}`);
       return data;
     } catch (error) {
       console.error('Error fetching definition:', error);
@@ -119,10 +122,15 @@ class DefinitionState extends BaseState<DefinitionStateType> {
 
   async getDefinition(word: string): Promise<ApiWordDefinition | null> {
     let definition = await this.getDefinitionFromCache(word);
+    if (definition === '404') {
+      console.error(`${word}: Word does not exist`);
+      return null;
+    }
     if (!definition) {
       definition = await this.fetchDefinition(word);
       if (definition) {
         await this.cacheDefinition(word, definition);
+        this.logging ?? console.log(`Definition for ${word} cached`);
       }
     }
     return definition;
@@ -132,6 +140,8 @@ class DefinitionState extends BaseState<DefinitionStateType> {
     this.state = { ...this.state, definition };
     if (definition) {
       await this.cacheDefinition(word, definition);
+      this.definitions += 1;
+      console.log(`Definition for ${word} cached`);
     }
   }
 

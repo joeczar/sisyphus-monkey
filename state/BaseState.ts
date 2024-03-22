@@ -11,6 +11,7 @@ export class BaseState<T> {
   protected prefix: string = '';
   protected channel: Channel = Channel.db;
   private stateSubject = new Subject<T>();
+  protected logging = true;
   #state!: T;
 
   constructor(identifier: string, defaultState: T) {
@@ -23,7 +24,8 @@ export class BaseState<T> {
   async initializeState(): Promise<void> {
     const state = await this.fetchStateFromRedis();
     if (state) {
-      // console.log('Fetched state from Redis:', this.channel, state);
+      this.logging ??
+        console.log('Fetched state from Redis:', this.channel, state);
       this.#state = state;
     } else {
       this.#state = { ...this.#state, ...this.#state };
@@ -37,7 +39,7 @@ export class BaseState<T> {
   set state(newState: T) {
     this.#state = { ...this.#state, ...newState };
     this.syncStateWithRedis().catch(console.error);
-    // console.log('State updated:', this.channel, this.#state);
+    this.logging ?? console.log('State updated:', this.channel, this.#state);
     this.publishState(this.#state).catch(console.error);
     this.stateSubject.next(this.#state);
   }
@@ -47,7 +49,8 @@ export class BaseState<T> {
       return;
     }
     await redisClient?.set(this.prefix, JSON.stringify(this.#state));
-    console.log('State synced with Redis:', this.channel, this.#state);
+    this.logging ??
+      console.log('State synced with Redis:', this.channel, this.#state);
   }
 
   protected async fetchStateFromRedis(): Promise<T | null> {
