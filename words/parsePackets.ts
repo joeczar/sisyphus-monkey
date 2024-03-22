@@ -4,8 +4,43 @@ import { wordsState } from '../state/WordsState';
 import { wordTrie } from '../found-words/trieService';
 import { PacketChannelService } from './RedisWordService';
 import type { WordNode } from '../types/wordNode';
+import { switchMap, catchError } from 'rxjs';
 
 const MAX_WORD_LENGTH = 20;
+
+export const handlePackets = () => {
+  console.log('Handling packets...');
+  wordsState
+    .packetsObservable()
+    .pipe(
+      switchMap(async (packetsProcessed: number) => {
+        console.log('SwitchMap packetsProcessed');
+        let packetCount = await packetService.getPacketCount();
+        console.log('SwitchMap packetsProcessed:', {
+          packetsProcessed,
+          packetCount,
+        });
+        while (packetsProcessed <= packetCount) {
+          try {
+            console.log('Processing packets. Packet count:', packetCount);
+            await processPackets(50, packetsProcessed);
+            packetCount = await packetService.getPacketCount(); // Update packetCount for the loop
+          } catch (error) {
+            console.error('Error fetching packets:', error);
+            throw error; // Rethrow to be caught by catchError
+          }
+        }
+      }),
+      catchError((error: Error) => {
+        console.error('Error in packets processing stream:', error);
+        return []; // Return an observable or an empty array to complete the stream gracefully
+      })
+    )
+    .subscribe({
+      // next: () => {},
+      error: (err) => console.error('Subscription error:', err),
+    });
+};
 
 export const processPackets = async (batchSize: number, offset: number) => {
   console.log('Processing packets:', batchSize, offset);

@@ -1,44 +1,11 @@
 import { wordsState } from '../state/WordsState';
 // import { WordsServer } from '../server/WordsServer';
-import { redisClient, redisClientManager } from '../db/redis/RedisClient';
+import { redisClientManager } from '../db/redis/RedisClient';
 import { safeParseJson } from '../utils/safeJsonParse';
-import { packetService } from '../db/neo4j/PacketService';
-import type { Packet } from '../characters/packet.type';
-import { processPackets } from './parsePackets';
-import { switchMap, catchError } from 'rxjs';
+import { handlePackets, processPackets } from './parsePackets';
 
 // const server = new WordsServer();
 // const app = server.getApp();
-
-const handlePackets = () => {
-  console.log('Handling packets...');
-  wordsState
-    .packetsObservable()
-    .pipe(
-      switchMap(async (packetsProcessed: number) => {
-        console.log('SwitchMap packetsProcessed:', packetsProcessed);
-        let packetCount = await packetService.getPacketCount();
-        while (packetsProcessed <= packetCount) {
-          try {
-            console.log('Processing packets. Packet count:', packetCount);
-            await processPackets(50, packetsProcessed);
-            packetCount = await packetService.getPacketCount(); // Update packetCount for the loop
-          } catch (error) {
-            console.error('Error fetching packets:', error);
-            throw error; // Rethrow to be caught by catchError
-          }
-        }
-      }),
-      catchError((error: Error) => {
-        console.error('Error in packets processing stream:', error);
-        return []; // Return an observable or an empty array to complete the stream gracefully
-      })
-    )
-    .subscribe({
-      // next: () => {},
-      error: (err) => console.error('Subscription error:', err),
-    });
-};
 
 const handleCharsMessage = async (parsedMessage: any) => {
   const { isReady, isFinishedWithChars, totalPackets } = parsedMessage;
