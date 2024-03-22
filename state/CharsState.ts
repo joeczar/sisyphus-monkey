@@ -52,6 +52,9 @@ class CharsState extends BaseState<CharsStateType> {
       totalPackets: this.state.totalPackets + totalPackets,
     };
   }
+  totalPacketsObservable() {
+    return this.select('totalPackets');
+  }
   async clearState() {
     this.state = defaultState;
   }
