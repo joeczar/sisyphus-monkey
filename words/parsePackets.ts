@@ -2,9 +2,7 @@ import type { Packet } from '../characters/packet.type';
 import { packetService } from '../db/neo4j/PacketService';
 import { wordsState } from '../state/WordsState';
 import { wordTrie } from '../found-words/trieService';
-import { PacketChannelService } from './RedisWordService';
 import type { WordNode } from '../types/wordNode';
-import { switchMap, catchError } from 'rxjs';
 
 const MAX_WORD_LENGTH = 20;
 
@@ -14,24 +12,18 @@ export const handlePackets = async () => {
   let continueProcessing = true;
   while (continueProcessing) {
     const packetsProcessed = wordsState.state.packetsProcessed;
-    const packetCount = await packetService.getPacketCount(); // Fetch the latest packet count from the database
+    const packetCount = await packetService.getPacketCount();
 
     if (packetsProcessed < packetCount) {
       console.log(
         `Processing packets. Processed: ${packetsProcessed}, Total: ${packetCount}`
       );
-      // Process a batch of packets, updating packetsProcessed accordingly
-      await processPackets(50, packetsProcessed); // Assume this function processes packets and updates `packetsProcessed` in your state
 
-      // Optionally, refresh/update the state or packetsProcessed variable here if needed
-      // For example, if processPackets doesn't directly update wordsState.state.packetsProcessed
+      await processPackets(50, packetsProcessed); // Assume this function
     } else {
       console.log('No new packets to process. Waiting for new packets...');
-      await new Promise((resolve) => setTimeout(resolve, 5000)); // Wait for 5 seconds before checking again
+      await new Promise((resolve) => setTimeout(resolve, 5000));
     }
-
-    // Additional logic to stop processing if needed
-    // For example, based on some state variable or external condition
     continueProcessing = !wordsState.state.isFinishedWithWords;
   }
 };

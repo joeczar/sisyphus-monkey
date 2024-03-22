@@ -1,9 +1,9 @@
 import fs from 'fs';
 import path from 'path';
-import type { Packet } from './packet.type';
-import { sleep } from '../utils/sleep';
+import type { Packet } from '../packet.type';
+import { sleep } from '../../utils/sleep';
 import { Transform } from 'stream';
-import { DatabaseService } from '../db/database';
+import { DatabaseService } from '../../db/database';
 
 const FOLDER_PATH = './generated-letters-chunked';
 

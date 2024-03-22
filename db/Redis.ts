@@ -1,7 +1,7 @@
 import type { Packet } from '../characters/packet.type';
 import { createClient, type RedisClientType } from 'redis';
 
-import { charEventsEmitter } from '../characters/charEvents';
+import { charEventsEmitter } from '../characters/old/charEvents';
 
 export class RedisService {
   static rateLimit = 0;

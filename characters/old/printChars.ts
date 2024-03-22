@@ -1,6 +1,6 @@
-import { AsyncQueue } from '../db/AsyncQueue';
-import { DatabaseService } from '../db/database';
-import type { Packet } from './packet.type';
+import { AsyncQueue } from '../../db/AsyncQueue';
+import { DatabaseService } from '../../db/database';
+import type { Packet } from '../packet.type';
 import { charEventsEmitter } from './charEvents';
 
 export const packetNrQueue = new AsyncQueue<number>();
@@ -11,14 +11,14 @@ charEventsEmitter.on('packetInserted', () => {
     processPacketNrQueue();
     isFirstEvent = false;
   }
-})
+});
 
 // Function to print a single packet's characters
 const printPacketChars = async (packet: Packet) => {
   const printChunkSize = 180; // Adjust this to control how many characters are printed at a time
   const printDelayMs = 0; // Adjust this to control the delay between chunks
 
-  console.log("Printing Chars for packetNr:", packet.packetNr);
+  console.log('Printing Chars for packetNr:', packet.packetNr);
   const { chunk } = packet;
   if (!chunk) {
     console.error('No chunk found in packet:', packet);
@@ -51,11 +51,11 @@ async function processPacket(packetNr: number) {
 
 // Function to continuously process packet numbers from the queue
 export const processPacketNrQueue = async () => {
-  console.log('Starting processPacketNrQueue')
+  console.log('Starting processPacketNrQueue');
   while (true) {
     try {
       const isEmpty = packetNrQueue.isEmpty();
-      console.log('isEmpty:', isEmpty)
+      console.log('isEmpty:', isEmpty);
       if (isEmpty) {
         console.log('Queue is empty, waiting for 1 second');
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -69,7 +69,6 @@ export const processPacketNrQueue = async () => {
       } else {
         console.error(`Dequeued undefined packet number`);
       }
-
     } catch (err) {
       console.error('Error in processPacketNrQueue', err);
     }

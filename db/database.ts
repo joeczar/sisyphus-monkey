@@ -1,11 +1,11 @@
 import type { Database } from 'sqlite';
 import type { Packet } from '../characters/packet.type';
 import { AsyncQueue } from './AsyncQueue';
-import { charEventsEmitter } from '../characters/charEvents';
+import { charEventsEmitter } from '../characters/old/charEvents';
 
 const sqlite3 = require('sqlite3').verbose();
 import { open } from 'sqlite';
-import { packetNrQueue } from '../characters/printChars';
+import { packetNrQueue } from '../characters/old/printChars';
 
 export class DatabaseService {
   static lastEnqueueTime = 0;
