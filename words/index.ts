@@ -11,6 +11,7 @@ import { switchMap, catchError } from 'rxjs';
 // const app = server.getApp();
 
 const handlePackets = () => {
+  console.log('Handling packets...');
   wordsState
     .packetsObservable()
     .pipe(
