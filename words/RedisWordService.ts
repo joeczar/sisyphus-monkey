@@ -1,6 +1,6 @@
 import { createClient, type RedisClientType } from 'redis';
 
-import { charEventsEmitter } from '../characters/charEvents';
+import { charEventsEmitter } from '../characters/old/charEvents';
 import type { Packet } from '../characters/packet.type';
 import type { WordNode } from '../types/wordNode';
 import { redisClient } from '../db/redis/RedisClient';

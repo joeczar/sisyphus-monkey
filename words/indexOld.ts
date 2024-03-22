@@ -1,5 +1,5 @@
 import neo4j from 'neo4j-driver';
-import { processFolder } from '../characters/readAndParse';
+import { processFolder } from '../characters/old/readAndParse';
 import { DatabaseService } from '../db/database';
 import { cors } from 'hono/cors';
 import { prettyJSON } from 'hono/pretty-json';

@@ -3,7 +3,7 @@ import { BaseState } from './BaseState';
 export type PoemStateType = {
   isReady: boolean;
   isFinishedWithPoems: boolean;
-  totalDefinitions: number;
+  wordsDefined: number;
   totalUniqueWords: number;
   totalMetadata: number;
   totalPoems: number;
@@ -48,7 +48,7 @@ class PoemsState extends BaseState<PoemStateType> {
 const defaultState: PoemStateType = {
   isReady: false,
   isFinishedWithPoems: false,
-  totalDefinitions: 0,
+  wordsDefined: 0,
   totalUniqueWords: 0,
   totalMetadata: 0,
   totalPoems: 0,
