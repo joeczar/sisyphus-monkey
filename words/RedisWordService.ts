@@ -2,8 +2,9 @@ import { createClient, type RedisClientType } from 'redis';
 
 import { charEventsEmitter } from '../characters/charEvents';
 import type { Packet } from '../characters/packet.type';
-import type { WordNode, WordDefinition } from '../types/wordNode';
-import { redisClient } from '../db/redis/redisConnect';
+import type { WordNode } from '../types/wordNode';
+import { redisClient } from '../db/redis/RedisClient';
+import type { WordDefinition } from '../types/wordData';
 
 export class PacketChannelService {
   static rateLimit = 0;

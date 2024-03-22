@@ -2,7 +2,7 @@ import { getAndParsePackets } from './readAndSavePackets';
 import { packetService } from '../db/neo4j/PacketService';
 // import { CharServer } from '../server/CharServer';
 // import { charsState } from '../state/CharsState';
-import { redisClient } from '../db/redis/redisConnect';
+import { redisClient, redisClientManager } from '../db/redis/RedisClient';
 import { charsState } from '../state/CharsState';
 
 // const server = new CharServer();
@@ -10,11 +10,13 @@ import { charsState } from '../state/CharsState';
 
 async function initializeChars() {
   console.log('Initializing chars server...');
-  console.log('Flushing Redis');
-  await redisClient.flushAll();
-  redisClient.set('chars:isReady', 'true');
-  const pong = await redisClient.ping();
-  console.log('Redis ping:', pong);
+  await redisClientManager?.connect();
+  if (redisClientManager?.isConnected === false) {
+    console.error('Could not connect to Redis');
+    process.exit(1);
+  }
+  // await redisClient?.connect();
+  const pong = await redisClient?.ping();
   if ((await packetService.checkConnection()) === false) {
     console.error('Could not connect to Neo4j');
     // retry 3 times

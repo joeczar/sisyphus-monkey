@@ -1,6 +1,7 @@
-import { redisClient } from '../db/redis/redisConnect';
+import { AsyncQueue } from '../db/AsyncQueue';
+import { redisClient, redisClientManager } from '../db/redis/RedisClient';
 import type { WordNode } from '../types/wordNode';
-import BaseState from './BaseState';
+import { BaseState } from './BaseState';
 
 export type WordStateType = {
   isReady: boolean;
@@ -18,6 +19,7 @@ const defaultState: WordStateType = {
 
 class WordsState extends BaseState<WordStateType> {
   static #instance: WordsState;
+  static queue: AsyncQueue<WordNode> = new AsyncQueue<WordNode>();
   private constructor(private identifier: string, defaultState: WordStateType) {
     super(identifier, defaultState);
     this.state = defaultState;
@@ -34,15 +36,13 @@ class WordsState extends BaseState<WordStateType> {
     try {
       console.log('Setting words for processing:', words.length);
       this.addToTotalWords(words.length);
-      const pipeline = redisClient.multi();
 
       words.forEach((word) => {
         const key = `word:${word.wordNr}`;
-        // console.log('Setting word:', key, word);
-        pipeline?.set(key, JSON.stringify(word));
+        console.log('Setting word:', key);
+
+        redisClientManager.setKey(key, JSON.stringify(word));
       });
-      const results = await pipeline.exec();
-      console.log('Transaction results:', results);
     } catch (error) {
       console.error('Error setting words for processing:', error);
       // Handle the error here
@@ -71,6 +71,9 @@ class WordsState extends BaseState<WordStateType> {
       ...this.state,
       packetsProcessed: this.state.packetsProcessed + packetsProcessed,
     };
+  }
+  async clearState() {
+    this.state = defaultState;
   }
 }
 
