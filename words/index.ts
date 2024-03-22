@@ -15,7 +15,8 @@ const handlePackets = () => {
   wordsState
     .packetsObservable()
     .pipe(
-      switchMap(async (packetsProcessed) => {
+      switchMap(async (packetsProcessed: number) => {
+        console.log('SwitchMap packetsProcessed:', packetsProcessed);
         let packetCount = await packetService.getPacketCount();
         while (packetsProcessed <= packetCount) {
           try {
