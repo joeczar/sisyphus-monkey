@@ -52,6 +52,11 @@ const handleCharsMessage = async (parsedMessage: any) => {
 };
 
 const initializeWords = async () => {
+  wordsState.packetsObservable().subscribe({
+    next: (value) => console.log('packetsObservable emitted:', value),
+    error: (err) => console.error('packetsObservable error:', err),
+    complete: () => console.log('packetsObservable complete'),
+  });
   console.log('Initializing words server...');
   await redisClientManager.connect();
   console.log('Connected to Redis & Clearing state');
@@ -59,11 +64,7 @@ const initializeWords = async () => {
   wordsState.logState();
   await wordsState.setIsReady(true);
   console.log('Words server is ready');
-  wordsState.packetsObservable().subscribe({
-    next: (value) => console.log('packetsObservable emitted:', value),
-    error: (err) => console.error('packetsObservable error:', err),
-    complete: () => console.log('packetsObservable complete'),
-  });
+
   handlePackets();
   wordsState.subscribeToChannel('channel:chars', async (message) => {
     console.log('Received message from chars:', message);
