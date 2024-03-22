@@ -37,7 +37,7 @@ class WordsState extends BaseState<WordStateType> {
       console.log('Setting words for processing:', words.length);
       this.addToTotalWords(words.length);
 
-      words.forEach(async (word) => {
+      for (const word of words) {
         const key = `word:${word.wordNr}`;
         if (!redisClient) {
           console.error('Redis client not available');
@@ -45,7 +45,7 @@ class WordsState extends BaseState<WordStateType> {
         }
         await redisClient?.set(key, JSON.stringify(word));
         console.log('Word set:', key);
-      });
+      }
     } catch (error) {
       console.error('Error setting words for processing:', error);
       // Handle the error here
