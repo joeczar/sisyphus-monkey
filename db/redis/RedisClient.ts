@@ -69,10 +69,12 @@ export class RedisClient {
   }
 
   async startProcessingQueue() {
+    console.log('Starting Redis operation queue...');
     while (true) {
       const operation = await this.operationQueue.dequeue();
       try {
-        await operation.execute();
+        const result = await operation.execute();
+        console.log('Operation executed:', result);
       } catch (error) {
         console.error('Error processing operation:', error);
       }
@@ -83,12 +85,10 @@ export class RedisClient {
     if (!this.isConnected || !key || !value) {
       return;
     }
-    console.log('Queueing: Set key:', key);
     await this.enqueueOperation({
       execute: async () => {
         try {
           const result = await this.client?.set(key, value);
-          console.log('Key is Set:', key, result);
         } catch (error) {
           console.error('Error setting key:', error);
         }
