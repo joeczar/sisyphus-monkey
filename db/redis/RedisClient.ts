@@ -75,7 +75,6 @@ export class RedisClient {
       try {
         const result = await operation.execute();
         console.log('Operation executed:', result);
-        return result;
       } catch (error) {
         console.error('Error processing operation:', error);
       }
