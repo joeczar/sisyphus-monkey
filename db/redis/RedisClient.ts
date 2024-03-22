@@ -11,7 +11,7 @@ export class RedisClient {
   pubClient;
   subClient;
   isConnected = false;
-  operationQueue: AsyncQueue<RedisOperation>;
+  operationQueue: AsyncQueue<RedisOperation> | undefined;
 
   constructor() {
     if (!RedisClient.instance) {
@@ -65,15 +65,15 @@ export class RedisClient {
   }
 
   async enqueueOperation(operation: RedisOperation) {
-    return await this.operationQueue.enqueue(operation);
+    return await this.operationQueue?.enqueue(operation);
   }
 
   async startProcessingQueue() {
     console.log('Starting Redis operation queue...');
     while (true) {
-      const operation = await this.operationQueue.dequeue();
+      const operation = await this.operationQueue?.dequeue();
       try {
-        const result = await operation.execute();
+        const result = await operation?.execute();
         console.log('Operation executed:', result);
       } catch (error) {
         console.error('Error processing operation:', error);

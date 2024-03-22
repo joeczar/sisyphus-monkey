@@ -39,7 +39,10 @@ class WordsState extends BaseState<WordStateType> {
 
       words.forEach((word) => {
         const key = `word:${word.wordNr}`;
-
+        if (!redisClient) {
+          console.error('Redis client not available');
+          return;
+        }
         redisClient?.set(key, JSON.stringify(word));
       });
     } catch (error) {
