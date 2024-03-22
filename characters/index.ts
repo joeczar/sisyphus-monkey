@@ -40,8 +40,7 @@ async function initializeChars() {
   process.stdout.write(prompt);
   for await (const line of console) {
     if (line) {
-      // await getAndParsePackets();
-      charsState.addToTotalChars(1);
+      await getAndParsePackets();
     }
   }
 }
