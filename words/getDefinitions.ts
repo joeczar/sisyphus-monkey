@@ -1,7 +1,15 @@
-
-import type { ApiDefinition, ApiMeaning, ApiWordDefinition } from '../types/ApiDefinition';
-import type { AntonymNode, MeaningNode, SynonymNode, WordNode,  } from '../types/wordNode';
-import { RedisService } from './RedisService';
+import { redisClient } from '../db/redis/RedisClient';
+import type {
+  ApiDefinition,
+  ApiMeaning,
+  ApiWordDefinition,
+} from '../types/ApiDefinition';
+import type {
+  AntonymNode,
+  MeaningNode,
+  SynonymNode,
+  WordNode,
+} from '../types/wordNode';
 
 const API_URL = 'https://api.dictionaryapi.dev/api/v2/entries/en';
 
@@ -19,6 +27,14 @@ const fetchWithTimeout = (url: string, options = {}, timeout = 10000) => {
       setTimeout(() => reject(new Error('Request timed out')), timeout)
     ),
   ]);
+};
+const setDefinition = async (word: string, definition: string) => {
+  await redisClient?.set(`definition:${word}`, definition);
+};
+
+const getRedisDefinition = async (word: string) => {
+  const result = await redisClient?.get(`definition:${word}`);
+  return JSON.parse(result!);
 };
 
 /**
@@ -38,7 +54,7 @@ const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
       if (response.ok) {
         return response;
       }
-      if (word) await RedisService.setDefinition(word, '404');
+      if (word) await setDefinition(word, '404');
       lastError = new Error(
         `Failed to fetch ${word}: ${response.status} ${response.statusText}`
       );
@@ -55,10 +71,12 @@ const fetchWithRetry = async (url: string, options = {}, maxRetries = 3) => {
  * @param word The word to retrieve the definition for.
  * @returns A promise that resolves to the cached definition or null if not found.
  */
-const getCachedDefinition = async (word: string) => {
-  const cachedDefinition = await RedisService.getDefinition(word);
+const getCachedDefinition = async (
+  word: string
+): Promise<ApiDefinition | '404' | null> => {
+  const cachedDefinition = await getDefinition(word);
   if (cachedDefinition) {
-    return JSON.parse(cachedDefinition) as ;
+    return cachedDefinition as ApiDefinition;
   }
   return null;
 };
@@ -75,7 +93,7 @@ export const getDefinition = async (word: string) => {
         console.log(word, 'Word does not exist');
         return null;
       }
-      return JSON.parse(cachedDefinition) as ApiWordDefinition[];
+      return cachedDefinition as ApiWordDefinition;
     }
 
     const response = await fetchWithRetry(`${API_URL}/${word}`, {
@@ -93,8 +111,8 @@ export const getDefinition = async (word: string) => {
       );
     }
 
-    const data = (await response.json()) as ApiWordDefinition[];
-    await RedisService.setDefinition(word, data);
+    const data = (await response.json()) as ApiWordDefinition;
+    await setDefinition(word, data);
     return data;
   } catch (error) {
     console.error('Error fetching data:', error);
@@ -103,27 +121,31 @@ export const getDefinition = async (word: string) => {
 };
 const mapDefinitions = (definitions: ApiDefinition[]): MeaningNode => {
   const mappedDefinitions: MeaningNode = {
-    partsOfSpeech: [], 
-    definitions: definitions.map(def => def.definition),
-    examples: definitions.filter(def => def.example !== undefined).map(def => def.example!),
-    synonyms: definitions.flatMap(def => def.synonyms.map(synonym => ({ word: synonym }))),
-    antonyms: definitions.flatMap(def => def.antonyms.map(antonym => ({ word: antonym }))),
+    partsOfSpeech: [],
+    definitions: definitions.map((def) => def.definition),
+    examples: definitions
+      .filter((def) => def.example !== undefined)
+      .map((def) => def.example!),
+    synonyms: definitions.flatMap((def) =>
+      def.synonyms.map((synonym) => ({ word: synonym }))
+    ),
+    antonyms: definitions.flatMap((def) =>
+      def.antonyms.map((antonym) => ({ word: antonym }))
+    ),
   };
   return mappedDefinitions;
-}
+};
 const mapApiMeaningToNodes = (apiMeaning: ApiMeaning[]): MeaningNode[] => {
   return apiMeaning.map((apiMeaning) => {
     const { partOfSpeech, definitions, synonyms, antonyms } = apiMeaning;
 
     const meaningNode: MeaningNode = {
       partsOfSpeech: [],
-      definitions: mapDefinitions(definitions)
-    }
+      definitions: mapDefinitions(definitions),
+    };
     return meaningNode;
-    
-    
   });
-}
+};
 
 export const getMeaning = async (word: string) => {
   try {
