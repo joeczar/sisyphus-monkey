@@ -21,6 +21,7 @@ export const processPackets = async (batchSize: number, offset: number) => {
         console.error('Error occurred while parsing packet:', error);
       }
     }
+    wordsState.addToPacketsProcessed(packets.length);
   } catch (error) {
     console.error('Error occurred while getting packets:', error);
   }

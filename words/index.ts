@@ -9,27 +9,31 @@ import { processPackets } from './parsePackets';
 // const server = new WordsServer();
 // const app = server.getApp();
 
+const handlePackets = async () => {
+  const { packetsProcessed } = wordsState.state;
+  // while (packetsProcessed <= packetCount) {
+  try {
+    const packetCount: number = await packetService.getPacketCount();
+    console.log('Packet count:', packetCount);
+
+    await processPackets(50, packetsProcessed);
+  } catch (error) {
+    console.error('Error fetching packets:', error);
+  }
+
+  // }
+};
 const handleCharsMessage = async (parsedMessage: any) => {
   const { isReady, isFinishedWithChars, totalPackets } = parsedMessage;
-  const { isFinishedWithWords, packetsProcessed } = wordsState.state;
+  const { isFinishedWithWords } = wordsState.state;
   console.log('Parsed message:', parsedMessage);
-  const packetCount: number = await packetService.getPacketCount();
-  console.log('Packet count:', packetCount);
+
   if (isFinishedWithChars) {
     console.log('Chars server is finished');
   }
   // if (isReady && !isFinishedWithWords) {
   console.log('Chars server is ready');
 
-  // while (packetsProcessed <= packetCount) {
-  try {
-    // wordsState.addToPacketsProcessed(packets.length);
-    const wordNodes = await processPackets(50, packetsProcessed);
-  } catch (error) {
-    console.error('Error fetching packets:', error);
-  }
-
-  // }
   // }
 };
 
@@ -51,6 +55,7 @@ const initializeWords = async () => {
       );
     }
   });
+  await handlePackets();
 };
 
 await initializeWords();
