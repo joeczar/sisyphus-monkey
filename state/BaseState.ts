@@ -4,19 +4,13 @@ import {
   redisSubClient,
 } from '../db/redis/RedisClient';
 import { redisPubClient } from '../db/redis/RedisClient';
-
-export enum Channel {
-  chars = 'channel:chars',
-  words = 'channel:words',
-  poems = 'channel:poems',
-  llm = 'channel:llm',
-  db = 'channel:db',
-}
+import { Observable, Subject } from 'rxjs';
+import { Channel } from './Channel.enum';
 
 export class BaseState<T> {
   protected prefix: string = '';
   protected channel: Channel = Channel.db;
-
+  private stateSubject = new Subject<T>();
   #state!: T;
 
   constructor(identifier: string, defaultState: T) {
@@ -45,6 +39,7 @@ export class BaseState<T> {
     this.syncStateWithRedis().catch(console.error);
     // console.log('State updated:', this.channel, this.#state);
     this.publishState(this.#state).catch(console.error);
+    this.stateSubject.next(this.#state);
   }
 
   protected async syncStateWithRedis() {
@@ -82,6 +77,19 @@ export class BaseState<T> {
         callback(message);
       })
       .catch(console.error);
+  }
+
+  getStateUpdates(): Observable<T> {
+    return this.stateSubject.asObservable();
+  }
+
+  select<K extends keyof T>(key: K): Observable<T[K]> {
+    return new Observable((subscriber) => {
+      const subscription = this.getStateUpdates().subscribe((state) => {
+        subscriber.next(state[key]);
+      });
+      return () => subscription.unsubscribe();
+    });
   }
 
   get prefixKey(): string {

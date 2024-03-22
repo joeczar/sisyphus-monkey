@@ -5,24 +5,39 @@ import { safeParseJson } from '../utils/safeJsonParse';
 import { packetService } from '../db/neo4j/PacketService';
 import type { Packet } from '../characters/packet.type';
 import { processPackets } from './parsePackets';
+import { switchMap, catchError } from 'rxjs';
 
 // const server = new WordsServer();
 // const app = server.getApp();
 
-const handlePackets = async () => {
-  const { packetsProcessed } = wordsState.state;
-  // while (packetsProcessed <= packetCount) {
-  try {
-    const packetCount: number = await packetService.getPacketCount();
-    console.log('Packet count:', packetCount);
-
-    await processPackets(50, packetsProcessed);
-  } catch (error) {
-    console.error('Error fetching packets:', error);
-  }
-
-  // }
+const handlePackets = () => {
+  wordsState
+    .packetsObservable()
+    .pipe(
+      switchMap(async (packetsProcessed) => {
+        let packetCount = await packetService.getPacketCount();
+        while (packetsProcessed <= packetCount) {
+          try {
+            console.log('Processing packets. Packet count:', packetCount);
+            await processPackets(50, packetsProcessed);
+            packetCount = await packetService.getPacketCount(); // Update packetCount for the loop
+          } catch (error) {
+            console.error('Error fetching packets:', error);
+            throw error; // Rethrow to be caught by catchError
+          }
+        }
+      }),
+      catchError((error: Error) => {
+        console.error('Error in packets processing stream:', error);
+        return []; // Return an observable or an empty array to complete the stream gracefully
+      })
+    )
+    .subscribe({
+      // next: () => {},
+      error: (err) => console.error('Subscription error:', err),
+    });
 };
+
 const handleCharsMessage = async (parsedMessage: any) => {
   const { isReady, isFinishedWithChars, totalPackets } = parsedMessage;
   const { isFinishedWithWords } = wordsState.state;
@@ -33,8 +48,6 @@ const handleCharsMessage = async (parsedMessage: any) => {
   }
   // if (isReady && !isFinishedWithWords) {
   console.log('Chars server is ready');
-
-  // }
 };
 
 const initializeWords = async () => {
