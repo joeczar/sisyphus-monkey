@@ -33,18 +33,20 @@ class WordsState extends BaseState<WordStateType> {
   }
 
   async setWordsForProcessing(words: WordNode[]) {
+    const batchSize = 50;
     try {
       console.log('Setting words for processing:', words.length);
       this.addToTotalWords(words.length);
 
-      for (const word of words) {
-        const key = `word:${word.wordNr}`;
-        if (!redisClient) {
-          console.error('Redis client not available');
-          return;
-        }
-        await redisClient?.set(key, JSON.stringify(word));
-        console.log('Word set:', key);
+      for (let i = 0; i < words.length; i += batchSize) {
+        const batch = words.slice(i, i + batchSize);
+        // Wait for the current batch to be fully processed before starting the next one
+        await Promise.all(
+          batch.map((word) => {
+            const key = `word:${word.wordNr}`;
+            return redisClient?.set(key, JSON.stringify(word));
+          })
+        );
       }
     } catch (error) {
       console.error('Error setting words for processing:', error);
