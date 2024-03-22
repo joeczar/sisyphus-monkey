@@ -1,6 +1,9 @@
-import { redisClient } from '../db/redis/redisConnect';
-import { redisPubClient } from '../db/redis/redisPubConnect';
-import { redisSubClient } from '../db/redis/redisSubConnect';
+import {
+  redisClient,
+  redisClientManager,
+  redisSubClient,
+} from '../db/redis/RedisClient';
+import { redisPubClient } from '../db/redis/RedisClient';
 
 export enum Channel {
   chars = 'channel:chars',
@@ -10,7 +13,7 @@ export enum Channel {
   db = 'channel:db',
 }
 
-class BaseState<T> {
+export class BaseState<T> {
   protected prefix: string = '';
   protected channel: Channel = Channel.db;
 
@@ -45,11 +48,17 @@ class BaseState<T> {
   }
 
   protected async syncStateWithRedis() {
+    if (!redisClient || !redisClientManager.isConnected) {
+      return;
+    }
     await redisClient?.set(this.prefix, JSON.stringify(this.#state));
-    // console.log('State synced with Redis:', this.channel, this.#state);
+    console.log('State synced with Redis:', this.channel, this.#state);
   }
 
   protected async fetchStateFromRedis(): Promise<T | null> {
+    if (!redisClient || !redisClientManager.isConnected) {
+      return null;
+    }
     const state = await redisClient?.get(this.prefix);
     if (!state) {
       return null;
@@ -58,6 +67,9 @@ class BaseState<T> {
   }
 
   async publishState(state: T): Promise<void> {
+    if (!redisPubClient || !redisClientManager.isConnected) {
+      return;
+    }
     await redisPubClient?.publish(this.channel, JSON.stringify(state));
   }
 
@@ -71,6 +83,20 @@ class BaseState<T> {
       })
       .catch(console.error);
   }
-}
 
-export default BaseState;
+  get prefixKey(): string {
+    return this.prefix;
+  }
+  get channelName(): string {
+    return this.channel;
+  }
+
+  logState() {
+    console.log(this.#state);
+  }
+
+  async clearState() {
+    await redisClient?.del(this.prefix);
+    this.#state = {} as T;
+  }
+}

@@ -1,4 +1,4 @@
-import BaseState from './BaseState';
+import { BaseState } from './BaseState';
 
 export type PoemStateType = {
   isReady: boolean;
@@ -40,13 +40,18 @@ class PoemsState extends BaseState<PoemStateType> {
       totalPoems: this.state.totalPoems + totalPoems,
     };
   }
+  async clearState() {
+    this.state = defaultState;
+  }
 }
 
-export const poemsState = PoemsState.getInstance('poems', {
+const defaultState: PoemStateType = {
   isReady: false,
-  totalDefinitions: 0,
-  totalMetadata: 0,
-  totalUniqueWords: 0,
   isFinishedWithPoems: false,
+  totalDefinitions: 0,
+  totalUniqueWords: 0,
+  totalMetadata: 0,
   totalPoems: 0,
-});
+};
+
+export const poemsState = PoemsState.getInstance('poems', defaultState);

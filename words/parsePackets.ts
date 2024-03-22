@@ -41,7 +41,7 @@ export async function parsePacket(packet: Packet): Promise<WordNode[]> {
 
       try {
         if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-          const wordNode = createWordNode(boundaryBuffer, packet.id, {
+          const wordNode = await createWordNode(boundaryBuffer, packet.id, {
             start: i,
             end: j,
           });
@@ -56,7 +56,7 @@ export async function parsePacket(packet: Packet): Promise<WordNode[]> {
   return words;
 }
 
-export function createWordNode(
+export async function createWordNode(
   word: string,
   packetId: number,
   position: { start: number; end: number }
@@ -68,6 +68,6 @@ export function createWordNode(
     wordNr: wordsState.totalWords,
     chars: word.length,
   };
-  wordsState.addToTotalWords(1);
+  await wordsState.addToTotalWords(1);
   return wordNode;
 }

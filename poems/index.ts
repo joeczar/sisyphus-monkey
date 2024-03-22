@@ -1,4 +1,4 @@
-import { redisClient } from '../db/redis/redisConnect';
+import { redisClient } from '../db/redis/RedisClient';
 import { poemsState } from '../state/PoemsState';
 import type { WordStateType } from '../state/WordsState';
 import { safeParseJson } from '../utils/safeJsonParse';

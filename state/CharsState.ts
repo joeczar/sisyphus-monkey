@@ -1,7 +1,7 @@
 // Make sure to import your newly set up Redis client
 
-import { redisClient } from '../db/redis/redisConnect';
-import BaseState from './BaseState';
+import { redisClient } from '../db/redis/RedisClient';
+import { BaseState } from './BaseState';
 
 export type CharsStateType = {
   isReady: boolean;
@@ -21,12 +21,7 @@ class CharsState extends BaseState<CharsStateType> {
   static #instance: CharsState;
 
   private constructor() {
-    super('chars', {
-      isReady: false,
-      isFinishedWithChars: false,
-      totalChars: 0,
-      totalPackets: 0,
-    });
+    super('chars', defaultState);
   }
 
   public static getInstance(): CharsState {
@@ -56,6 +51,9 @@ class CharsState extends BaseState<CharsStateType> {
       ...this.state,
       totalPackets: this.state.totalPackets + totalPackets,
     };
+  }
+  async clearState() {
+    this.state = defaultState;
   }
 }
 
