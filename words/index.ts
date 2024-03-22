@@ -60,6 +60,7 @@ const initializeWords = async () => {
   await wordsState.setIsReady(true);
   console.log('Words server is ready');
   wordsState.logState();
+  handlePackets();
   wordsState.subscribeToChannel('channel:chars', async (message) => {
     console.log('Received message from chars:', message);
     const parsedMessage = await safeParseJson(message);
@@ -69,7 +70,6 @@ const initializeWords = async () => {
       );
     }
   });
-  await handlePackets();
 };
 
 await initializeWords();
