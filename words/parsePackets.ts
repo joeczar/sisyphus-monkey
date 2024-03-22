@@ -16,7 +16,7 @@ export const processPackets = async (batchSize: number, offset: number) => {
       try {
         const wordNodes = await parsePacket(packet);
         console.log('Word nodes:', wordNodes.length, wordNodes[0]);
-        wordsState.setWordsForProcessing(wordNodes);
+        await wordsState.setWordsForProcessing(wordNodes);
       } catch (error) {
         console.error('Error occurred while parsing packet:', error);
       }

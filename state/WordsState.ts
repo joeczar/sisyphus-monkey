@@ -40,11 +40,12 @@ class WordsState extends BaseState<WordStateType> {
 
       for (let i = 0; i < words.length; i += batchSize) {
         const batch = words.slice(i, i + batchSize);
+
         // Wait for the current batch to be fully processed before starting the next one
         await Promise.all(
-          batch.map((word) => {
+          batch.map(async (word) => {
             const key = `word:${word.wordNr}`;
-            return redisClient?.set(key, JSON.stringify(word));
+            await redisClient?.set(key, JSON.stringify(word));
           })
         );
       }
