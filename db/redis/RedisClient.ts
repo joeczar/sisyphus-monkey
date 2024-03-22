@@ -83,10 +83,12 @@ export class RedisClient {
     if (!this.isConnected || !key || !value) {
       return;
     }
+    console.log('Queueing: Set key:', key);
     await this.enqueueOperation({
       execute: async () => {
         try {
-          await this.client?.set(key, value);
+          const result = await this.client?.set(key, value);
+          console.log('Key is Set:', key, result);
         } catch (error) {
           console.error('Error setting key:', error);
         }
