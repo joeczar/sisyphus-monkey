@@ -78,6 +78,11 @@ class WordsState extends BaseState<WordStateType> {
       packetsProcessed: this.state.packetsProcessed + packetsProcessed,
     };
   }
+
+  packetsObservable() {
+    return this.select('packetsProcessed');
+  }
+
   async clearState() {
     this.state = defaultState;
   }
