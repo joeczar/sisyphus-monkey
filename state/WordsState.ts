@@ -40,7 +40,7 @@ class WordsState extends BaseState<WordStateType> {
       words.forEach((word) => {
         const key = `word:${word.wordNr}`;
 
-        redisClientManager.setKey(key, JSON.stringify(word));
+        redisClient?.set(key, JSON.stringify(word));
       });
     } catch (error) {
       console.error('Error setting words for processing:', error);
