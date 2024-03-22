@@ -65,7 +65,7 @@ export class RedisClient {
   }
 
   async enqueueOperation(operation: RedisOperation) {
-    await this.operationQueue.enqueue(operation);
+    return await this.operationQueue.enqueue(operation);
   }
 
   async startProcessingQueue() {
@@ -75,6 +75,7 @@ export class RedisClient {
       try {
         const result = await operation.execute();
         console.log('Operation executed:', result);
+        return result;
       } catch (error) {
         console.error('Error processing operation:', error);
       }
@@ -85,10 +86,11 @@ export class RedisClient {
     if (!this.isConnected || !key || !value) {
       return;
     }
-    await this.enqueueOperation({
+    return await this.enqueueOperation({
       execute: async () => {
         try {
           const result = await this.client?.set(key, value);
+          return result;
         } catch (error) {
           console.error('Error setting key:', error);
         }
