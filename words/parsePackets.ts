@@ -9,8 +9,10 @@ import type { FlattenedWordDefinition } from '../types/ApiDefinition';
 import { Semaphore } from '../utils/semaphore';
 import util from 'util';
 import os from 'os';
+import { delay } from '../utils/delay';
+import { wordNodeService } from '../db/neo4j/WordNodeService';
 
-const semaphore = new Semaphore(5); // Adjust based on performance observations
+const semaphore = new Semaphore(1); // Adjust based on performance observations
 
 const MAX_WORD_LENGTH = 20;
 
@@ -55,57 +57,23 @@ export const processPackets = async (batchSize: number, offset: number) => {
 };
 
 async function parsePacket(packet: Packet) {
-  const batchLength = 25; // Adjust based on performance observations
   const potentialWords = parseWords(packet);
 
-  for (let i = 0; i < potentialWords.length; i += batchLength) {
-    const batch = potentialWords.slice(i, i + batchLength);
-    console.log(`Processing batch: ${i}`);
-
-    // Fetch definitions with concurrency control
-    const batchWords = await fetchDefinitionsConcurrently(batch);
-
-    // Continue if no words were processed
-    if (!batchWords.length) {
-      continue;
+  // Process each word sequentially
+  const processedWords: WordNode[] = [];
+  for (const word of potentialWords) {
+    if (!word.word) {
+      continue; // Skip if the word is undefined
     }
+  }
 
-    console.log(
-      `Batch ${i / batchLength + 1} processed, Total Words: ${
-        batchWords.length
-      }`
-    );
-    await wordsState.setWordsForProcessing(batchWords);
+  if (processedWords.length > 0) {
+    await wordNodeService.createWordNodes(processedWords);
+    await wordsState.setWordsForProcessing(processedWords);
   }
 }
 
-async function fetchDefinitionsConcurrently(
-  words: WordNode[]
-): Promise<WordNode[]> {
-  const definitions = await Promise.all(
-    words.map(async (word) => {
-      await semaphore.acquire();
-      try {
-        const definition = await definitionState.getDefinition(word.word);
-        if (definition && definition !== '404') {
-          const wordNode: WordNode = {
-            ...word,
-            definitions: flattenWordDefinitions(definition),
-          };
-          return wordNode;
-        }
-      } catch (error) {
-        console.error('Error fetching definition:', error);
-      } finally {
-        semaphore.release();
-      }
-    })
-  );
-
-  return definitions.filter((word): word is WordNode => word !== undefined);
-}
-
-function parseWords(packet: Packet) {
+function parseWords(packet: Packet): Partial<WordNode>[] {
   let potentialWords: { word: string; start: number; end: number }[] = [];
 
   // First, collect all potential words without doing async work

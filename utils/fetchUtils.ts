@@ -30,40 +30,43 @@ export const fetchWithRetry = async (
   options = {},
   maxRetries = 3,
   retryDelay = 1000 // Default delay between retries is 1000 milliseconds
-) => {
-  let lastError;
-  const word = url.split('/').pop() || 'unknown';
-
+): Promise<Response | 'NotFound'> => {
   for (let i = 0; i < maxRetries; i++) {
     try {
       const response = (await fetchWithTimeout(url, options)) as Response;
+      response.headers.forEach((value, name) => {
+        console.log(`${name}: ${value}`);
+      });
+
       if (response.ok) {
-        return response;
-      }
-      if (response.status === 429) {
-        // Handle rate limiting
+        return response; // Success, return response
+      } else if (response.status === 404) {
+        // Treat 404 differently - return a specific indicator instead of throwing an error
+        return 'NotFound';
+      } else if (response.status === 429) {
+        // Rate limited by the API
         const retryAfter = response.headers.get('Retry-After');
         const waitTime = retryAfter
           ? parseInt(retryAfter, 10) * 1000
           : retryDelay;
-        console.log(
-          `Rate limited. Retrying ${word} after ${waitTime} milliseconds.`
-        );
+        console.log(`Rate limited. Retrying after ${waitTime} milliseconds.`);
         await new Promise((resolve) => setTimeout(resolve, waitTime));
-        continue; // Continue to the next iteration for a retry
+        retryDelay *= 2; // Optional: implement exponential backoff
+        continue; // Retry
+      } else {
+        // For other errors, throw immediately without retrying
+        throw new Error(
+          `Failed to fetch: ${response.status} ${response.statusText}`
+        );
       }
-      // If not rate limited but response is not OK, don't retry and return null immediately
-      lastError = new Error(
-        `Failed to fetch ${word}: ${response.status} ${response.statusText}`
-      );
-      return null; // Early return for non-OK, non-429 responses
     } catch (error) {
-      console.error(`Error on attempt ${i + 1} for ${word}:`, error);
-      lastError = error;
-      // Wait before retrying for non-rate limit errors
+      if (i === maxRetries - 1) {
+        throw error; // Throw error if all retries exhausted
+      }
+      console.log(`Error on attempt ${i + 1}:`, error);
       await new Promise((resolve) => setTimeout(resolve, retryDelay));
     }
   }
 
-  throw lastError; // If all retries exhausted, throw the last encountered error
+  throw new Error('All retries exhausted'); // Fallback error if loop exits without returning
 };

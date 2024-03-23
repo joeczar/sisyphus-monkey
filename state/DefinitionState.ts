@@ -110,8 +110,7 @@ class DefinitionState extends BaseState<DefinitionStateType> {
       const response = await fetchWithRetry(`${this.API_URL}/${word}`, {
         method: 'GET',
       });
-      if (!response) {
-        // Assuming fetchWithRetry returns null for non-retryable errors or rate limits
+      if (response === 'NotFound') {
         console.log(
           `Fetching definition for ${word} returned null, possibly rate-limited.`
         );
@@ -120,8 +119,12 @@ class DefinitionState extends BaseState<DefinitionStateType> {
       const data = (await response.json()) as ApiWordDefinition[];
       return data.length > 0 ? data : '404';
     } catch (error) {
-      console.error(`Error fetching definition for ${word}:`, error);
-      return null; // Consider returning '404' or null based on how you wish to handle errors
+      if (error instanceof Error && error.message.includes('404')) {
+        return '404';
+      } else {
+        console.error('An error occurred:', error);
+        return null;
+      }
     }
   }
 
