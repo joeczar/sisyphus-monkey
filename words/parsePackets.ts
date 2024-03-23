@@ -16,8 +16,8 @@ export const handlePackets = async () => {
   while (continueProcessing) {
     const packetsProcessed = wordsState.state.packetsProcessed;
     const packetCount = await packetService.getPacketCount();
-
-    if (packetsProcessed < packetCount) {
+    console.log('Packet count:', packetCount);
+    if (packetCount && packetsProcessed < packetCount) {
       console.log(
         `Processing packets. Processed: ${packetsProcessed}, Total: ${packetCount}`
       );
