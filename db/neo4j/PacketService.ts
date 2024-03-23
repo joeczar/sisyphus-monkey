@@ -116,6 +116,15 @@ export class PacketService extends Neo4jServiceBase {
       await session.close();
     }
   }
+
+  async clearDb() {
+    const session = this.driver.session();
+    try {
+      await session.run('MATCH (n) DETACH DELETE n');
+    } finally {
+      await session.close();
+    }
+  }
 }
 
 const packetService = new PacketService();
