@@ -3,6 +3,9 @@ import { packetService } from '../db/neo4j/PacketService';
 import { wordsState } from '../state/WordsState';
 import { wordTrie } from '../found-words/trieService';
 import type { WordNode } from '../types/wordNode';
+import { flattenWordDefinitions } from '../poems/utils/definitionUtils';
+import { definitionState } from '../state/DefinitionState';
+import type { FlattenedWordDefinition } from '../types/ApiDefinition';
 
 const MAX_WORD_LENGTH = 20;
 
@@ -63,11 +66,28 @@ export async function parsePacket(packet: Packet): Promise<WordNode[]> {
 
       try {
         if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-          const wordNode = await createWordNode(boundaryBuffer, packet.id, {
-            start: i,
-            end: j,
-          });
-          words.push(wordNode);
+          const definition = await definitionState.getDefinition(
+            boundaryBuffer
+          );
+          const word = boundaryBuffer;
+          if (definition) {
+            if (definition === '404') {
+              console.error(`${word}: Word does not exist`);
+              break;
+            }
+            definitionState.setDefinition(word, definition);
+
+            const wordNode: WordNode = {
+              word,
+              packetNr: packet.id,
+              position: { start: i, end: j },
+              wordNr: wordsState.totalWords,
+              chars: word.length,
+              definitions: flattenWordDefinitions(definition),
+            };
+
+            words.push(wordNode);
+          }
         }
       } catch (error) {
         console.error('Error occurred while searching for word:', error);
@@ -76,20 +96,4 @@ export async function parsePacket(packet: Packet): Promise<WordNode[]> {
   }
 
   return words;
-}
-
-export async function createWordNode(
-  word: string,
-  packetId: number,
-  position: { start: number; end: number }
-) {
-  const wordNode: WordNode = {
-    word,
-    packetNr: packetId,
-    position,
-    wordNr: wordsState.totalWords,
-    chars: word.length,
-  };
-  await wordsState.addToTotalWords(1);
-  return wordNode;
 }
