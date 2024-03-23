@@ -14,6 +14,15 @@ export class AsyncQueue<T> extends EventEmitter {
     this.maxSize = maxSize;
   }
 
+  async clear() {
+    // Empties the queue
+    this.queue = [];
+    // Optionally reset other states as needed
+    this.hasStarted = false;
+    this.hasFinished = false;
+    console.log('Queue has been cleared');
+  }
+
   enqueue(item: T): Promise<void> {
     if (this.resolveDequeue) {
       // If there is someone waiting to dequeue, resolve their promise and don't add to the queue
