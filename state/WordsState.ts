@@ -1,6 +1,7 @@
 import { AsyncQueue } from '../db/AsyncQueue';
 import { redisClient, redisClientManager } from '../db/redis/RedisClient';
 import type { WordNode } from '../types/wordNode';
+import { delay } from '../utils/delay';
 import { BaseState } from './BaseState';
 
 export type WordStateType = {
@@ -33,30 +34,39 @@ export class WordsState extends BaseState<WordStateType> {
   }
 
   async setWordsForProcessing(words: WordNode[]) {
-    const batchSize = 50;
+    if (!redisClient) {
+      console.error('Redis client is not available.');
+      return;
+    }
+    if (!words.length) {
+      console.log('No words to process.');
+      return;
+    }
+
+    const batchSize = 100;
+    const rateLimitDelay = 200; // Delay in milliseconds between each batch
+
     try {
       console.log('Setting words for processing:', words.length);
-      this.addToTotalWords(words.length); // Assuming this updates some internal state or Redis
+      this.addWords(words.length); // Updates some internal state or Redis
 
       for (let i = 0; i < words.length; i += batchSize) {
         const batch = words.slice(i, i + batchSize);
-
-        // Create a new multi operation for each batch
-        const multi = redisClient?.multi();
-
+        const multi = redisClient.multi();
+        if (!multi) {
+          console.error('Redis multi is not available.');
+          return;
+        }
         batch.forEach((word) => {
           const key = `word:${word.wordNr}`;
-          multi?.set(key, JSON.stringify(word));
+          multi.set(key, JSON.stringify(word));
         });
 
-        // Execute all commands in the batch
-        const results = await multi?.exec();
+        const results = await multi.exec();
+        console.log(`Batch ${i / batchSize + 1} processed:`, results);
 
-        if (results === null) {
-          console.error('Transaction was rolled back');
-        } else {
-          console.log(`Batch ${i / batchSize + 1} processed:`, results);
-        }
+        // Wait for a bit before processing the next batch
+        await delay(rateLimitDelay);
       }
     } catch (error) {
       console.error('Error setting words for processing:', error);
@@ -71,7 +81,7 @@ export class WordsState extends BaseState<WordStateType> {
     this.state = { ...this.state, isFinishedWithWords };
   }
 
-  async addToTotalWords(totalWords: number) {
+  async addWords(totalWords: number) {
     this.state = {
       ...this.state,
       totalWords: this.state.totalWords + totalWords,

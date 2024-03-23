@@ -1,11 +1,13 @@
+import { type WordNode } from './../types/wordNode';
 import type { Packet } from '../characters/packet.type';
 import { packetService } from '../db/neo4j/PacketService';
 import { wordsState } from '../state/WordsState';
 import { wordTrie } from '../found-words/trieService';
-import type { WordNode } from '../types/wordNode';
 import { flattenWordDefinitions } from '../poems/utils/definitionUtils';
 import { definitionState } from '../state/DefinitionState';
 import type { FlattenedWordDefinition } from '../types/ApiDefinition';
+import util from 'util';
+import os from 'os';
 
 const MAX_WORD_LENGTH = 20;
 
@@ -38,9 +40,7 @@ export const processPackets = async (batchSize: number, offset: number) => {
     console.log('Packets:', packets.length);
     for (const packet of packets) {
       try {
-        const wordNodes = await parsePacket(packet);
-        console.log('Word nodes:', wordNodes.length, wordNodes[0]);
-        await wordsState.setWordsForProcessing(wordNodes);
+        await parsePacket(packet);
       } catch (error) {
         console.error('Error occurred while parsing packet:', error);
       }
@@ -51,48 +51,57 @@ export const processPackets = async (batchSize: number, offset: number) => {
   }
 };
 
-export async function parsePacket(packet: Packet): Promise<WordNode[]> {
-  let words: WordNode[] = [];
-  let redisArray: WordNode[] = [];
-  const batchLength = 100;
+async function parsePacket(packet: Packet) {
+  // let words: WordNode[] = [];
+  const batchLength = 50;
   const potentialWords = parseWords(packet);
+  console.log('Potential words:', potentialWords.length);
 
-  // Then, look up all definitions in parallel
-  const definitionPromises = potentialWords.map((pWord) =>
-    definitionState
-      .getDefinition(pWord.word)
-      .then((definition) => ({ ...pWord, definition }))
-  );
-  const results = await Promise.allSettled(definitionPromises);
+  // break up the potential words into batches
+  for (let i = 0; i < potentialWords.length; i += batchLength) {
+    console.log('Processing batch:', i);
+    const batchWords: WordNode[] = [];
+    const batch = potentialWords.slice(i, i + batchLength);
+    console.log(
+      `Processing batch: ${i}, Memory Usage: ${util.inspect(
+        process.memoryUsage()
+      )}`
+    );
+    console.log(
+      `System Free Memory: ${os.freemem()} bytes, System Total Memory: ${os.totalmem()} bytes`
+    );
 
-  results.forEach((result) => {
-    if (
-      result.status === 'fulfilled' &&
-      result.value.definition &&
-      result.value.definition !== '404'
-    ) {
-      const { word, start, end, definition } = result.value;
-      definitionState.setDefinition(word, definition);
-
-      const wordNode: WordNode = {
-        word,
-        packetNr: packet.id,
-        position: { start, end },
-        wordNr: wordsState.totalWords,
-        chars: word.length,
-        definitions: flattenWordDefinitions(definition),
-      };
-      words.push(wordNode);
-      redisArray.push(wordNode);
-      if (redisArray.length === batchLength) {
-        wordsState.setWordsForProcessing(redisArray);
-        redisArray = [];
+    const definitionPromises = batch.map((pWord) =>
+      definitionState
+        .getDefinition(pWord.word)
+        .then((definition) => ({ ...pWord, definition }))
+    );
+    const results = await Promise.allSettled(definitionPromises);
+    for (const result of results) {
+      if (
+        result.status === 'fulfilled' &&
+        result.value.definition &&
+        result.value.definition !== '404'
+      ) {
+        const { word, start, end, definition } = result.value;
+        await definitionState.setDefinition(word, definition);
+        console.log('Definition:', definition);
+        const wordNode: WordNode = {
+          word,
+          packetNr: packet.id,
+          position: { start, end },
+          wordNr: wordsState.totalWords,
+          chars: word.length,
+          definitions: flattenWordDefinitions(definition),
+        };
+        batchWords.push(wordNode);
       }
-      console.log('words Processed in batch:', words.length);
     }
-  });
-  wordsState.setWordsForProcessing(redisArray);
-  return words;
+    if (!batchWords.length) {
+      continue;
+    }
+    await wordsState.setWordsForProcessing(batchWords);
+  }
 }
 
 function parseWords(packet: Packet) {
