@@ -17,7 +17,7 @@ const defaultState: WordStateType = {
   isFinishedWithWords: false,
 };
 
-class WordsState extends BaseState<WordStateType> {
+export class WordsState extends BaseState<WordStateType> {
   static #instance: WordsState;
   static queue: AsyncQueue<WordNode> = new AsyncQueue<WordNode>();
   private constructor(private identifier: string, defaultState: WordStateType) {
