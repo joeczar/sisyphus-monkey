@@ -6,8 +6,9 @@ import { ChatPromptTemplate } from '@langchain/core/prompts';
 import type { WordData } from '../types/wordData';
 import { metadataPrompt } from './metadataPrompt';
 import { PacketChannelService } from '../words/RedisWordService';
+import type { WordNode } from '../types/wordNode';
 
-async function groqPrompt(wordObject: WordData) {
+async function groqPrompt(wordObject: WordNode) {
   const model = new ChatGroq({
     apiKey: process.env.GROQ_API_KEY,
     modelName: 'mixtral-8x7b-32768',
@@ -28,7 +29,7 @@ async function groqPrompt(wordObject: WordData) {
     chain,
   };
 }
-export async function generateMetadata(wordObject: WordData) {
+export async function generateMetadata(wordObject: WordNode) {
   try {
     const { response } = await groqPrompt(wordObject);
     console.log('generateMetadata Response:', response);
@@ -46,7 +47,7 @@ export async function generateMetadata(wordObject: WordData) {
     console.error('Error generating metadata:', error);
   }
 }
-export async function addMetadata(wordData: WordData): Promise<WordData> {
+export async function addMetadata(wordData: WordNode): Promise<WordNode> {
   const savedMetadata = await PacketChannelService.getMetadata(wordData.word);
   if (savedMetadata) {
     console.log('Metadata already saved:', savedMetadata);

@@ -5,26 +5,33 @@ import type { ApiWordDefinition } from '../types/ApiDefinition';
 import { waitForKeysAndProcess } from './utils/redisUtils';
 import { getDefinition } from '../words/getDefinitions';
 import { flattenWordDefinitions } from './utils/definitionUtils';
+import { metadataState } from '../state/MetadataState';
 
 const pattern = 'word:*'; // Replace with your key pattern
 const chunkSize = 100; // Define the size of each chunk
-export const handleDefinitions = async () => {
+export const handleMetadata = async () => {
   console.log('Fetching definitions');
 
   waitForKeysAndProcess(pattern, chunkSize, async (keysChunk) => {
     for (const wordNodes of keysChunk) {
       setTimeout(async () => {
         const { word } = JSON.parse(wordNodes);
-        definitionState.totalWords += 1;
-        const definition = await definitionState.getDefinition(word);
-        if (definition) {
-          if (definition === '404') {
-            console.error(`${word}: Word does not exist`);
+        if (!word.definition) {
+          const definitions = await getDefinition(word);
+          if (!definitions) {
             return;
           }
-          definitionState.setDefinition(word, definition);
-          const flattenedDefinitions = flattenWordDefinitions(definition);
+          const withDefinition = definitionState.addDefinition(word);
+          if (!withDefinition) {
+            return;
+          }
+          metadataState.totalWords += 1;
+          await metadataState.addMetadata(word);
         }
+        metadataState.totalWords += 1;
+        const node = await metadataState.addMetadata(word);
+
+        // embeddings?
       }, 3000);
     }
     console.log(

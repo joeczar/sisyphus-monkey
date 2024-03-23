@@ -4,7 +4,7 @@
 
 import { Redis } from 'ioredis';
 import { redisClientManager } from '../db/redis/RedisClient';
-import { handleDefinitions } from './definitions';
+import { handleMetadata } from './metadata';
 import { definitionState } from '../state/DefinitionState';
 
 const initializePoems = async () => {
@@ -19,7 +19,7 @@ const initializePoems = async () => {
     console.error('Failed to fetch definitions:', apiResponse.statusText);
     return;
   }
-  await handleDefinitions();
+  await handleMetadata();
   // console.log('Poems initialized');
 };
 
