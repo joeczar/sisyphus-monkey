@@ -10,7 +10,7 @@ import { metadataState } from '../state/MetadataState';
 const pattern = 'word:*'; // Replace with your key pattern
 const chunkSize = 100; // Define the size of each chunk
 export const handleMetadata = async () => {
-  console.log('Fetching definitions');
+  console.log('Fetching Metadatax');
 
   waitForKeysAndProcess(pattern, chunkSize, async (keysChunk) => {
     for (const wordNodes of keysChunk) {
