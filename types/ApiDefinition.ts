@@ -24,6 +24,17 @@ export type ApiWordDefinition = {
   meanings: ApiMeaning[];
 };
 
+export type FlattenedWordDefinition = {
+  word: string;
+  partOfSpeech: string;
+  definition: string;
+  synonyms: string[];
+  antonyms: string[];
+  example?: string;
+  phonetics: string;
+  origin: string;
+};
+
 // [
 //   {
 //     word: 'i',

@@ -1,14 +1,13 @@
+import type { FlattenedWordDefinition } from './ApiDefinition';
+
 export type WordNode = {
   word: string;
   packetNr: number;
   wordNr: number;
   chars: number;
   position: Position;
-  // utility - not for nodes
   trash?: boolean;
-  // Relationships
-
-  meanings?: MeaningNode[];
+  definitions?: FlattenedWordDefinition[];
   metadata?: MetadataNode[];
   embedding?: number[][];
 };
