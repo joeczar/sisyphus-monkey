@@ -1,4 +1,4 @@
-import { wordsState } from '../state/WordsState';
+import { wordsState, WordsState } from '../state/WordsState';
 // import { WordsServer } from '../server/WordsServer';
 import { redisClientManager } from '../db/redis/RedisClient';
 import { safeParseJson } from '../utils/safeJsonParse';
@@ -6,6 +6,17 @@ import { handlePackets, processPackets } from './parsePackets';
 
 // const server = new WordsServer();
 // const app = server.getApp();
+
+const gracefulShutdown = async () => {
+  console.log('Starting graceful shutdown...');
+  // Disconnect from Redis
+  await redisClientManager.disconnect();
+  await wordsState.clearState();
+  await WordsState.queue.close();
+
+  console.log('All resources have been cleanly shutdown. Exiting now.');
+  process.exit(0);
+};
 
 const handleCharsMessage = async (parsedMessage: any) => {
   const { isReady, isFinishedWithChars, totalPackets } = parsedMessage;
@@ -20,11 +31,6 @@ const handleCharsMessage = async (parsedMessage: any) => {
 };
 
 const initializeWords = async () => {
-  wordsState.packetsObservable().subscribe({
-    next: (value) => console.log('packetsObservable emitted:', value),
-    error: (err) => console.error('packetsObservable error:', err),
-    complete: () => console.log('packetsObservable complete'),
-  });
   console.log('Initializing words server...');
   await redisClientManager.connect();
   console.log('Connected to Redis & Clearing state');
@@ -45,7 +51,15 @@ const initializeWords = async () => {
   });
 };
 
-await initializeWords();
+await initializeWords()
+  .catch(console.error)
+  .finally(async () => {
+    console.log('closing');
+    await gracefulShutdown();
+  });
+
+process.on('SIGINT', gracefulShutdown);
+process.on('SIGTERM', gracefulShutdown);
 
 // export default {
 //   port: 4002,
