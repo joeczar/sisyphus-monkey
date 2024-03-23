@@ -1,5 +1,5 @@
 import { BaseState } from './BaseState'; // Adjust path as necessary
-import { redisClientManager } from '../db/redis/RedisClient'; // Ensure correct path
+import { redisClient, redisClientManager } from '../db/redis/RedisClient'; // Ensure correct path
 import { fetchWithTimeout, fetchWithRetry } from '../utils/fetchUtils'; // These are extracted methods
 import type {
   ApiWordDefinition,
@@ -111,12 +111,12 @@ class DefinitionState extends BaseState<DefinitionStateType> {
         method: 'GET',
       });
       if (!response?.ok) {
-        console.log(`${word}: Word does not exist`);
+        // this.logging ?? console.log(`${word}: Word does not exist`);
         redisClientManager.setKey(`definition:${word}`, '404');
         return null;
       }
       const data = (await response.json()) as ApiWordDefinition[];
-      console.log(`Fetched definition for ${word}`);
+      // this.logging ?? console.log(`Fetched definition for ${word}`);
       return data;
     } catch (error) {
       console.error('Error fetching definition:', error);
@@ -127,19 +127,20 @@ class DefinitionState extends BaseState<DefinitionStateType> {
   async getDefinition(
     word: string
   ): Promise<ApiWordDefinition[] | '404' | null> {
-    let definition: ApiWordDefinition[] | '404' | null =
-      await this.getDefinitionFromCache(word);
-    if (definition === '404') {
-      console.error(`${word}: Word does not exist`);
-      return null;
+    const cacheKey = `definition:${word.toLowerCase()}`; // Normalize key
+    let definition = await this.getDefinitionFromCache(cacheKey);
+
+    if (definition) {
+      return definition === '404' ? null : definition;
     }
-    if (!definition) {
-      definition = await this.fetchDefinition(word);
-      if (definition) {
-        await this.cacheDefinition(word, definition);
-        this.logging ?? console.log(`Definition for ${word} cached`);
-      }
+
+    definition = await this.fetchDefinition(word);
+    if (definition) {
+      await this.cacheDefinition(cacheKey, definition);
+    } else {
+      await redisClient?.set(cacheKey, '404');
     }
+
     return definition;
   }
 
@@ -147,7 +148,7 @@ class DefinitionState extends BaseState<DefinitionStateType> {
     if (definition) {
       await this.cacheDefinition(word, definition);
       this.definitions += 1;
-      console.log(`Definition for ${word} cached`);
+      // this.logging ?? console.log(`Definition for ${word} cached`);
     }
   }
   async addDefinition(word: WordNode) {

@@ -53,7 +53,52 @@ export const processPackets = async (batchSize: number, offset: number) => {
 
 export async function parsePacket(packet: Packet): Promise<WordNode[]> {
   let words: WordNode[] = [];
+  let redisArray: WordNode[] = [];
+  const batchLength = 100;
+  const potentialWords = parseWords(packet);
 
+  // Then, look up all definitions in parallel
+  const definitionPromises = potentialWords.map((pWord) =>
+    definitionState
+      .getDefinition(pWord.word)
+      .then((definition) => ({ ...pWord, definition }))
+  );
+  const results = await Promise.allSettled(definitionPromises);
+
+  results.forEach((result) => {
+    if (
+      result.status === 'fulfilled' &&
+      result.value.definition &&
+      result.value.definition !== '404'
+    ) {
+      const { word, start, end, definition } = result.value;
+      definitionState.setDefinition(word, definition);
+
+      const wordNode: WordNode = {
+        word,
+        packetNr: packet.id,
+        position: { start, end },
+        wordNr: wordsState.totalWords,
+        chars: word.length,
+        definitions: flattenWordDefinitions(definition),
+      };
+      words.push(wordNode);
+      redisArray.push(wordNode);
+      if (redisArray.length === batchLength) {
+        wordsState.setWordsForProcessing(redisArray);
+        redisArray = [];
+      }
+      console.log('words Processed in batch:', words.length);
+    }
+  });
+  wordsState.setWordsForProcessing(redisArray);
+  return words;
+}
+
+function parseWords(packet: Packet) {
+  let potentialWords: { word: string; start: number; end: number }[] = [];
+
+  // First, collect all potential words without doing async work
   for (let i = 0; i < packet.content.length; i++) {
     let boundaryBuffer = '';
 
@@ -63,37 +108,10 @@ export async function parsePacket(packet: Packet): Promise<WordNode[]> {
       j++
     ) {
       boundaryBuffer += packet.content[j];
-
-      try {
-        if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-          const definition = await definitionState.getDefinition(
-            boundaryBuffer
-          );
-          const word = boundaryBuffer;
-          if (definition) {
-            if (definition === '404') {
-              console.error(`${word}: Word does not exist`);
-              break;
-            }
-            definitionState.setDefinition(word, definition);
-
-            const wordNode: WordNode = {
-              word,
-              packetNr: packet.id,
-              position: { start: i, end: j },
-              wordNr: wordsState.totalWords,
-              chars: word.length,
-              definitions: flattenWordDefinitions(definition),
-            };
-
-            words.push(wordNode);
-          }
-        }
-      } catch (error) {
-        console.error('Error occurred while searching for word:', error);
+      if (wordTrie.search(boundaryBuffer.toLowerCase())) {
+        potentialWords.push({ word: boundaryBuffer, start: i, end: j });
       }
     }
   }
-
-  return words;
+  return potentialWords;
 }
