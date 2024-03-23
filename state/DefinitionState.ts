@@ -1,9 +1,13 @@
 import { BaseState } from './BaseState'; // Adjust path as necessary
 import { redisClientManager } from '../db/redis/RedisClient'; // Ensure correct path
 import { fetchWithTimeout, fetchWithRetry } from '../utils/fetchUtils'; // These are extracted methods
-import type { ApiWordDefinition } from '../types/ApiDefinition';
+import type {
+  ApiWordDefinition,
+  FlattenedWordDefinition,
+} from '../types/ApiDefinition';
 import type { Word } from '../characters/packet.type';
 import type { WordNode } from '../types/wordNode';
+import { flattenWordDefinitions } from '../poems/utils/definitionUtils';
 
 type DefinitionStateType = {
   isReady: boolean;
@@ -145,6 +149,14 @@ class DefinitionState extends BaseState<DefinitionStateType> {
       this.definitions += 1;
       console.log(`Definition for ${word} cached`);
     }
+  }
+  async addDefinition(word: WordNode) {
+    const definition = await this.getDefinition(word.word);
+    if (!definition || definition === '404') {
+      return null;
+    }
+    word.definitions = flattenWordDefinitions(definition);
+    return word;
   }
 
   async clearState() {
