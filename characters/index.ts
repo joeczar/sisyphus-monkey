@@ -33,6 +33,7 @@ async function initializeChars() {
       process.exit(1);
     }
   }
+  packetService.clearDb();
   charsState.setIsReady(true);
 
   // get user input to start the process
@@ -40,7 +41,7 @@ async function initializeChars() {
   process.stdout.write(prompt);
   for await (const line of console) {
     if (line) {
-      await getAndParsePackets();
+      // await getAndParsePackets();
       // charsState.addToTotalChars(1);
     }
   }
