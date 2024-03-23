@@ -1,3 +1,4 @@
+import { Word } from './../characters/packet.type';
 import { wordsState, WordsState } from '../state/WordsState';
 // import { WordsServer } from '../server/WordsServer';
 import { redisClientManager } from '../db/redis/RedisClient';
@@ -35,6 +36,8 @@ const initializeWords = async () => {
   await redisClientManager.connect();
   console.log('Connected to Redis & Clearing state');
   await wordsState.clearState();
+  await WordsState.queue.clear();
+  await WordsState.queue.close();
   wordsState.logState();
   await wordsState.setIsReady(true);
   console.log('Words server is ready');
