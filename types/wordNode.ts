@@ -6,7 +6,7 @@ export type WordNode = {
   wordNr: number;
   chars: number;
   position: Position;
-  trash?: boolean;
+  // Relationships
   definitions?: FlattenedWordDefinition[];
   metadata?: MetadataNode[];
   embedding?: number[][];
