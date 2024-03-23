@@ -105,22 +105,23 @@ class DefinitionState extends BaseState<DefinitionStateType> {
 
   private async fetchDefinition(
     word: string
-  ): Promise<ApiWordDefinition[] | null> {
+  ): Promise<ApiWordDefinition[] | '404' | null> {
     try {
       const response = await fetchWithRetry(`${this.API_URL}/${word}`, {
         method: 'GET',
       });
-      if (!response?.ok) {
-        // this.logging ?? console.log(`${word}: Word does not exist`);
-        redisClientManager.setKey(`definition:${word}`, '404');
-        return null;
+      if (!response) {
+        // Assuming fetchWithRetry returns null for non-retryable errors or rate limits
+        console.log(
+          `Fetching definition for ${word} returned null, possibly rate-limited.`
+        );
+        return '404';
       }
       const data = (await response.json()) as ApiWordDefinition[];
-      // this.logging ?? console.log(`Fetched definition for ${word}`);
-      return data;
+      return data.length > 0 ? data : '404';
     } catch (error) {
-      console.error('Error fetching definition:', error);
-      return null;
+      console.error(`Error fetching definition for ${word}:`, error);
+      return null; // Consider returning '404' or null based on how you wish to handle errors
     }
   }
 
@@ -135,7 +136,7 @@ class DefinitionState extends BaseState<DefinitionStateType> {
     }
 
     definition = await this.fetchDefinition(word);
-    if (definition) {
+    if (definition && definition !== '404') {
       await this.cacheDefinition(cacheKey, definition);
     } else {
       await redisClient?.set(cacheKey, '404');

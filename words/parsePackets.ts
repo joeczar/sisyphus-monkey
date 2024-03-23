@@ -6,8 +6,11 @@ import { wordTrie } from '../found-words/trieService';
 import { flattenWordDefinitions } from '../poems/utils/definitionUtils';
 import { definitionState } from '../state/DefinitionState';
 import type { FlattenedWordDefinition } from '../types/ApiDefinition';
+import { Semaphore } from '../utils/semaphore';
 import util from 'util';
 import os from 'os';
+
+const semaphore = new Semaphore(5); // Adjust based on performance observations
 
 const MAX_WORD_LENGTH = 20;
 
@@ -52,56 +55,54 @@ export const processPackets = async (batchSize: number, offset: number) => {
 };
 
 async function parsePacket(packet: Packet) {
-  // let words: WordNode[] = [];
-  const batchLength = 50;
+  const batchLength = 25; // Adjust based on performance observations
   const potentialWords = parseWords(packet);
-  console.log('Potential words:', potentialWords.length);
 
-  // break up the potential words into batches
   for (let i = 0; i < potentialWords.length; i += batchLength) {
-    console.log('Processing batch:', i);
-    const batchWords: WordNode[] = [];
     const batch = potentialWords.slice(i, i + batchLength);
-    console.log(
-      `Processing batch: ${i}, Memory Usage: ${util.inspect(
-        process.memoryUsage()
-      )}`
-    );
-    console.log(
-      `System Free Memory: ${os.freemem()} bytes, System Total Memory: ${os.totalmem()} bytes`
-    );
+    console.log(`Processing batch: ${i}`);
 
-    const definitionPromises = batch.map((pWord) =>
-      definitionState
-        .getDefinition(pWord.word)
-        .then((definition) => ({ ...pWord, definition }))
-    );
-    const results = await Promise.allSettled(definitionPromises);
-    for (const result of results) {
-      if (
-        result.status === 'fulfilled' &&
-        result.value.definition &&
-        result.value.definition !== '404'
-      ) {
-        const { word, start, end, definition } = result.value;
-        await definitionState.setDefinition(word, definition);
-        console.log('Definition:', definition);
-        const wordNode: WordNode = {
-          word,
-          packetNr: packet.id,
-          position: { start, end },
-          wordNr: wordsState.totalWords,
-          chars: word.length,
-          definitions: flattenWordDefinitions(definition),
-        };
-        batchWords.push(wordNode);
-      }
-    }
+    // Fetch definitions with concurrency control
+    const batchWords = await fetchDefinitionsConcurrently(batch);
+
+    // Continue if no words were processed
     if (!batchWords.length) {
       continue;
     }
+
+    console.log(
+      `Batch ${i / batchLength + 1} processed, Total Words: ${
+        batchWords.length
+      }`
+    );
     await wordsState.setWordsForProcessing(batchWords);
   }
+}
+
+async function fetchDefinitionsConcurrently(
+  words: WordNode[]
+): Promise<WordNode[]> {
+  const definitions = await Promise.all(
+    words.map(async (word) => {
+      await semaphore.acquire();
+      try {
+        const definition = await definitionState.getDefinition(word.word);
+        if (definition && definition !== '404') {
+          const wordNode: WordNode = {
+            ...word,
+            definitions: flattenWordDefinitions(definition),
+          };
+          return wordNode;
+        }
+      } catch (error) {
+        console.error('Error fetching definition:', error);
+      } finally {
+        semaphore.release();
+      }
+    })
+  );
+
+  return definitions.filter((word): word is WordNode => word !== undefined);
 }
 
 function parseWords(packet: Packet) {
