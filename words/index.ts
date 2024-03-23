@@ -1,7 +1,6 @@
-import { Word } from './../characters/packet.type';
 import { wordsState, WordsState } from '../state/WordsState';
 // import { WordsServer } from '../server/WordsServer';
-import { redisClientManager } from '../db/redis/RedisClient';
+import { RedisClient, redisClientManager } from '../db/redis/RedisClient';
 import { safeParseJson } from '../utils/safeJsonParse';
 import { handlePackets, processPackets } from './parsePackets';
 
@@ -38,6 +37,8 @@ const initializeWords = async () => {
   await wordsState.clearState();
   await WordsState.queue.clear();
   await WordsState.queue.close();
+  await redisClientManager.operationQueue?.clear();
+  await redisClientManager.operationQueue?.close();
   wordsState.logState();
   await wordsState.setIsReady(true);
   console.log('Words server is ready');

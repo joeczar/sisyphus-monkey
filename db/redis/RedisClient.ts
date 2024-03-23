@@ -11,7 +11,7 @@ export class RedisClient {
   pubClient;
   subClient;
   isConnected = false;
-  operationQueue: AsyncQueue<RedisOperation> | undefined;
+  public operationQueue: AsyncQueue<RedisOperation> | undefined;
 
   constructor() {
     if (!RedisClient.instance) {
