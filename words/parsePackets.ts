@@ -1,18 +1,12 @@
-import { type WordNode } from './../types/wordNode';
-import type { Packet } from '../characters/packet.type';
+import { type Packet } from './../characters/packet.type';
 import { packetService } from '../db/neo4j/PacketService';
 import { wordsState } from '../state/WordsState';
 import { wordTrie } from '../found-words/trieService';
+import type { WordNode } from '../types/wordNode';
 import { flattenWordDefinitions } from '../poems/utils/definitionUtils';
 import { definitionState } from '../state/DefinitionState';
 import type { FlattenedWordDefinition } from '../types/ApiDefinition';
-import { Semaphore } from '../utils/semaphore';
-import util from 'util';
-import os from 'os';
-import { delay } from '../utils/delay';
 import { wordNodeService } from '../db/neo4j/WordNodeService';
-
-const semaphore = new Semaphore(1); // Adjust based on performance observations
 
 const MAX_WORD_LENGTH = 20;
 
@@ -23,8 +17,8 @@ export const handlePackets = async () => {
   while (continueProcessing) {
     const packetsProcessed = wordsState.state.packetsProcessed;
     const packetCount = await packetService.getPacketCount();
-    console.log('Packet count:', packetCount);
-    if (packetCount && packetsProcessed < packetCount) {
+
+    if (packetsProcessed < packetCount) {
       console.log(
         `Processing packets. Processed: ${packetsProcessed}, Total: ${packetCount}`
       );
@@ -45,7 +39,19 @@ export const processPackets = async (batchSize: number, offset: number) => {
     console.log('Packets:', packets.length);
     for (const packet of packets) {
       try {
-        await parsePacket(packet);
+        const wordNodes = await parsePacket(packet);
+        // split wordNodes into batches of 50
+        for (let i = 0; i < wordNodes.length; i += 50) {
+          const batch = wordNodes.slice(i, i + 50);
+          // console.log('setWordsForProcessing', batch.length);
+          // await wordsState.setWordsForProcessing(batch);
+          console.log(' wordNodeService.createWordNodes', batch.length);
+          await wordNodeService.createWordNodes(batch);
+        }
+        // console.log('setWordsForProcessing', wordNodes.length);
+        // await wordsState.setWordsForProcessing(wordNodes);
+        // console.log(' wordNodeService.createWordNodes', wordNodes.length);
+        // await wordNodeService.createWordNodes(wordNodes);
       } catch (error) {
         console.error('Error occurred while parsing packet:', error);
       }
@@ -56,27 +62,13 @@ export const processPackets = async (batchSize: number, offset: number) => {
   }
 };
 
-async function parsePacket(packet: Packet) {
-  const potentialWords = parseWords(packet);
-
-  // Process each word sequentially
-  const processedWords: WordNode[] = [];
-  for (const word of potentialWords) {
-    if (!word.word) {
-      continue; // Skip if the word is undefined
-    }
+export async function parsePacket(packet: Packet): Promise<WordNode[]> {
+  if (!packet || !packet.id) {
+    console.error('Packet is null');
+    return [];
   }
+  let words: WordNode[] = [];
 
-  if (processedWords.length > 0) {
-    await wordNodeService.createWordNodes(processedWords);
-    await wordsState.setWordsForProcessing(processedWords);
-  }
-}
-
-function parseWords(packet: Packet): Partial<WordNode>[] {
-  let potentialWords: { word: string; start: number; end: number }[] = [];
-
-  // First, collect all potential words without doing async work
   for (let i = 0; i < packet.content.length; i++) {
     let boundaryBuffer = '';
 
@@ -86,10 +78,26 @@ function parseWords(packet: Packet): Partial<WordNode>[] {
       j++
     ) {
       boundaryBuffer += packet.content[j];
-      if (wordTrie.search(boundaryBuffer.toLowerCase())) {
-        potentialWords.push({ word: boundaryBuffer, start: i, end: j });
+
+      try {
+        if (wordTrie.search(boundaryBuffer.toLowerCase())) {
+          wordsState.addWords(1);
+          const word = boundaryBuffer;
+          console.log('Found word:', word, 'in packet:', packet.id);
+          const wordNode: WordNode = {
+            word,
+            packetNr: packet.id,
+            position: { start: i, end: j },
+            wordNr: wordsState.totalWords,
+            chars: word.length,
+          };
+          words.push(wordNode);
+        }
+      } catch (error) {
+        console.error('Error occurred while searching for word:', error);
       }
     }
   }
-  return potentialWords;
+
+  return words;
 }

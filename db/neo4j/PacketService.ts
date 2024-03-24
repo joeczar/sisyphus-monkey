@@ -6,24 +6,6 @@ export class PacketService extends Neo4jServiceBase {
     super();
   }
 
-  public async savePacket(packet: Packet) {
-    const session = this.driver.session();
-    try {
-      const result = await session.run(
-        `CREATE (p:Packet {id: $id, content: $content, source: $source, charCount: $charCount }) RETURN p`,
-        {
-          id: packet.id,
-          content: packet.content,
-          source: packet.source,
-          charCount: packet.charCount,
-        }
-      );
-      return result;
-    } finally {
-      session.close();
-    }
-  }
-
   public async savePacketBatch(packets: Packet[]) {
     const session = this.driver.session();
     try {
@@ -76,11 +58,12 @@ export class PacketService extends Neo4jServiceBase {
         }
       );
       if (result.records.length > 0) {
+        console.log('Packets:', result.records[0]);
         const packets = result.records
           .map((record) => record.get('p'))
           .map((p) => {
             return {
-              id: p.properties.id,
+              id: p.properties.packetNr,
               content: p.properties.content,
               source: p.properties.source,
               charCount: p.properties.charCount,

@@ -8,6 +8,8 @@ export type CharsStateType = {
   isFinishedWithChars: boolean;
   totalChars: number;
   totalPackets: number;
+  sortedFilenames: string[];
+  processedFilenames: string[];
 };
 
 const defaultState: CharsStateType = {
@@ -15,6 +17,8 @@ const defaultState: CharsStateType = {
   isFinishedWithChars: false,
   totalChars: 0,
   totalPackets: 0,
+  sortedFilenames: [],
+  processedFilenames: [],
 };
 
 class CharsState extends BaseState<CharsStateType> {
@@ -57,6 +61,31 @@ class CharsState extends BaseState<CharsStateType> {
   }
   async clearState() {
     this.state = defaultState;
+  }
+  async setSortedFilenames(sortedFilenames: string[]) {
+    this.state = { ...this.state, sortedFilenames };
+  }
+  get sortedFilenames() {
+    return this.state.sortedFilenames;
+  }
+  set sortedFilenames(sortedFilenames: string[]) {
+    this.state = { ...this.state, sortedFilenames };
+  }
+  getNextFilename() {
+    const fileName = this.state.sortedFilenames.shift();
+    this.state = { ...this.state, sortedFilenames: this.state.sortedFilenames };
+    return fileName;
+  }
+  async addProcessedFilename(filename: string) {
+    this.state = {
+      ...this.state,
+      processedFilenames: [...this.state.processedFilenames, filename],
+    };
+  }
+  get totalFiles() {
+    return (
+      this.state.sortedFilenames.length + this.state.processedFilenames.length
+    );
   }
 }
 

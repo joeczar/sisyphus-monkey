@@ -12,21 +12,39 @@ class WordNodeService extends Neo4jServiceBase {
     if (!this.#instance) {
       this.#instance = new WordNodeService();
     }
+    this.#instance.checkConnection();
     return this.#instance;
   }
 
   async createWordNodes(words: WordNode[]) {
+    console.log('Creating word nodes:', words.length, words[0]);
     const session = this.driver.session();
     try {
       const result = await session.run(
-        `UNWIND $words AS word
-        MERGE (w:WordNode {wordNr: word.wordNr})
-        ON CREATE SET w.word = word.word, w.chars = word.chars, 
-                      w.positionStart = word.position.start, w.positionEnd = word.position.end
-        WITH w, word
-        MATCH (p:Packet {id: word.packetNr})
-        MERGE (p)-[:CONTAINS]->(w)
-        RETURN w`,
+        `UNWIND $words AS wordNode
+        MERGE (p:Packet {id: wordNode.packetNr})
+        WITH wordNode, p
+        CREATE (w:Word {
+          word: wordNode.word,
+          packetNr: wordNode.packetNr,
+          startPosition: wordNode.position.start,
+          endPosition: wordNode.position.end,
+          wordNr: wordNode.wordNr,
+          chars: wordNode.chars
+        })
+        MERGE (w)-[:BELONGS_TO]->(p)
+        WITH w, wordNode
+        ORDER BY wordNode.wordNr ASC
+        WITH collect(w) AS words
+        FOREACH (i in RANGE(0, size(words)-2) |
+          FOREACH (curr in [words[i]] |
+            FOREACH (next in [words[i+1]] |
+              MERGE (curr)-[:NEXT]->(next)
+            )
+          )
+        )
+        RETURN count(words) as totalWordsCreated        
+        `,
         { words }
       );
       console.log(`${result.records.length} Word nodes created and linked.`);
