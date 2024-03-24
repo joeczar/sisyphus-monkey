@@ -48,7 +48,6 @@ export class WordsState extends BaseState<WordStateType> {
 
     try {
       console.log('Setting words for processing:', words.length);
-      this.addWords(words.length); // Updates some internal state or Redis
 
       for (let i = 0; i < words.length; i += batchSize) {
         const batch = words.slice(i, i + batchSize);

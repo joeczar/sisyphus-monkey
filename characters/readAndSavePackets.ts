@@ -6,9 +6,9 @@ import { packetService } from '../db/neo4j/PacketService';
 import { charsState } from '../state/CharsState';
 
 const FOLDER_PATH = path.join(__dirname, '..', 'generated-letters-chunked');
-const BATCH_LENGTH = 50;
+const BATCH_LENGTH = 10;
 
-export async function getAndParsePackets() {
+export async function getAndSortFiles() {
   state.loadState();
   let files = await fs.promises.readdir(FOLDER_PATH);
   const numberOfFiles = files.length;
@@ -25,28 +25,22 @@ export async function getAndParsePackets() {
       }))
       .slice(0, 10)
   );
-  files.sort((a, b) => sortFilesByTitleNumbers(a, b));
+  return files.sort((a, b) => sortFilesByTitleNumbers(a, b));
+}
 
-  let packetBatch: Packet[] = [];
-  for (let fileIndex = 0; fileIndex < files.length; fileIndex++) {
-    let file = files[fileIndex];
-    const filePath = path.join(FOLDER_PATH, file);
+export async function fetchAndSavePacket(fileName: string) {
+  try {
+    const filePath = path.join(FOLDER_PATH, fileName);
     let fileContent = await fs.promises.readFile(filePath, 'utf-8');
     let packet: Packet = JSON.parse(fileContent);
     console.log(`Processing packet ${packet.id}...`);
-    packetBatch.push(packet);
-    // save to neo4j
-    if (packetBatch.length === BATCH_LENGTH) {
-      try {
-        await packetService.savePacketBatch(packetBatch);
-        charsState.addToTotalPackets(packetBatch.length);
-        packetBatch = [];
-      } catch (error) {
-        console.error('Error saving packet batch', error);
-      }
 
-      await new Promise((resolve) => setTimeout(resolve, 10000)); // 1 second pause
-    }
+    const result = await packetService.savePacketBatch([packet]);
+
+    charsState.addToTotalPackets(1);
+    return result;
+  } catch (error) {
+    console.error('Error saving packet batch', error);
   }
 }
 

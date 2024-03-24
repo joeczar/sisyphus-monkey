@@ -13,6 +13,7 @@ export class Neo4jDriverSingleton {
       console.log('Creating new driver instance with URI:', URI);
       this.driverInstance = neo4j.driver(URI, neo4j.auth.basic(USER, PASSWORD));
       // Assume verifyConnectivity() or similar async calls are handled appropriately
+      console.log('Driver instance created.');
     }
     return this.driverInstance;
   }

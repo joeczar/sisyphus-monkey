@@ -9,18 +9,19 @@ export abstract class Neo4jServiceBase {
   }
 
   public async checkConnection(): Promise<boolean> {
-    const session = this.driver.session();
     try {
-      const result = await session.run(
-        'RETURN "Message from Neo4j" as message'
-      );
-      console.log('Connection successful', result.records[0].get('message'));
-      return true;
+      const serverInfo = await this.driver.getServerInfo();
+      console.log('Connection established');
+      console.log(serverInfo);
+      console.log('Checking Neo4j connection...');
+      if (serverInfo) {
+        console.log('Connection established.');
+        return true;
+      }
+      return false;
     } catch (error) {
       console.error('Error checking Neo4j connection:', error);
       return false;
-    } finally {
-      await session.close();
     }
   }
 }
