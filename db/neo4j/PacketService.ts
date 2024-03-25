@@ -112,7 +112,7 @@ export class PacketService extends Neo4jServiceBase {
         // For numbers within JavaScript’s safe integer range, .low is sufficient
         const countResult = result.records[0].get('count');
 
-        return Math.floor(countResult.toInt());
+        return Math.floor(countResult.toNumber());
       } else {
         // No result scenario
         return 0;
@@ -131,7 +131,7 @@ export class PacketService extends Neo4jServiceBase {
         'MATCH (p:Packet) RETURN p.packetNr AS id'
       );
       if (result.records.length > 0) {
-        return result.records.map((record) => record.get('id').toInt());
+        return result.records.map((record) => record.get('id'));
       }
       return [];
     } finally {
