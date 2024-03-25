@@ -3,7 +3,7 @@ import { CharServer } from '../server/CharServer';
 // import { charsState } from '../state/CharsState';
 import { redisClient, redisClientManager } from '../db/redis/RedisClient';
 import { charsState } from '../state/CharsState';
-import { getAndSortFiles } from './readAndSavePackets';
+import { getAndSortFiles, getSavedPacketIds } from './readAndSavePackets';
 
 const server = new CharServer();
 const app = server.getApp();
@@ -35,6 +35,7 @@ async function initializeChars() {
   console.log('Connected to Redis & Neo4j - Clearing state');
   // packetService.clearDb();
   const sortedFiles = await getAndSortFiles();
+  await getSavedPacketIds();
   charsState.sortedFilenames = sortedFiles;
   charsState.setIsReady(true);
 }

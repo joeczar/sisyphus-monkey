@@ -44,10 +44,49 @@ packetRoutes.get('/process-next', async (c) => {
     if (!result) {
       return c.json({ message: 'Error processing packet', ok: false });
     }
-    charsState.addProcessedIds(result.id);
+    charsState.addProcessedIds(result);
     return c.json({ result });
   } catch (err) {
     console.error('Error getting next packet:', err);
     return c.json({ message: 'Error getting next packet', ok: false }, 500);
   }
 });
+
+// Define your Packet type
+type Packet = {
+  id: string;
+  content: string;
+  // ... other properties
+};
+
+// Initialize Hono app
+const app = new Hono();
+
+// Define a route with a URL parameter
+app.get('/packet/:id', async (c) => {
+  // Extract the 'id' parameter from the URL
+  const id = c.req.param('id');
+
+  // You can now use this 'id' to fetch the packet data
+  // For example, let's assume you have a function 'getPacketById' that returns a Packet or null
+  const packet: Packet | null = await getPacketById(id);
+
+  if (packet) {
+    // If the packet is found, return it as JSON
+    return c.json(packet);
+  } else {
+    // If the packet is not found, return a 404 error
+    return c.notFound();
+  }
+});
+
+// Function to simulate fetching a packet by ID
+async function getPacketById(id: string): Promise<Packet | null> {
+  // Implement your logic to fetch a packet by ID
+  // This is just a placeholder for demonstration
+  return {
+    id: id,
+    content: 'This is the packet content',
+    // ... other properties
+  };
+}

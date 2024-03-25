@@ -59,3 +59,9 @@ const sortFilesByTitleNumbers = (a: string, b: string) => {
     return numA2 - numB2;
   }
 };
+
+export const getSavedPacketIds = async () => {
+  const ids = await packetService.getPacketIds();
+  charsState.addProcessedIds(ids);
+  return ids;
+};
