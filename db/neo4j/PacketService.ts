@@ -6,6 +6,28 @@ export class PacketService extends Neo4jServiceBase {
     super();
   }
 
+  public async savePacket(packet: Packet) {
+    const session = this.driver.session();
+    try {
+      const result = await session.run(
+        `MERGE (s:Source {id: $packet.source})
+        CREATE (p:Packet {packetNr: $packet.id, content: $packet.content, charCount: $packet.charCount, timestamp: $packet.timestamp})
+        CREATE (p)-[:ORIGINATES_FROM]->(s)
+        RETURN p.packetNr AS id`,
+        {
+          id: packet.id,
+          content: packet.content,
+          source: packet.source,
+          charCount: packet.charCount,
+          timestamp: packet.timestamp,
+        }
+      );
+      return result.records[0].get('p');
+    } finally {
+      session.close();
+    }
+  }
+
   public async savePacketBatch(packets: Packet[]) {
     const session = this.driver.session();
     try {
@@ -35,13 +57,22 @@ export class PacketService extends Neo4jServiceBase {
     }
   }
 
-  public async getPacket(id: string) {
+  public async getPacket(id: number) {
     const session = this.driver.session();
     try {
       const result = await session.run(`MATCH (p:Packet {id: $id}) RETURN p`, {
         id,
       });
-      return result.records[0].get('p');
+      if (result.records.length > 0) {
+        const packet = result.records[0].get('p');
+        return {
+          id: packet.properties.packetNr,
+          content: packet.properties.content,
+          source: packet.properties.source,
+          charCount: packet.properties.charCount,
+        } as Packet;
+      }
+      return undefined;
     } finally {
       session.close();
     }

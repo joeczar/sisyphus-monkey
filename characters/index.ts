@@ -32,12 +32,12 @@ async function initializeChars() {
     }
   }
   console.log('Connected to Redis & Neo4j - Clearing state');
-  packetService.clearDb();
+  // packetService.clearDb();
   charsState.setIsReady(true);
 }
 
 await initializeChars();
 export default {
-  port: 4001, // Port is specified here for environments like Bun that use it
+  port: 4001,
   fetch: app.fetch.bind(app),
 };

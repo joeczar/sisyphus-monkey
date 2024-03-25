@@ -35,7 +35,7 @@ export async function fetchAndSavePacket(fileName: string) {
     let packet: Packet = JSON.parse(fileContent);
     console.log(`Processing packet ${packet.id}...`);
 
-    const result = await packetService.savePacketBatch([packet]);
+    const result = await packetService.savePacket(packet);
 
     charsState.addToTotalPackets(1);
     return result;

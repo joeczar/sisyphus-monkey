@@ -8,14 +8,14 @@ import { charsState } from '../../state/CharsState';
 export const packetRoutes = new Hono();
 packetRoutes.get('/', async (c) => {
   try {
-    const statePackets = charsState.totalFiles;
+    const statePackets = charsState.sortedFilenames.length;
     if (statePackets === 0) {
       console.log('No packets found in state, loading files...');
       const sortedFiles = await getAndSortFiles();
       charsState.sortedFilenames = sortedFiles;
     }
     return c.json({
-      packetFiles: charsState.totalFiles,
+      unprocessed: charsState.sortedFilenames.length,
       fileNames: charsState.sortedFilenames,
     });
   } catch (err) {
@@ -27,8 +27,8 @@ packetRoutes.get('/', async (c) => {
 packetRoutes.get('/processed', async (c) => {
   try {
     return c.json({
-      packetsProcessed: charsState.state.processedFilenames.length,
-      fileNames: charsState.state.processedFilenames,
+      packetsProcessed: charsState.state.processedIds.length,
+      ids: charsState.state.processedIds,
     });
   } catch (err) {
     console.error('Error getting all packets:', err);
@@ -43,6 +43,10 @@ packetRoutes.get('/process-next', async (c) => {
       return c.json({ message: 'No packets to process', ok: false });
     }
     const result = await fetchAndSavePacket(nextPacket);
+    if (!result) {
+      return c.json({ message: 'Error processing packet', ok: false });
+    }
+    charsState.addProcessedIds(result.id);
     return c.json({ result });
   } catch (err) {
     console.error('Error getting next packet:', err);

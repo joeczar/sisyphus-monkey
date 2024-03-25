@@ -10,59 +10,45 @@ import { wordNodeService } from '../db/neo4j/WordNodeService';
 
 const MAX_WORD_LENGTH = 20;
 
-export const handlePackets = async () => {
+export const handlePackets = async (ids: string[]) => {
   console.log('Starting packet processing...');
 
-  let continueProcessing = true;
-  while (continueProcessing) {
-    const packetsProcessed = wordsState.state.packetsProcessed;
-    const packetCount = await packetService.getPacketCount();
+  const packetsProcessed = wordsState.state.packetsProcessed;
 
-    if (packetsProcessed < packetCount) {
-      console.log(
-        `Processing packets. Processed: ${packetsProcessed}, Total: ${packetCount}`
-      );
-
-      await processPackets(50, packetsProcessed); // Assume this function
-    } else {
-      console.log('No new packets to process. Waiting for new packets...');
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-    }
-    continueProcessing = !wordsState.state.isFinishedWithWords;
-  }
+  const toProcess: number[] = ids
+    .filter((id) => !packetsProcessed.includes(parseInt(id)))
+    .map((id) => parseInt(id));
+  console.log('To process:', toProcess);
+  wordsState.addProcessQueue(toProcess);
 };
 
-export const processPackets = async (batchSize: number, offset: number) => {
-  console.log('Processing packets:', batchSize, offset);
+export const processPackets = async (id: number) => {
+  console.log('Processing packets:', id);
   try {
-    const packets = await packetService.getPackets(batchSize, offset);
-    console.log('Packets:', packets.length);
-    for (const packet of packets) {
-      try {
-        const wordNodes = await parsePacket(packet);
-        // split wordNodes into batches of 50
-        for (let i = 0; i < wordNodes.length; i += 50) {
-          const batch = wordNodes.slice(i, i + 50);
-          // console.log('setWordsForProcessing', batch.length);
-          // await wordsState.setWordsForProcessing(batch);
-          console.log(' wordNodeService.createWordNodes', batch.length);
-          await wordNodeService.createWordNodes(batch);
-        }
-        // console.log('setWordsForProcessing', wordNodes.length);
-        // await wordsState.setWordsForProcessing(wordNodes);
-        // console.log(' wordNodeService.createWordNodes', wordNodes.length);
-        // await wordNodeService.createWordNodes(wordNodes);
-      } catch (error) {
-        console.error('Error occurred while parsing packet:', error);
-      }
+    const packet = await packetService.getPacket(id);
+    console.log('Fetched Packet:', packet.id);
+
+    const wordNodes = await parsePacket(packet);
+
+    for (let i = 0; i < wordNodes.length; i += 50) {
+      const batch = wordNodes.slice(i, i + 50);
+
+      console.log('wordNodeService.createWordNodes', batch.length);
+      await wordNodeService.createWordNodes(batch);
     }
-    wordsState.addToPacketsProcessed(packets.length);
+
+    wordsState.addToPacketsProcessed(packet.id);
   } catch (error) {
     console.error('Error occurred while getting packets:', error);
   }
 };
 
-export async function parsePacket(packet: Packet): Promise<WordNode[]> {
+export async function parsePacket(
+  packet: Packet | number
+): Promise<WordNode[]> {
+  if (typeof packet === 'number') {
+    packet = (await packetService.getPacket(packet)) as Packet;
+  }
   if (!packet || !packet.id) {
     console.error('Packet is null');
     return [];
@@ -88,7 +74,7 @@ export async function parsePacket(packet: Packet): Promise<WordNode[]> {
             word,
             packetNr: packet.id,
             position: { start: i, end: j },
-            wordNr: wordsState.totalWords,
+            wordNr: await wordsState.incrementWords(),
             chars: word.length,
           };
           words.push(wordNode);
