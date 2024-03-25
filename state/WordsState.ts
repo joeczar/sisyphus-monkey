@@ -6,16 +6,18 @@ import { BaseState } from './BaseState';
 
 export type WordStateType = {
   isReady: boolean;
-  packetsProcessed: number;
+  packetsProcessed: number[];
   totalWords: number;
   isFinishedWithWords: boolean;
+  processQueue: number[];
 };
 
 const defaultState: WordStateType = {
   isReady: false,
-  packetsProcessed: 0,
+  packetsProcessed: [],
   totalWords: 0,
   isFinishedWithWords: false,
+  processQueue: [],
 };
 
 export class WordsState extends BaseState<WordStateType> {
@@ -86,18 +88,46 @@ export class WordsState extends BaseState<WordStateType> {
       totalWords: this.state.totalWords + totalWords,
     };
   }
-  get totalWords() {
-    return this.state.totalWords;
-  }
-  async addToPacketsProcessed(packetsProcessed: number) {
+  async incrementWords() {
     this.state = {
       ...this.state,
-      packetsProcessed: this.state.packetsProcessed + packetsProcessed,
+      totalWords: this.state.totalWords + 1,
+    };
+    return this.state.totalWords;
+  }
+  addToPacketsProcessed(id: number) {
+    this.state = {
+      ...this.state,
+      packetsProcessed: [...this.state.packetsProcessed, id],
+    };
+  }
+  get packetsProcessed() {
+    return this.state.packetsProcessed;
+  }
+  get processQueue() {
+    return this.state.processQueue;
+  }
+
+  async addProcessQueue(id: number | number[]) {
+    const newIds = Array.isArray(id) ? id : [id];
+    this.state = {
+      ...this.state,
+      processQueue: [...this.state.processQueue, ...newIds],
     };
   }
 
-  packetsObservable() {
-    return this.select('packetsProcessed');
+  async removeFromProcessQueue(id: number) {
+    this.state = {
+      ...this.state,
+      processQueue: this.state.processQueue.filter((i) => i !== id),
+    };
+  }
+  moveFromProcessQueueToProcessed(id: number) {
+    this.state = {
+      ...this.state,
+      processQueue: this.state.processQueue.filter((i) => i !== id),
+      packetsProcessed: [...this.state.packetsProcessed, id],
+    };
   }
 
   async clearState() {

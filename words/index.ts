@@ -1,11 +1,12 @@
 import { wordsState, WordsState } from '../state/WordsState';
-// import { WordsServer } from '../server/WordsServer';
+import { WordsServer } from '../server/WordsServer';
 import { RedisClient, redisClientManager } from '../db/redis/RedisClient';
 import { safeParseJson } from '../utils/safeJsonParse';
 import { handlePackets, processPackets } from './parsePackets';
+import type { CharsStateType } from '../state/CharsState';
 
-// const server = new WordsServer();
-// const app = server.getApp();
+const server = new WordsServer();
+const app = server.getApp();
 
 const gracefulShutdown = async () => {
   console.log('Starting graceful shutdown...');
@@ -19,12 +20,12 @@ const gracefulShutdown = async () => {
 };
 
 const handleCharsMessage = async (parsedMessage: any) => {
-  const { isReady, isFinishedWithChars, totalPackets } = parsedMessage;
-  const { isFinishedWithWords } = wordsState.state;
+  const { processedIds } = parsedMessage as CharsStateType;
   console.log('Parsed message:', parsedMessage);
 
-  if (isFinishedWithChars) {
-    console.log('Chars server is finished');
+  if (processedIds) {
+    console.log('Processing packets...');
+    await handlePackets(processedIds);
   }
   // if (isReady && !isFinishedWithWords) {
   console.log('Chars server is ready');
@@ -43,7 +44,6 @@ const initializeWords = async () => {
   await wordsState.setIsReady(true);
   console.log('Words server is ready');
 
-  await handlePackets();
   wordsState.subscribeToChannel('channel:chars', async (message) => {
     console.log('Received message from chars:', message);
     const parsedMessage = await safeParseJson(message);
@@ -59,13 +59,13 @@ await initializeWords()
   .catch(console.error)
   .finally(async () => {
     console.log('closing');
-    await gracefulShutdown();
+    // await gracefulShutdown();
   });
 
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
 
-// export default {
-//   port: 4002,
-//   fetch: app.fetch.bind(app),
-// };
+export default {
+  port: 4002,
+  fetch: app.fetch.bind(app),
+};
