@@ -124,6 +124,20 @@ export class PacketService extends Neo4jServiceBase {
       await session.close();
     }
   }
+  async getPacketIds(): Promise<number[]> {
+    const session = this.driver.session();
+    try {
+      const result = await session.run(
+        'MATCH (p:Packet) RETURN p.packetNr AS id'
+      );
+      if (result.records.length > 0) {
+        return result.records.map((record) => record.get('id').toInt());
+      }
+      return [];
+    } finally {
+      await session.close();
+    }
+  }
 
   async clearDb() {
     const session = this.driver.session();

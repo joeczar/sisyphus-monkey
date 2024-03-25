@@ -10,14 +10,15 @@ import { wordNodeService } from '../db/neo4j/WordNodeService';
 
 const MAX_WORD_LENGTH = 20;
 
-export const handlePackets = async (ids: string[]) => {
+export const handlePackets = async (ids: number[]) => {
   console.log('Starting packet processing...');
 
   const packetsProcessed = wordsState.state.packetsProcessed;
 
-  const toProcess: number[] = ids
-    .filter((id) => !packetsProcessed.includes(parseInt(id)))
-    .map((id) => parseInt(id));
+  const toProcess: number[] = ids.filter(
+    (id) => !packetsProcessed.includes(id)
+  );
+
   console.log('To process:', toProcess);
   wordsState.addProcessQueue(toProcess);
 };

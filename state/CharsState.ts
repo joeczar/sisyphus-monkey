@@ -9,7 +9,7 @@ export type CharsStateType = {
   totalChars: number;
   totalPackets: number;
   sortedFilenames: string[];
-  processedIds: string[];
+  processedIds: number[];
 };
 
 const defaultState: CharsStateType = {
@@ -76,10 +76,11 @@ class CharsState extends BaseState<CharsStateType> {
     this.state = { ...this.state, sortedFilenames: this.state.sortedFilenames };
     return fileName;
   }
-  async addProcessedIds(id: string) {
+  async addProcessedIds(id: number | number[]) {
+    const processedIds = Array.isArray(id) ? id : [id];
     this.state = {
       ...this.state,
-      processedIds: [...this.state.processedIds, id],
+      processedIds: [...this.state.processedIds, ...processedIds],
     };
   }
   get processedIds() {
