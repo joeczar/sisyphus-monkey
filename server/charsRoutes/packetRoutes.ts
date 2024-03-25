@@ -11,8 +11,6 @@ packetRoutes.get('/', async (c) => {
     const statePackets = charsState.sortedFilenames.length;
     if (statePackets === 0) {
       console.log('No packets found in state, loading files...');
-      const sortedFiles = await getAndSortFiles();
-      charsState.sortedFilenames = sortedFiles;
     }
     return c.json({
       unprocessed: charsState.sortedFilenames.length,
