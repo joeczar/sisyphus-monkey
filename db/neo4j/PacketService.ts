@@ -14,15 +14,9 @@ export class PacketService extends Neo4jServiceBase {
         CREATE (p:Packet {packetNr: $packet.id, content: $packet.content, charCount: $packet.charCount, timestamp: $packet.timestamp})
         CREATE (p)-[:ORIGINATES_FROM]->(s)
         RETURN p.packetNr AS id`,
-        {
-          id: packet.id,
-          content: packet.content,
-          source: packet.source,
-          charCount: packet.charCount,
-          timestamp: packet.timestamp,
-        }
+        { packet } // Pass the entire packet object as a parameter
       );
-      return result.records[0].get('p');
+      return result.records[0].get('id');
     } finally {
       session.close();
     }
