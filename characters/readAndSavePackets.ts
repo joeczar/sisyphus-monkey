@@ -9,7 +9,6 @@ const FOLDER_PATH = path.join(__dirname, '..', 'generated-letters-chunked');
 const BATCH_LENGTH = 10;
 
 export async function getAndSortFiles() {
-  state.loadState();
   let files = await fs.promises.readdir(FOLDER_PATH);
   const numberOfFiles = files.length;
   console.log(`Found ${numberOfFiles} files`);
@@ -45,14 +44,14 @@ export async function fetchAndSavePacket(fileName: string) {
 }
 
 const sortFilesByTitleNumbers = (a: string, b: string) => {
-  const matchA = a.match(/^(\d+)_sisyphos-chunk-(\d+)\.json$/);
-  const matchB = b.match(/^(\d+)_sisyphos-chunk-(\d+)\.json$/);
+  const matchA = a.match(/^(\d+)_(sisyphos|sisyphus)-chunk-(\d+)\.json$/);
+  const matchB = b.match(/^(\d+)_(sisyphos|sisyphus)-chunk-(\d+)\.json$/);
   if (!matchA || !matchB) return 0; // or handle this case as an error
 
   const numA1 = parseInt(matchA[1], 10);
-  const numA2 = parseInt(matchA[2], 10);
+  const numA2 = parseInt(matchA[3], 10); // Changed to index 3 to match the third capture group
   const numB1 = parseInt(matchB[1], 10);
-  const numB2 = parseInt(matchB[2], 10);
+  const numB2 = parseInt(matchB[3], 10); // Changed to index 3 to match the third capture group
 
   if (numA1 !== numB1) {
     return numA1 - numB1;

@@ -26,6 +26,10 @@ export const processPackets = async (id: number) => {
   console.log('Processing packets:', id);
   try {
     const packet = await packetService.getPacket(id);
+    if (!packet) {
+      console.error('Packet not found:', id);
+      return;
+    }
     console.log('Fetched Packet:', packet.id);
 
     const wordNodes = await parsePacket(packet);
