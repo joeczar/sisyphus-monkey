@@ -9,7 +9,9 @@
     "test": "bun test",
     "find-words": "bun run src/word-finder/index.ts",
     "generate-poems": "bun run src/poetry/index.ts",
-    "process-dictionary": "bun run src/scripts/process-dictionary.ts"
+    "process-dictionary": "bun run src/scripts/process-dictionary.ts",
+    "generate-tries": "bun run src/scripts/generate-letter-tries.ts",
+    "test-tries": "bun run src/scripts/test-trie-service.ts"
   },
   "devDependencies": {
     "bun-types": "latest",
@@ -17,6 +19,7 @@
     "typescript": "latest"
   },
   "dependencies": {
+    "neo4j-driver": "^5.28.1",
     "openai": "^4.28.0"
   }
 }

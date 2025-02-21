@@ -7,6 +7,10 @@ export interface AlphabeticalDictionary {
   [word: string]: string;
 }
 
+export interface DictionaryData {
+  [word: string]: string;
+}
+
 export interface WordMatch {
   word: string;
   position: number;

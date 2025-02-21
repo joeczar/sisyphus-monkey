@@ -1,6 +1,6 @@
 import { readFile } from 'fs/promises';
 import { join } from 'path';
-import type { DictionaryData, DictionaryWord } from './types';
+import type { DictionaryData } from './types';
 
 class Dictionary {
   private words: Set<string> = new Set();
