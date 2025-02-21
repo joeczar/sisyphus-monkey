@@ -23,6 +23,7 @@ export interface WordPacket {
   wordCount: number;
   timestamp: Date;
   processed: boolean;
+  word_count: number;
 }
 
 export interface PacketWord {
@@ -170,9 +171,14 @@ export class SQLiteService {
   }
 
   async getUnprocessedPackets(): Promise<WordPacket[]> {
-    return this.db.prepare(
-      'SELECT * FROM word_packets WHERE processed = FALSE ORDER BY sequence'
-    ).all() as WordPacket[];
+    return this.db.prepare(`
+      SELECT wp.*, COUNT(pw.word_id) as word_count 
+      FROM word_packets wp
+      LEFT JOIN packet_words pw ON wp.id = pw.packet_id
+      WHERE wp.processed = FALSE 
+      GROUP BY wp.id
+      ORDER BY wp.sequence
+    `).all() as WordPacket[];
   }
 
   // Poem operations
