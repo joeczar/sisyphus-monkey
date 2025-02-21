@@ -19,6 +19,7 @@
     "typescript": "latest"
   },
   "dependencies": {
+    "chalk": "^5.4.1",
     "neo4j-driver": "^5.28.1",
     "openai": "^4.28.0"
   }
