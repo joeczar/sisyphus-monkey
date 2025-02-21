@@ -8,8 +8,8 @@ export interface PacketOptions {
 }
 
 const DEFAULT_OPTIONS: Required<PacketOptions> = {
-  minSize: 5,
-  maxSize: 10,
+  minSize: 90,
+  maxSize: 100,
   preferRelated: true
 };
 
