@@ -27,16 +27,29 @@ export class WordFinderService {
 
     // Process the chunk character by character
     for (let i = 0; i < content.length; i++) {
+      let longestWord = '';
+      let longestLength = 0;
+
       // Try words of different lengths (3 to 15 characters is reasonable)
       for (let length = 3; length <= Math.min(15, content.length - i); length++) {
         const possibleWord = content.slice(i, i + length).toLowerCase();
         
         // Check if it's a valid word using Trie
         if (await trieService.findWord(possibleWord)) {
-          // Store the word and its position
-          const wordId = await sqliteService.addWord(possibleWord, chunkId, i);
-          foundWords.push(wordId);
+          // Update longest word found at this position
+          if (possibleWord.length > longestLength) {
+            longestWord = possibleWord;
+            longestLength = possibleWord.length;
+          }
         }
+      }
+
+      // If we found a word at this position, store the longest one
+      if (longestWord) {
+        const wordId = await sqliteService.addWord(longestWord, chunkId, i);
+        foundWords.push(wordId);
+        // Skip ahead to avoid finding subwords of the word we just found
+        i += longestLength - 1;
       }
     }
 

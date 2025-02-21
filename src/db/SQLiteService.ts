@@ -227,6 +227,28 @@ export class SQLiteService {
   async close(): Promise<void> {
     this.db.close();
   }
+
+  async getPacketWords(packetId: string): Promise<string[]> {
+    const result = this.db.prepare(`
+      SELECT w.value
+      FROM packet_words pw
+      JOIN words w ON pw.word_id = w.id
+      WHERE pw.packet_id = ?
+      ORDER BY pw.sequence
+    `).all(packetId) as Array<{ value: string }>;
+
+    return result.map(row => row.value);
+  }
+
+  async getPacketWordsWithPositions(packetId: string): Promise<Array<{ value: string, position: number }>> {
+    return this.db.prepare(`
+      SELECT w.value, w.position
+      FROM packet_words pw
+      JOIN words w ON pw.word_id = w.id
+      WHERE pw.packet_id = ?
+      ORDER BY w.position
+    `).all(packetId) as Array<{ value: string, position: number }>;
+  }
 }
 
 // Export singleton instance
